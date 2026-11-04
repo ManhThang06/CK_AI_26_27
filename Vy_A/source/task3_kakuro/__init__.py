@@ -1,0 +1,1 @@
+"""Giao diện phát lại sự kiện của A, kèm bộ giải tham chiếu để kiểm tra độc lập."""

@@ -1,0 +1,11 @@
+# Giữ tài liệu ghi chú trên máy, không đưa lên GitHub.
+/docs/
+
+# Môi trường cài đặt và file sinh tự động.
+.venv/
+.deps/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+dist/
+*.zip

@@ -1,0 +1,9 @@
+N,variant,seed,steps,time,success
+8,standard,0,30,0.002,1
+8,standard,1,22,0.002,1
+8,heuristic,0,15,0.001,1
+8,heuristic,1,12,0.001,1
+16,standard,0,60,0.005,1
+16,standard,1,48,0.004,1
+16,heuristic,0,25,0.003,1
+16,heuristic,1,31,0.003,1

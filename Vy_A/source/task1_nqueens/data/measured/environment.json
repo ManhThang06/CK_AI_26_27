@@ -1,0 +1,18 @@
+{
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.9",
+  "python-sat": "1.9.dev17",
+  "repeats": 5,
+  "N": [
+    4,
+    5,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64
+  ],
+  "note": "new solver per trial, sequential; no timeout"
+}
