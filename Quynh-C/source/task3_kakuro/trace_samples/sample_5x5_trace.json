@@ -1,0 +1,9077 @@
+{
+ "puzzle": "puzzle_5x5",
+ "events": [
+  {
+   "step": 0,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 1
+  },
+  {
+   "step": 1,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 1,
+   "reason": "D1"
+  },
+  {
+   "step": 2,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 3,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 1,
+   "reason": "D1"
+  },
+  {
+   "step": 4,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 5,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "D1"
+  },
+  {
+   "step": 6,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 7,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 8,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 9,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 10,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 11,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 12,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 13,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 14,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 15,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 16,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 17,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 18,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 19,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 20,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 21,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 22,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 23,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "A4"
+  },
+  {
+   "step": 24,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 25,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 26,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 27,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 28,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 29,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 30,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 31,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 32,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 33,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 34,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 35,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 36,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 37,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 38,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 39,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 40,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 41,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 42,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 43,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 44,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 45,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 46,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 47,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 48,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 49,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 50,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 51,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 52,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 53,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 54,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 55,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 56,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 57,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 58,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 59,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 60,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 61,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 62,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 63,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 64,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 65,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 66,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 67,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 68,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 3,
+   "reason": "D1"
+  },
+  {
+   "step": 69,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 4,
+   "reason": "D1"
+  },
+  {
+   "step": 70,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 71,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 72,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 73,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 8,
+   "reason": "A2"
+  },
+  {
+   "step": 74,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 8,
+   "reason": "A2"
+  },
+  {
+   "step": 75,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 3,
+   "reason": "D4"
+  },
+  {
+   "step": 76,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 3,
+   "reason": "D4"
+  },
+  {
+   "step": 77,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 2,
+   "reason": "A3"
+  },
+  {
+   "step": 78,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 1,
+   "reason": "D2"
+  },
+  {
+   "step": 79,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 1,
+   "reason": "D2"
+  },
+  {
+   "step": 80,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 9,
+   "reason": "A2"
+  },
+  {
+   "step": 81,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 9,
+   "reason": "A2"
+  },
+  {
+   "step": 82,
+   "type": "fail",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 83,
+   "type": "backtrack",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 1,
+   "restored": [
+    [
+     1,
+     2,
+     2
+    ],
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     1,
+     2,
+     4
+    ],
+    [
+     1,
+     2,
+     5
+    ],
+    [
+     1,
+     2,
+     6
+    ],
+    [
+     1,
+     2,
+     7
+    ],
+    [
+     1,
+     2,
+     8
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     2,
+     1
+    ],
+    [
+     2,
+     2,
+     2
+    ],
+    [
+     3,
+     2,
+     1
+    ],
+    [
+     3,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     1
+    ],
+    [
+     4,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     8
+    ],
+    [
+     4,
+     3,
+     1
+    ],
+    [
+     4,
+     3,
+     2
+    ],
+    [
+     4,
+     3,
+     3
+    ],
+    [
+     4,
+     3,
+     4
+    ],
+    [
+     4,
+     3,
+     5
+    ],
+    [
+     4,
+     3,
+     6
+    ],
+    [
+     4,
+     3,
+     8
+    ],
+    [
+     1,
+     3,
+     9
+    ],
+    [
+     2,
+     3,
+     9
+    ],
+    [
+     3,
+     3,
+     9
+    ],
+    [
+     4,
+     3,
+     9
+    ],
+    [
+     4,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     9
+    ],
+    [
+     3,
+     2,
+     9
+    ],
+    [
+     3,
+     1,
+     4
+    ],
+    [
+     3,
+     1,
+     6
+    ],
+    [
+     3,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     8
+    ],
+    [
+     3,
+     1,
+     9
+    ],
+    [
+     3,
+     2,
+     4
+    ],
+    [
+     3,
+     2,
+     6
+    ],
+    [
+     3,
+     2,
+     7
+    ],
+    [
+     3,
+     2,
+     8
+    ],
+    [
+     3,
+     3,
+     4
+    ],
+    [
+     3,
+     3,
+     6
+    ],
+    [
+     3,
+     3,
+     7
+    ],
+    [
+     3,
+     3,
+     8
+    ],
+    [
+     3,
+     4,
+     4
+    ],
+    [
+     3,
+     4,
+     6
+    ],
+    [
+     3,
+     4,
+     7
+    ],
+    [
+     3,
+     4,
+     8
+    ],
+    [
+     3,
+     4,
+     9
+    ],
+    [
+     2,
+     4,
+     1
+    ],
+    [
+     3,
+     4,
+     1
+    ],
+    [
+     1,
+     3,
+     3
+    ],
+    [
+     1,
+     3,
+     5
+    ],
+    [
+     1,
+     3,
+     6
+    ],
+    [
+     1,
+     3,
+     7
+    ],
+    [
+     1,
+     3,
+     8
+    ],
+    [
+     2,
+     3,
+     3
+    ],
+    [
+     2,
+     3,
+     5
+    ],
+    [
+     2,
+     3,
+     6
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     2,
+     3,
+     8
+    ],
+    [
+     3,
+     3,
+     3
+    ],
+    [
+     3,
+     3,
+     5
+    ],
+    [
+     2,
+     1,
+     1
+    ],
+    [
+     2,
+     1,
+     2
+    ],
+    [
+     2,
+     1,
+     3
+    ],
+    [
+     2,
+     1,
+     4
+    ],
+    [
+     2,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     1
+    ],
+    [
+     3,
+     1,
+     2
+    ],
+    [
+     3,
+     1,
+     3
+    ],
+    [
+     3,
+     2,
+     5
+    ],
+    [
+     3,
+     4,
+     5
+    ],
+    [
+     2,
+     2,
+     3
+    ],
+    [
+     2,
+     2,
+     4
+    ],
+    [
+     2,
+     2,
+     5
+    ],
+    [
+     2,
+     2,
+     6
+    ],
+    [
+     2,
+     2,
+     7
+    ],
+    [
+     2,
+     1,
+     8
+    ],
+    [
+     2,
+     4,
+     8
+    ],
+    [
+     2,
+     4,
+     3
+    ],
+    [
+     3,
+     4,
+     3
+    ],
+    [
+     3,
+     3,
+     2
+    ],
+    [
+     1,
+     3,
+     1
+    ],
+    [
+     2,
+     3,
+     1
+    ],
+    [
+     2,
+     1,
+     9
+    ],
+    [
+     2,
+     4,
+     9
+    ]
+   ]
+  },
+  {
+   "step": 84,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 2
+  },
+  {
+   "step": 85,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 1,
+   "reason": "D1"
+  },
+  {
+   "step": 86,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 87,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 1,
+   "reason": "D1"
+  },
+  {
+   "step": 88,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 89,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "D1"
+  },
+  {
+   "step": 90,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 91,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 92,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 93,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 94,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 95,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 96,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 97,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 98,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 99,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 100,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 101,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 102,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 103,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 104,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 105,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 106,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 107,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "A4"
+  },
+  {
+   "step": 108,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 109,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 110,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 111,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 112,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 113,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 114,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 115,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 116,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 117,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 118,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 119,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 120,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 121,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 122,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 123,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 124,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 125,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 126,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 127,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 128,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 129,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 130,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 131,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 132,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 133,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "A3"
+  },
+  {
+   "step": 134,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "A3"
+  },
+  {
+   "step": 135,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 3,
+   "reason": "A3"
+  },
+  {
+   "step": 136,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 137,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 138,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 139,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 140,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 141,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 142,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 143,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 144,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 145,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 146,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 147,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 3,
+   "reason": "D1"
+  },
+  {
+   "step": 148,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 4,
+   "reason": "D1"
+  },
+  {
+   "step": 149,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 150,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 151,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 152,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 153,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 154,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 155,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 156,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 157,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 158,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 2,
+   "reason": "D4"
+  },
+  {
+   "step": 159,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 3,
+   "reason": "D4"
+  },
+  {
+   "step": 160,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 4,
+   "reason": "D4"
+  },
+  {
+   "step": 161,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 5,
+   "reason": "D4"
+  },
+  {
+   "step": 162,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 6,
+   "reason": "D4"
+  },
+  {
+   "step": 163,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 7,
+   "reason": "D4"
+  },
+  {
+   "step": 164,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 8,
+   "reason": "D4"
+  },
+  {
+   "step": 165,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 5,
+   "reason": "A2"
+  },
+  {
+   "step": 166,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 6,
+   "reason": "A2"
+  },
+  {
+   "step": 167,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 8,
+   "reason": "A2"
+  },
+  {
+   "step": 168,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 9,
+   "reason": "A2"
+  },
+  {
+   "step": 169,
+   "type": "fail",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 2,
+   "reason": "A2"
+  },
+  {
+   "step": 170,
+   "type": "backtrack",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 2,
+   "restored": [
+    [
+     1,
+     2,
+     1
+    ],
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     1,
+     2,
+     4
+    ],
+    [
+     1,
+     2,
+     5
+    ],
+    [
+     1,
+     2,
+     6
+    ],
+    [
+     1,
+     2,
+     7
+    ],
+    [
+     1,
+     2,
+     8
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     2,
+     1
+    ],
+    [
+     2,
+     2,
+     2
+    ],
+    [
+     3,
+     2,
+     1
+    ],
+    [
+     3,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     1
+    ],
+    [
+     4,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     8
+    ],
+    [
+     4,
+     3,
+     1
+    ],
+    [
+     4,
+     3,
+     2
+    ],
+    [
+     4,
+     3,
+     3
+    ],
+    [
+     4,
+     3,
+     4
+    ],
+    [
+     4,
+     3,
+     5
+    ],
+    [
+     4,
+     3,
+     6
+    ],
+    [
+     4,
+     3,
+     8
+    ],
+    [
+     1,
+     3,
+     9
+    ],
+    [
+     2,
+     3,
+     9
+    ],
+    [
+     3,
+     3,
+     9
+    ],
+    [
+     4,
+     3,
+     9
+    ],
+    [
+     4,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     5
+    ],
+    [
+     2,
+     2,
+     8
+    ],
+    [
+     2,
+     2,
+     9
+    ],
+    [
+     3,
+     2,
+     5
+    ],
+    [
+     3,
+     2,
+     8
+    ],
+    [
+     3,
+     2,
+     9
+    ],
+    [
+     3,
+     1,
+     4
+    ],
+    [
+     3,
+     1,
+     6
+    ],
+    [
+     3,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     8
+    ],
+    [
+     3,
+     1,
+     9
+    ],
+    [
+     3,
+     2,
+     4
+    ],
+    [
+     3,
+     2,
+     6
+    ],
+    [
+     3,
+     2,
+     7
+    ],
+    [
+     3,
+     3,
+     4
+    ],
+    [
+     3,
+     3,
+     6
+    ],
+    [
+     3,
+     3,
+     7
+    ],
+    [
+     3,
+     3,
+     8
+    ],
+    [
+     3,
+     4,
+     4
+    ],
+    [
+     3,
+     4,
+     6
+    ],
+    [
+     3,
+     4,
+     7
+    ],
+    [
+     3,
+     4,
+     8
+    ],
+    [
+     3,
+     4,
+     9
+    ],
+    [
+     2,
+     4,
+     1
+    ],
+    [
+     3,
+     4,
+     1
+    ],
+    [
+     3,
+     1,
+     3
+    ],
+    [
+     3,
+     3,
+     3
+    ],
+    [
+     3,
+     4,
+     3
+    ],
+    [
+     1,
+     3,
+     3
+    ],
+    [
+     1,
+     3,
+     5
+    ],
+    [
+     1,
+     3,
+     6
+    ],
+    [
+     1,
+     3,
+     7
+    ],
+    [
+     1,
+     3,
+     8
+    ],
+    [
+     2,
+     3,
+     3
+    ],
+    [
+     2,
+     3,
+     5
+    ],
+    [
+     2,
+     3,
+     6
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     2,
+     3,
+     8
+    ],
+    [
+     3,
+     3,
+     5
+    ],
+    [
+     2,
+     2,
+     3
+    ],
+    [
+     2,
+     2,
+     4
+    ],
+    [
+     2,
+     2,
+     6
+    ],
+    [
+     2,
+     1,
+     1
+    ],
+    [
+     2,
+     1,
+     2
+    ],
+    [
+     2,
+     1,
+     3
+    ],
+    [
+     2,
+     1,
+     4
+    ],
+    [
+     2,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     1
+    ],
+    [
+     3,
+     1,
+     2
+    ],
+    [
+     3,
+     4,
+     5
+    ],
+    [
+     2,
+     4,
+     2
+    ],
+    [
+     2,
+     4,
+     3
+    ],
+    [
+     2,
+     4,
+     4
+    ],
+    [
+     2,
+     4,
+     5
+    ],
+    [
+     2,
+     4,
+     6
+    ],
+    [
+     2,
+     4,
+     7
+    ],
+    [
+     2,
+     4,
+     8
+    ],
+    [
+     2,
+     1,
+     5
+    ],
+    [
+     2,
+     1,
+     6
+    ],
+    [
+     2,
+     1,
+     8
+    ],
+    [
+     2,
+     1,
+     9
+    ]
+   ]
+  },
+  {
+   "step": 171,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 3
+  },
+  {
+   "step": 172,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 3,
+   "reason": "D1"
+  },
+  {
+   "step": 173,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 3,
+   "reason": "D1"
+  },
+  {
+   "step": 174,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "D1"
+  },
+  {
+   "step": 175,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 176,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 177,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 178,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 179,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 180,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 181,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 182,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 183,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 184,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 185,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 186,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 187,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 188,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 189,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 190,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 191,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 192,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "A4"
+  },
+  {
+   "step": 193,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 194,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 195,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 196,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 197,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 198,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 199,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 200,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 201,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 202,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 203,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 204,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 205,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 206,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 207,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 208,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 209,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 210,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 211,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 212,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 213,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 214,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 215,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 216,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 217,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 218,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 219,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 220,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 221,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 222,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 223,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 224,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 225,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 226,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 227,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 228,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 229,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 230,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 231,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 232,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 233,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 234,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 235,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 236,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 237,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 238,
+   "type": "fail",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 3,
+   "reason": "A1"
+  },
+  {
+   "step": 239,
+   "type": "backtrack",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 3,
+   "restored": [
+    [
+     1,
+     2,
+     1
+    ],
+    [
+     1,
+     2,
+     2
+    ],
+    [
+     1,
+     2,
+     4
+    ],
+    [
+     1,
+     2,
+     5
+    ],
+    [
+     1,
+     2,
+     6
+    ],
+    [
+     1,
+     2,
+     7
+    ],
+    [
+     1,
+     2,
+     8
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     2,
+     3
+    ],
+    [
+     3,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     1
+    ],
+    [
+     4,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     8
+    ],
+    [
+     4,
+     3,
+     1
+    ],
+    [
+     4,
+     3,
+     2
+    ],
+    [
+     4,
+     3,
+     3
+    ],
+    [
+     4,
+     3,
+     4
+    ],
+    [
+     4,
+     3,
+     5
+    ],
+    [
+     4,
+     3,
+     6
+    ],
+    [
+     4,
+     3,
+     8
+    ],
+    [
+     1,
+     3,
+     9
+    ],
+    [
+     2,
+     3,
+     9
+    ],
+    [
+     3,
+     3,
+     9
+    ],
+    [
+     4,
+     3,
+     9
+    ],
+    [
+     4,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     6
+    ],
+    [
+     2,
+     2,
+     9
+    ],
+    [
+     3,
+     2,
+     6
+    ],
+    [
+     3,
+     2,
+     9
+    ],
+    [
+     3,
+     1,
+     4
+    ],
+    [
+     3,
+     1,
+     6
+    ],
+    [
+     3,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     8
+    ],
+    [
+     3,
+     1,
+     9
+    ],
+    [
+     3,
+     2,
+     4
+    ],
+    [
+     3,
+     2,
+     7
+    ],
+    [
+     3,
+     2,
+     8
+    ],
+    [
+     3,
+     3,
+     4
+    ],
+    [
+     3,
+     3,
+     6
+    ],
+    [
+     3,
+     3,
+     7
+    ],
+    [
+     3,
+     3,
+     8
+    ],
+    [
+     3,
+     4,
+     4
+    ],
+    [
+     3,
+     4,
+     6
+    ],
+    [
+     3,
+     4,
+     7
+    ],
+    [
+     3,
+     4,
+     8
+    ],
+    [
+     3,
+     4,
+     9
+    ],
+    [
+     2,
+     4,
+     1
+    ],
+    [
+     3,
+     4,
+     1
+    ],
+    [
+     1,
+     3,
+     3
+    ],
+    [
+     1,
+     3,
+     5
+    ],
+    [
+     1,
+     3,
+     6
+    ],
+    [
+     1,
+     3,
+     7
+    ],
+    [
+     1,
+     3,
+     8
+    ],
+    [
+     2,
+     3,
+     3
+    ],
+    [
+     2,
+     3,
+     5
+    ],
+    [
+     2,
+     3,
+     6
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     2,
+     3,
+     8
+    ],
+    [
+     3,
+     3,
+     3
+    ],
+    [
+     3,
+     3,
+     5
+    ],
+    [
+     2,
+     1,
+     1
+    ],
+    [
+     2,
+     1,
+     2
+    ],
+    [
+     2,
+     1,
+     3
+    ],
+    [
+     2,
+     1,
+     4
+    ],
+    [
+     2,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     1
+    ],
+    [
+     3,
+     1,
+     2
+    ],
+    [
+     3,
+     1,
+     3
+    ],
+    [
+     3,
+     2,
+     5
+    ],
+    [
+     3,
+     4,
+     5
+    ]
+   ]
+  },
+  {
+   "step": 240,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 4
+  },
+  {
+   "step": 241,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 4,
+   "reason": "D1"
+  },
+  {
+   "step": 242,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "D1"
+  },
+  {
+   "step": 243,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "D1"
+  },
+  {
+   "step": 244,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 245,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 246,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 247,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 248,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 249,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 250,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 251,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 252,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 253,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 254,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 255,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 256,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 257,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 258,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 259,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 260,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 261,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "A4"
+  },
+  {
+   "step": 262,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 263,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 264,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 265,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 266,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 267,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 268,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 269,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 270,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 271,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 272,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 273,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 274,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 275,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 276,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 277,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 278,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 279,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 280,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 281,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 282,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 283,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 284,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 285,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 286,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 287,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 288,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 289,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 290,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 291,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 292,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 293,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 294,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 295,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 296,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 297,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 298,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 299,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 300,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 301,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 302,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 303,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 304,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 305,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 306,
+   "type": "fail",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 4,
+   "reason": "A1"
+  },
+  {
+   "step": 307,
+   "type": "backtrack",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 4,
+   "restored": [
+    [
+     1,
+     2,
+     1
+    ],
+    [
+     1,
+     2,
+     2
+    ],
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     1,
+     2,
+     5
+    ],
+    [
+     1,
+     2,
+     6
+    ],
+    [
+     1,
+     2,
+     7
+    ],
+    [
+     1,
+     2,
+     8
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     2,
+     4
+    ],
+    [
+     3,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     1
+    ],
+    [
+     4,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     8
+    ],
+    [
+     4,
+     3,
+     1
+    ],
+    [
+     4,
+     3,
+     2
+    ],
+    [
+     4,
+     3,
+     3
+    ],
+    [
+     4,
+     3,
+     4
+    ],
+    [
+     4,
+     3,
+     5
+    ],
+    [
+     4,
+     3,
+     6
+    ],
+    [
+     4,
+     3,
+     8
+    ],
+    [
+     1,
+     3,
+     9
+    ],
+    [
+     2,
+     3,
+     9
+    ],
+    [
+     3,
+     3,
+     9
+    ],
+    [
+     4,
+     3,
+     9
+    ],
+    [
+     4,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     8
+    ],
+    [
+     2,
+     2,
+     9
+    ],
+    [
+     3,
+     2,
+     8
+    ],
+    [
+     3,
+     2,
+     9
+    ],
+    [
+     3,
+     1,
+     4
+    ],
+    [
+     3,
+     1,
+     6
+    ],
+    [
+     3,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     8
+    ],
+    [
+     3,
+     1,
+     9
+    ],
+    [
+     3,
+     2,
+     6
+    ],
+    [
+     3,
+     2,
+     7
+    ],
+    [
+     3,
+     3,
+     4
+    ],
+    [
+     3,
+     3,
+     6
+    ],
+    [
+     3,
+     3,
+     7
+    ],
+    [
+     3,
+     3,
+     8
+    ],
+    [
+     3,
+     4,
+     4
+    ],
+    [
+     3,
+     4,
+     6
+    ],
+    [
+     3,
+     4,
+     7
+    ],
+    [
+     3,
+     4,
+     8
+    ],
+    [
+     3,
+     4,
+     9
+    ],
+    [
+     2,
+     4,
+     1
+    ],
+    [
+     3,
+     4,
+     1
+    ],
+    [
+     1,
+     3,
+     3
+    ],
+    [
+     1,
+     3,
+     5
+    ],
+    [
+     1,
+     3,
+     6
+    ],
+    [
+     1,
+     3,
+     7
+    ],
+    [
+     1,
+     3,
+     8
+    ],
+    [
+     2,
+     3,
+     3
+    ],
+    [
+     2,
+     3,
+     5
+    ],
+    [
+     2,
+     3,
+     6
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     2,
+     3,
+     8
+    ],
+    [
+     3,
+     3,
+     3
+    ],
+    [
+     3,
+     3,
+     5
+    ],
+    [
+     2,
+     1,
+     1
+    ],
+    [
+     2,
+     1,
+     2
+    ],
+    [
+     2,
+     1,
+     3
+    ],
+    [
+     2,
+     1,
+     4
+    ],
+    [
+     2,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     1
+    ],
+    [
+     3,
+     1,
+     2
+    ],
+    [
+     3,
+     1,
+     3
+    ],
+    [
+     3,
+     2,
+     5
+    ],
+    [
+     3,
+     4,
+     5
+    ]
+   ]
+  },
+  {
+   "step": 308,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 5
+  },
+  {
+   "step": 309,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 310,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 311,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 312,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 313,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 314,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 315,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 316,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 317,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 318,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 319,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 320,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 321,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 322,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 323,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 324,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 325,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 326,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 327,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 328,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 329,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "A4"
+  },
+  {
+   "step": 330,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 331,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 332,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 333,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 334,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 335,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 336,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 337,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 338,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 339,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 340,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 341,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 342,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 343,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 344,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 345,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 346,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 347,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 348,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 349,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 350,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 351,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 352,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 353,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 354,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 355,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 356,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 357,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 358,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 359,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 360,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 361,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 362,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 363,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 364,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 365,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 366,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 367,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 368,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 369,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 370,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 371,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 372,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 373,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 374,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 375,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 376,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 377,
+   "type": "fail",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 5,
+   "reason": "A1"
+  },
+  {
+   "step": 378,
+   "type": "backtrack",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 5,
+   "restored": [
+    [
+     1,
+     2,
+     1
+    ],
+    [
+     1,
+     2,
+     2
+    ],
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     1,
+     2,
+     4
+    ],
+    [
+     1,
+     2,
+     6
+    ],
+    [
+     1,
+     2,
+     7
+    ],
+    [
+     1,
+     2,
+     8
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     2,
+     5
+    ],
+    [
+     3,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     1
+    ],
+    [
+     4,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     8
+    ],
+    [
+     4,
+     3,
+     1
+    ],
+    [
+     4,
+     3,
+     2
+    ],
+    [
+     4,
+     3,
+     3
+    ],
+    [
+     4,
+     3,
+     4
+    ],
+    [
+     4,
+     3,
+     5
+    ],
+    [
+     4,
+     3,
+     6
+    ],
+    [
+     4,
+     3,
+     8
+    ],
+    [
+     1,
+     3,
+     9
+    ],
+    [
+     2,
+     3,
+     9
+    ],
+    [
+     3,
+     3,
+     9
+    ],
+    [
+     4,
+     3,
+     9
+    ],
+    [
+     4,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     2
+    ],
+    [
+     2,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     8
+    ],
+    [
+     2,
+     2,
+     9
+    ],
+    [
+     3,
+     2,
+     2
+    ],
+    [
+     3,
+     2,
+     7
+    ],
+    [
+     3,
+     2,
+     8
+    ],
+    [
+     3,
+     2,
+     9
+    ],
+    [
+     3,
+     1,
+     4
+    ],
+    [
+     3,
+     1,
+     6
+    ],
+    [
+     3,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     8
+    ],
+    [
+     3,
+     1,
+     9
+    ],
+    [
+     3,
+     2,
+     4
+    ],
+    [
+     3,
+     2,
+     6
+    ],
+    [
+     3,
+     3,
+     4
+    ],
+    [
+     3,
+     3,
+     6
+    ],
+    [
+     3,
+     3,
+     7
+    ],
+    [
+     3,
+     3,
+     8
+    ],
+    [
+     3,
+     4,
+     4
+    ],
+    [
+     3,
+     4,
+     6
+    ],
+    [
+     3,
+     4,
+     7
+    ],
+    [
+     3,
+     4,
+     8
+    ],
+    [
+     3,
+     4,
+     9
+    ],
+    [
+     2,
+     4,
+     1
+    ],
+    [
+     3,
+     4,
+     1
+    ],
+    [
+     1,
+     3,
+     3
+    ],
+    [
+     1,
+     3,
+     5
+    ],
+    [
+     1,
+     3,
+     6
+    ],
+    [
+     1,
+     3,
+     7
+    ],
+    [
+     1,
+     3,
+     8
+    ],
+    [
+     2,
+     3,
+     3
+    ],
+    [
+     2,
+     3,
+     5
+    ],
+    [
+     2,
+     3,
+     6
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     2,
+     3,
+     8
+    ],
+    [
+     3,
+     3,
+     3
+    ],
+    [
+     3,
+     3,
+     5
+    ],
+    [
+     2,
+     1,
+     1
+    ],
+    [
+     2,
+     1,
+     2
+    ],
+    [
+     2,
+     1,
+     3
+    ],
+    [
+     2,
+     1,
+     4
+    ],
+    [
+     2,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     1
+    ],
+    [
+     3,
+     1,
+     2
+    ],
+    [
+     3,
+     1,
+     3
+    ],
+    [
+     3,
+     4,
+     5
+    ]
+   ]
+  },
+  {
+   "step": 379,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 6
+  },
+  {
+   "step": 380,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 381,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 382,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 383,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 384,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 385,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 386,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 387,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 388,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 389,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 390,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 391,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 392,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 393,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 394,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 395,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 396,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 397,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 398,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 399,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 400,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "A4"
+  },
+  {
+   "step": 401,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 3,
+   "reason": "D1"
+  },
+  {
+   "step": 402,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 403,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 404,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 405,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 3,
+   "reason": "D1"
+  },
+  {
+   "step": 406,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 407,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 408,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 409,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 410,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 411,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 412,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 413,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 414,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 415,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 416,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 417,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 418,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 419,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 420,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 421,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 422,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 423,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 424,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 425,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 426,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 427,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 428,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 429,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 430,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 431,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 432,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 433,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 434,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 435,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 436,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 437,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 438,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 439,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 440,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 441,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 442,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 443,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 444,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 445,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 446,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 447,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 448,
+   "type": "fail",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 6,
+   "reason": "A1"
+  },
+  {
+   "step": 449,
+   "type": "backtrack",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 6,
+   "restored": [
+    [
+     1,
+     2,
+     1
+    ],
+    [
+     1,
+     2,
+     2
+    ],
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     1,
+     2,
+     4
+    ],
+    [
+     1,
+     2,
+     5
+    ],
+    [
+     1,
+     2,
+     7
+    ],
+    [
+     1,
+     2,
+     8
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     2,
+     6
+    ],
+    [
+     3,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     1
+    ],
+    [
+     4,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     8
+    ],
+    [
+     4,
+     3,
+     1
+    ],
+    [
+     4,
+     3,
+     2
+    ],
+    [
+     4,
+     3,
+     3
+    ],
+    [
+     4,
+     3,
+     4
+    ],
+    [
+     4,
+     3,
+     5
+    ],
+    [
+     4,
+     3,
+     6
+    ],
+    [
+     4,
+     3,
+     8
+    ],
+    [
+     1,
+     3,
+     9
+    ],
+    [
+     2,
+     3,
+     9
+    ],
+    [
+     3,
+     3,
+     9
+    ],
+    [
+     4,
+     3,
+     9
+    ],
+    [
+     4,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     3
+    ],
+    [
+     2,
+     2,
+     7
+    ],
+    [
+     2,
+     2,
+     8
+    ],
+    [
+     2,
+     2,
+     9
+    ],
+    [
+     3,
+     2,
+     3
+    ],
+    [
+     3,
+     2,
+     7
+    ],
+    [
+     3,
+     2,
+     8
+    ],
+    [
+     3,
+     2,
+     9
+    ],
+    [
+     3,
+     1,
+     4
+    ],
+    [
+     3,
+     1,
+     6
+    ],
+    [
+     3,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     8
+    ],
+    [
+     3,
+     1,
+     9
+    ],
+    [
+     3,
+     2,
+     4
+    ],
+    [
+     3,
+     3,
+     4
+    ],
+    [
+     3,
+     3,
+     6
+    ],
+    [
+     3,
+     3,
+     7
+    ],
+    [
+     3,
+     3,
+     8
+    ],
+    [
+     3,
+     4,
+     4
+    ],
+    [
+     3,
+     4,
+     6
+    ],
+    [
+     3,
+     4,
+     7
+    ],
+    [
+     3,
+     4,
+     8
+    ],
+    [
+     3,
+     4,
+     9
+    ],
+    [
+     2,
+     4,
+     1
+    ],
+    [
+     3,
+     4,
+     1
+    ],
+    [
+     1,
+     3,
+     3
+    ],
+    [
+     1,
+     3,
+     5
+    ],
+    [
+     1,
+     3,
+     6
+    ],
+    [
+     1,
+     3,
+     7
+    ],
+    [
+     1,
+     3,
+     8
+    ],
+    [
+     2,
+     3,
+     3
+    ],
+    [
+     2,
+     3,
+     5
+    ],
+    [
+     2,
+     3,
+     6
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     2,
+     3,
+     8
+    ],
+    [
+     3,
+     3,
+     3
+    ],
+    [
+     3,
+     3,
+     5
+    ],
+    [
+     2,
+     1,
+     1
+    ],
+    [
+     2,
+     1,
+     2
+    ],
+    [
+     2,
+     1,
+     3
+    ],
+    [
+     2,
+     1,
+     4
+    ],
+    [
+     2,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     1
+    ],
+    [
+     3,
+     1,
+     2
+    ],
+    [
+     3,
+     1,
+     3
+    ],
+    [
+     3,
+     2,
+     5
+    ],
+    [
+     3,
+     4,
+     5
+    ]
+   ]
+  },
+  {
+   "step": 450,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 7
+  },
+  {
+   "step": 451,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 452,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 453,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 454,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 455,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 456,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 457,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 458,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 459,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 460,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 461,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 462,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 463,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 464,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 465,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 466,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 467,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 468,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 469,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 470,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 471,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 472,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 473,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 474,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 475,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 476,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 477,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 478,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 479,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 480,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 481,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 482,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 483,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 484,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 485,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 486,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 487,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 488,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 489,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 490,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 491,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 492,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 493,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 494,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 495,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 496,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 497,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 498,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 499,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 500,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 501,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 502,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 503,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 504,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 505,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 506,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 507,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 508,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 509,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 510,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 511,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 512,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 513,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 514,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 515,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 516,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 517,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 518,
+   "type": "fail",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 7,
+   "reason": "A1"
+  },
+  {
+   "step": 519,
+   "type": "backtrack",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 7,
+   "restored": [
+    [
+     1,
+     2,
+     1
+    ],
+    [
+     1,
+     2,
+     2
+    ],
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     1,
+     2,
+     4
+    ],
+    [
+     1,
+     2,
+     5
+    ],
+    [
+     1,
+     2,
+     6
+    ],
+    [
+     1,
+     2,
+     8
+    ],
+    [
+     1,
+     2,
+     9
+    ],
+    [
+     2,
+     2,
+     7
+    ],
+    [
+     3,
+     2,
+     7
+    ],
+    [
+     4,
+     2,
+     7
+    ],
+    [
+     4,
+     2,
+     1
+    ],
+    [
+     4,
+     2,
+     2
+    ],
+    [
+     4,
+     2,
+     3
+    ],
+    [
+     4,
+     2,
+     4
+    ],
+    [
+     4,
+     2,
+     5
+    ],
+    [
+     4,
+     2,
+     6
+    ],
+    [
+     4,
+     2,
+     8
+    ],
+    [
+     4,
+     3,
+     1
+    ],
+    [
+     4,
+     3,
+     2
+    ],
+    [
+     4,
+     3,
+     3
+    ],
+    [
+     4,
+     3,
+     4
+    ],
+    [
+     4,
+     3,
+     5
+    ],
+    [
+     4,
+     3,
+     6
+    ],
+    [
+     4,
+     3,
+     8
+    ],
+    [
+     1,
+     3,
+     9
+    ],
+    [
+     2,
+     3,
+     9
+    ],
+    [
+     3,
+     3,
+     9
+    ],
+    [
+     4,
+     3,
+     9
+    ],
+    [
+     2,
+     2,
+     5
+    ],
+    [
+     2,
+     2,
+     6
+    ],
+    [
+     2,
+     2,
+     8
+    ],
+    [
+     2,
+     2,
+     9
+    ],
+    [
+     3,
+     2,
+     5
+    ],
+    [
+     3,
+     2,
+     6
+    ],
+    [
+     3,
+     2,
+     8
+    ],
+    [
+     3,
+     2,
+     9
+    ],
+    [
+     3,
+     1,
+     4
+    ],
+    [
+     3,
+     1,
+     6
+    ],
+    [
+     3,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     8
+    ],
+    [
+     3,
+     1,
+     9
+    ],
+    [
+     3,
+     2,
+     4
+    ],
+    [
+     3,
+     3,
+     4
+    ],
+    [
+     3,
+     3,
+     6
+    ],
+    [
+     3,
+     3,
+     7
+    ],
+    [
+     3,
+     3,
+     8
+    ],
+    [
+     3,
+     4,
+     4
+    ],
+    [
+     3,
+     4,
+     6
+    ],
+    [
+     3,
+     4,
+     7
+    ],
+    [
+     3,
+     4,
+     8
+    ],
+    [
+     3,
+     4,
+     9
+    ],
+    [
+     2,
+     4,
+     1
+    ],
+    [
+     3,
+     4,
+     1
+    ],
+    [
+     1,
+     3,
+     3
+    ],
+    [
+     1,
+     3,
+     5
+    ],
+    [
+     1,
+     3,
+     6
+    ],
+    [
+     1,
+     3,
+     7
+    ],
+    [
+     1,
+     3,
+     8
+    ],
+    [
+     2,
+     3,
+     3
+    ],
+    [
+     2,
+     3,
+     5
+    ],
+    [
+     2,
+     3,
+     6
+    ],
+    [
+     2,
+     3,
+     7
+    ],
+    [
+     2,
+     3,
+     8
+    ],
+    [
+     3,
+     3,
+     3
+    ],
+    [
+     3,
+     3,
+     5
+    ],
+    [
+     2,
+     1,
+     1
+    ],
+    [
+     2,
+     1,
+     2
+    ],
+    [
+     2,
+     1,
+     3
+    ],
+    [
+     2,
+     1,
+     4
+    ],
+    [
+     2,
+     1,
+     7
+    ],
+    [
+     3,
+     1,
+     1
+    ],
+    [
+     3,
+     1,
+     2
+    ],
+    [
+     3,
+     1,
+     3
+    ],
+    [
+     3,
+     4,
+     5
+    ]
+   ]
+  },
+  {
+   "step": 520,
+   "type": "assign",
+   "cell": [
+    1,
+    2
+   ],
+   "value": 8
+  },
+  {
+   "step": 521,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 522,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 523,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 8,
+   "reason": "D1"
+  },
+  {
+   "step": 524,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 525,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 526,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 527,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 528,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 529,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 530,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 1,
+   "reason": "A4"
+  },
+  {
+   "step": 531,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 2,
+   "reason": "A4"
+  },
+  {
+   "step": 532,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 3,
+   "reason": "A4"
+  },
+  {
+   "step": 533,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 4,
+   "reason": "A4"
+  },
+  {
+   "step": 534,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 5,
+   "reason": "A4"
+  },
+  {
+   "step": 535,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 6,
+   "reason": "A4"
+  },
+  {
+   "step": 536,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 8,
+   "reason": "A4"
+  },
+  {
+   "step": 537,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 538,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 539,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 540,
+   "type": "remove",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 9,
+   "reason": "D2"
+  },
+  {
+   "step": 541,
+   "type": "remove",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 7,
+   "reason": "A4"
+  },
+  {
+   "step": 542,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 543,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 4,
+   "reason": "D1"
+  },
+  {
+   "step": 544,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 545,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 546,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 547,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 548,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 2,
+   "reason": "D1"
+  },
+  {
+   "step": 549,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 4,
+   "reason": "D1"
+  },
+  {
+   "step": 550,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 5,
+   "reason": "D1"
+  },
+  {
+   "step": 551,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 6,
+   "reason": "D1"
+  },
+  {
+   "step": 552,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 7,
+   "reason": "D1"
+  },
+  {
+   "step": 553,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 9,
+   "reason": "D1"
+  },
+  {
+   "step": 554,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 555,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 556,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 557,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 558,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 559,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 560,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 561,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 562,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 563,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 4,
+   "reason": "A3"
+  },
+  {
+   "step": 564,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 6,
+   "reason": "A3"
+  },
+  {
+   "step": 565,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 7,
+   "reason": "A3"
+  },
+  {
+   "step": 566,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 8,
+   "reason": "A3"
+  },
+  {
+   "step": 567,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 9,
+   "reason": "A3"
+  },
+  {
+   "step": 568,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 569,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 1,
+   "reason": "D4"
+  },
+  {
+   "step": 570,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 571,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 572,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 573,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 574,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 575,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 576,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 577,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 6,
+   "reason": "D2"
+  },
+  {
+   "step": 578,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 7,
+   "reason": "D2"
+  },
+  {
+   "step": 579,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 8,
+   "reason": "D2"
+  },
+  {
+   "step": 580,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 3,
+   "reason": "D2"
+  },
+  {
+   "step": 581,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 5,
+   "reason": "D2"
+  },
+  {
+   "step": 582,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 583,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 584,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 585,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 4,
+   "reason": "D3"
+  },
+  {
+   "step": 586,
+   "type": "remove",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 7,
+   "reason": "D3"
+  },
+  {
+   "step": 587,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 1,
+   "reason": "D3"
+  },
+  {
+   "step": 588,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 2,
+   "reason": "D3"
+  },
+  {
+   "step": 589,
+   "type": "remove",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 3,
+   "reason": "D3"
+  },
+  {
+   "step": 590,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 5,
+   "reason": "A3"
+  },
+  {
+   "step": 591,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 1,
+   "reason": "A1"
+  },
+  {
+   "step": 592,
+   "type": "remove",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 2,
+   "reason": "A1"
+  },
+  {
+   "step": 593,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 4,
+   "reason": "D2"
+  },
+  {
+   "step": 594,
+   "type": "assign",
+   "cell": [
+    1,
+    3
+   ],
+   "value": 4
+  },
+  {
+   "step": 595,
+   "type": "assign",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 5
+  },
+  {
+   "step": 596,
+   "type": "fail",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 5,
+   "reason": "D3"
+  },
+  {
+   "step": 597,
+   "type": "backtrack",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 5,
+   "restored": [
+    [
+     2,
+     1,
+     6
+    ],
+    [
+     2,
+     1,
+     8
+    ],
+    [
+     2,
+     1,
+     9
+    ]
+   ]
+  },
+  {
+   "step": 598,
+   "type": "assign",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 6
+  },
+  {
+   "step": 599,
+   "type": "fail",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 6,
+   "reason": "D3"
+  },
+  {
+   "step": 600,
+   "type": "backtrack",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 6,
+   "restored": [
+    [
+     2,
+     1,
+     5
+    ],
+    [
+     2,
+     1,
+     8
+    ],
+    [
+     2,
+     1,
+     9
+    ]
+   ]
+  },
+  {
+   "step": 601,
+   "type": "assign",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 8
+  },
+  {
+   "step": 602,
+   "type": "fail",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 8,
+   "reason": "D3"
+  },
+  {
+   "step": 603,
+   "type": "backtrack",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 8,
+   "restored": [
+    [
+     2,
+     1,
+     5
+    ],
+    [
+     2,
+     1,
+     6
+    ],
+    [
+     2,
+     1,
+     9
+    ]
+   ]
+  },
+  {
+   "step": 604,
+   "type": "assign",
+   "cell": [
+    2,
+    1
+   ],
+   "value": 9
+  },
+  {
+   "step": 605,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 9,
+   "reason": "A2"
+  },
+  {
+   "step": 606,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 2,
+   "reason": "D4"
+  },
+  {
+   "step": 607,
+   "type": "remove",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 2,
+   "reason": "D4"
+  },
+  {
+   "step": 608,
+   "type": "remove",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 3,
+   "reason": "A3"
+  },
+  {
+   "step": 609,
+   "type": "remove",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 1,
+   "reason": "D1"
+  },
+  {
+   "step": 610,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 3,
+   "reason": "A2"
+  },
+  {
+   "step": 611,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 6,
+   "reason": "A2"
+  },
+  {
+   "step": 612,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 4,
+   "reason": "D4"
+  },
+  {
+   "step": 613,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 5,
+   "reason": "D4"
+  },
+  {
+   "step": 614,
+   "type": "remove",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 7,
+   "reason": "D4"
+  },
+  {
+   "step": 615,
+   "type": "remove",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 2,
+   "reason": "A2"
+  },
+  {
+   "step": 616,
+   "type": "remove",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 1,
+   "reason": "D2"
+  },
+  {
+   "step": 617,
+   "type": "assign",
+   "cell": [
+    2,
+    2
+   ],
+   "value": 3
+  },
+  {
+   "step": 618,
+   "type": "assign",
+   "cell": [
+    2,
+    3
+   ],
+   "value": 1
+  },
+  {
+   "step": 619,
+   "type": "assign",
+   "cell": [
+    2,
+    4
+   ],
+   "value": 8
+  },
+  {
+   "step": 620,
+   "type": "assign",
+   "cell": [
+    3,
+    1
+   ],
+   "value": 5
+  },
+  {
+   "step": 621,
+   "type": "assign",
+   "cell": [
+    3,
+    2
+   ],
+   "value": 1
+  },
+  {
+   "step": 622,
+   "type": "assign",
+   "cell": [
+    3,
+    3
+   ],
+   "value": 2
+  },
+  {
+   "step": 623,
+   "type": "assign",
+   "cell": [
+    3,
+    4
+   ],
+   "value": 3
+  },
+  {
+   "step": 624,
+   "type": "assign",
+   "cell": [
+    4,
+    2
+   ],
+   "value": 9
+  },
+  {
+   "step": 625,
+   "type": "assign",
+   "cell": [
+    4,
+    3
+   ],
+   "value": 7
+  },
+  {
+   "step": 626,
+   "type": "solved"
+  }
+ ]
+}

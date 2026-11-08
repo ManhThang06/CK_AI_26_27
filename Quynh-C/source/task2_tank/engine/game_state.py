@@ -3,7 +3,8 @@ from .constants import (Action, Direction, MOVE_DIRECTION, BULLET_SPEED,
 from .entities import Tank, Base, Bullet
 
 class GameState:
-    def __init__(self, width, height, walls, tanks, bases, bullets, cycle, pending):
+    def __init__(self, width, height, walls, tanks, bases, bullets, cycle, pending,
+                 max_cycles=MAX_CYCLES):
         self.width = width
         self.height = height
         self.walls = walls      
@@ -11,17 +12,18 @@ class GameState:
         self.bases = bases      
         self.bullets = bullets  
         self.cycle = cycle
-        self.pending = pending  
+        self.pending = pending
+        self.max_cycles = max_cycles
 
     @staticmethod
-    def from_map(game_map):
+    def from_map(game_map, max_cycles=MAX_CYCLES):
         walls = {pos: WALL_HP for pos in game_map.walls}
         (x1, y1), (x2, y2) = game_map.tank_pos
         tanks = [Tank(x1, y1, GameState._face(x1, y1, x2, y2)),
                  Tank(x2, y2, GameState._face(x2, y2, x1, y1))]
         bases = [Base(*game_map.base_pos[0]), Base(*game_map.base_pos[1])]
         return GameState(game_map.width, game_map.height, walls,
-                         tanks, bases, [], 0, None)
+                         tanks, bases, [], 0, None, max_cycles)
 
     @staticmethod
     def _face(x, y, tx, ty):
@@ -35,7 +37,7 @@ class GameState:
                          [self.tanks[0].clone(), self.tanks[1].clone()],
                          [self.bases[0].clone(), self.bases[1].clone()],
                          [b.clone() for b in self.bullets] if self.bullets else [],
-                         self.cycle, self.pending)
+                         self.cycle, self.pending, self.max_cycles)
 
     def player(self):
         return 0 if self.pending is None else 1
@@ -54,7 +56,7 @@ class GameState:
     def is_terminal(self):
         if self.pending is not None:    
             return False
-        return self._max_lost() or self._min_lost() or self.cycle >= MAX_CYCLES
+        return self._max_lost() or self._min_lost() or self.cycle >= self.max_cycles
 
     def utility(self):
         max_lost, min_lost = self._max_lost(), self._min_lost()
