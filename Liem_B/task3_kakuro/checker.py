@@ -31,8 +31,6 @@ class KakuroChecker:
                 return False, f"Sai tong tai run {run_cells}: tong={sum(values)} != clue={clue_sum}"
 
         return True, "Loi giai Kakuro hop le 100%"
-
-
 # --- Unit Tests chung minh checker.py bat loi chinh xac ---
 def run_checker_unit_tests():
     # Gia lap 1 bang Kakuro nho gom 4 o trang
@@ -44,32 +42,26 @@ def run_checker_unit_tests():
         (12, [(1, 2), (2, 2)]),  # Cot 2: tong = 12
     ]
     checker = KakuroChecker(white_cells, clues)
-
     # Test 1: Bang giai dung ((1,1)=1, (1,2)=3, (2,1)=2, (2,2)=9)
     valid_assign = {(1, 1): 1, (1, 2): 3, (2, 1): 2, (2, 2): 9}
     ok, msg = checker.check_solution(valid_assign)
     assert ok is True, msg
     print("Test 1 (Bang hop le):", msg)
-
     # Test 2: Bang dien thieu o
     missing_assign = {(1, 1): 1, (1, 2): 3, (2, 1): 2}
     ok, msg = checker.check_solution(missing_assign)
     assert ok is False
     print("Test 2 (Bat loi thieu o):", msg)
-
     # Test 3: Bang trung so trong cung 1 run (2 + 2 = 4)
     dup_assign = {(1, 1): 2, (1, 2): 2, (2, 1): 1, (2, 2): 9}
     ok, msg = checker.check_solution(dup_assign)
     assert ok is False
     print("Test 3 (Bat loi trung so Alldiff):", msg)
-
     # Test 4: Bang cong sai tong
     wrong_sum_assign = {(1, 1): 1, (1, 2): 4, (2, 1): 2, (2, 2): 9}
     ok, msg = checker.check_solution(wrong_sum_assign)
     assert ok is False
     print("Test 4 (Bat loi sai tong Sum):", msg)
     print("-> Tat ca Unit Tests cua KakuroChecker: PASS")
-
-
 if __name__ == "__main__":
     run_checker_unit_tests()
