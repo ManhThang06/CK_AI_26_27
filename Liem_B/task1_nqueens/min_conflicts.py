@@ -1,7 +1,6 @@
 import random
 import time
 
-
 class Board:
     def __init__(self, N, rng=None, state=None):
         self.N = N
@@ -75,8 +74,11 @@ class Board:
 
 
 class MinConflictsSolver:
-    def __init__(self, N, max_steps=50000, mode="standard", tabu_size=5):
+    def __init__(self, N, max_steps=50000, mode="standard", tabu_size=5, restart_after=None):
         self.N = N
+        # restart_after = K: neu K buoc lien tiep khong tim duoc h nho hon ky luc thi xep lai quan co ngau nhien
+        # (random restart, Lec 06). None = Min-Conflicts thuan nhu Lec 08, co the ket o cuc tri dia phuong.
+        self.restart_after = restart_after
         self.max_steps = max_steps
         self.mode = mode  # "standard", "max_tabu", hoac "roulette"
         self.tabu_size = tabu_size
@@ -137,6 +139,9 @@ class MinConflictsSolver:
         self.tabu_list = []
 
         start_time = time.perf_counter()
+        best_h = board.total_conflicts()
+        since_best = 0
+        restarts = 0
 
         for step in range(self.max_steps):
             conflicted_cols = board.conflicted_columns()
@@ -147,6 +152,7 @@ class MinConflictsSolver:
                     "success": True,
                     "solution": list(board.state),
                     "steps": step,
+                    "restarts": restarts,
                     "time_sec": time.perf_counter() - start_time,
                 }
 
@@ -154,19 +160,33 @@ class MinConflictsSolver:
             best_row = self.select_best_row(board, col)
             board.move_queen(col, best_row)
 
+            if self.restart_after is not None:
+                h = board.total_conflicts()
+                if h < best_h:
+                    best_h, since_best = h, 0
+                else:
+                    since_best += 1
+                if since_best >= self.restart_after:      # bi ket -> xep lai ban co
+                    board = Board(self.N, rng=rng)
+                    self.tabu_list = []
+                    best_h, since_best = board.total_conflicts(), 0
+                    restarts += 1
+
         # Kiem tra lai sau buoc cuoi cung
         solved = len(board.conflicted_columns()) == 0
         return {
             "success": solved,
             "solution": list(board.state) if solved else None,
             "steps": self.max_steps,
+            "restarts": restarts,
             "time_sec": time.perf_counter() - start_time,
         }
     
 def slow_conflicts(state):
     """
-    Tinh tong so cap quan hau tan cong nhau.
-    Moi cot co mot quan hau.
+    Dem so cap quan hau tan cong nhau bang cach duyet moi cap (O(N^2)).
+    Moi cot co mot quan hau; state[c] = hang cua quan hau o cot c.
+    Dung de kiem tra doc lap voi Board.total_conflicts() (ban dem nhanh).
     """
     N = len(state)
     conflicts = 0
@@ -176,7 +196,8 @@ def slow_conflicts(state):
             r2 = state[c2]
             if r1 == r2 or abs(r1 - r2) == abs(c1 - c2):
                 conflicts += 1
-        return conflicts
+    return conflicts   # return nam NGOAI hai vong for (ban cu thut vao trong nen chi dem cot 0)
+
 
 if __name__ == "__main__":
     for mode in ["standard", "max_tabu", "roulette"]:
