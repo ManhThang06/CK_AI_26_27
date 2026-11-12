@@ -1,36 +1,19 @@
-# Task 1.3: Mô hình hóa Min-Conflicts và Đề xuất Heuristic chọn biến
-## 1. Biểu diễn trạng thái (Complete-State Formulation)
-- **Biến (Variables):** $X = \{X_0, X_1, \dots, X_{N-1}\}$, trong đó $X_c$ biểu diễn vị trí hàng của quân hậu tại cột $c$.
-- **Miền giá trị (Domains):** $D(X_c) = \{0, 1, \dots, N-1\}$ với mọi $c \in [0, N-1]$. Cách biểu diễn này tự động thỏa mãn ràng buộc không có 2 quân hậu nào đứng cùng một cột.
-- **Đếm xung đột $O(1)$:** Sử dụng 3 mảng đếm số lượng quân hậu trên từng hàng ngang (`row_count`), đường chéo chính (`diag1_count` với chỉ số $r - c + N - 1$) và đường chéo phụ (`diag2_count` với chỉ số $r + c$).
+# Heuristic chon bien cho Min-Conflicts (1.3)
 
-## 2. Các phương pháp chọn biến (Variable Selection Heuristics)
-### 2.1. Bản chuẩn (Standard Min-Conflicts - Lec 08 Slide 30)
-- **Cơ chế:** Chọn ngẫu nhiên đồng đều (uniform random) một cột $c$ từ tập các cột đang có xung đột (`conflicted_cols`).
-- **Nhược điểm:** Không tận dụng được thông tin mức độ nghiêm trọng của xung đột tại mỗi cột, dẫn đến số bước lặp lớn khi $N$ tăng.
+Ban chuan (Lec 08 tr.30): chon NGAU NHIEN 1 bien dang xung dot, gan gia tri it xung dot nhat (hoa thi ngau nhien).
+Ban de xuat chi doi buoc **chon bien**; chon gia tri van nhu ban chuan, de so sanh cong bang.
 
-### 2.2. Đề xuất 1: Max-Conflict kết hợp Danh sách cấm (Max-Tabu)
-- **Ý tưởng:** Ưu tiên chọn cột $c \in \text{conflicted\_cols}$ có số lượng xung đột hiện tại lớn nhất để giảm nhanh hàm mục tiêu $h$.
-- **Xử lý kẹt (Plateau / Cycling):** Nếu chỉ chọn cực đại thuần túy, thuật toán dễ bị lặp vô hạn giữa một nhóm nhỏ các cột. Ta duy trì một danh sách `tabu_list` lưu lại $k$ cột vừa mới được chọn gần nhất ($k = \text{tabu\_size}$). Ở mỗi bước, chỉ xét các cột xung đột không nằm trong `tabu_list` (nếu tất cả các cột xung đột đều nằm trong Tabu thì mới nới lỏng để xét toàn bộ).
+| Ung vien | Y tuong | Ly do | Rui ro |
+|---|---|---|---|
+| `max_tabu` (chon lam heuristic chinh) | Chon cot xung dot NHIEU NHAT; hoa thi ngau nhien; cot vua chon nam trong danh sach tabu (do dai `max(2, min(10, N//5))`) mot thoi gian | Sua cot "te nhat" truoc giam h nhanh hon; tabu chong lap lai cung mot cot | Ket o cuc tri dia phuong (h dung yen = 1) -> that bai o N=8 (4/30 lan); khong lien quan do dai tabu (thu 2..6 deu 26-27/30) |
+| `roulette` | Chon cot xung dot voi xac suat ti le so xung dot | Uu tien cot te nhung van giu ngau nhien de thoat cuc tri dia phuong | Gan nhu bang ban chuan khi xung dot deu nhau |
 
-### 2.3. Đề xuất 2: Chọn theo xác suất tỷ lệ thuận xung đột (Roulette Wheel)
-- **Ý tưởng:** Mỗi cột $c \in \text{conflicted\_cols}$ được gán trọng số $w_c = \text{conflicts}(c, \text{state}[c])$. Xác suất cột $c$ được chọn là:
-  $$P(c) = \frac{w_c}{\sum_{j \in \text{conflicted\_cols}} w_j}$$
-- **Ưu điểm:** Vừa hướng việc tìm kiếm vào các cột nhiều xung đột (exploitation), vừa giữ lại xác suất nhỏ cho các cột ít xung đột để thoát khỏi cực trị địa phương mà không cần bộ nhớ phụ (exploration).
+Cach do: 30 seed co dinh moi N, cung trang thai khoi tao, cung max_steps = 20000; do ti le thanh cong, trung vi va TB so buoc
+(lan thanh cong), thoi gian/lan. Ket qua (xem `experiments/t1_minconflicts.ipynb`): `max_tabu` giam so buoc khoang 30-35%
+o N >= 16 nhung thoi gian gan nhu bang ban chuan khi N lon (moi buoc ton hon: phai tinh xung dot cua moi cot).
 
-## 3. Thiết kế thực nghiệm và Kết quả (30 Seeds, max_steps = 20000)
-- **Phương pháp đo:** Với mỗi kích thước $N \in \{8, 16, 32, 64, 100, 200\}$, chạy lặp 30 seed cố định (`seed = 1..30`). Ở mỗi cặp $(N, \text{seed})$, cả 3 chế độ dùng chung một trạng thái bàn cờ khởi tạo ban đầu (`init_state`) để đảm bảo tính công bằng.
-- **Độ đo:** Tỷ lệ thành công (`Success Rate %`), Số bước trung bình (`Avg Steps`), Thời gian chạy trung bình (`Avg Time ms`).
-
-| N | Standard (Steps / Time) | Max-Tabu (Steps / Time) | Roulette (Steps / Time) | Tỷ lệ thành công |
-|---:|:---:|:---:|:---:|:---:|
-| 8 | 38.53 / 0.197 ms | **18.03 / 0.107 ms** | 45.20 / 0.303 ms | 100.0% |
-| 16 | 64.00 / 0.531 ms | **26.70 / 0.269 ms** | 75.40 / 0.744 ms | 100.0% |
-| 32 | 74.40 / 1.108 ms | **39.63 / 0.692 ms** | 82.13 / 1.493 ms | 100.0% |
-| 64 | 116.20 / 3.386 ms | **59.20 / 2.004 ms** | 108.63 / 3.576 ms | 100.0% |
-| 100 | 141.63 / 5.979 ms | **88.17 / 4.450 ms** | 134.17 / 6.836 ms | 100.0% |
-| 200 | 198.07 / 17.991 ms | **145.37 / 15.352 ms** | 189.23 / 18.907 ms | 100.0% |
-
-## 4. Nhận xét
-- **Max-Tabu** vượt trội hoàn toàn so với bản chuẩn trên mọi kích thước $N$: giảm từ **35% đến 58% số bước di chuyển** và giảm đáng kể thời gian thực thi nhờ giải quyết trực tiếp các quân hậu gây xung đột nhiều nhất mà không bị lặp chu trình.
-- **Roulette** bắt đầu cho thấy lợi thế về số bước so với bản chuẩn khi $N \ge 64$, tuy nhiên chi phí tính toán mảng trọng số ở mỗi bước khiến thời gian thực thi (ms) cao hơn nhẹ so với bản chuẩn.
+## Vi sao co that bai, va cach khac phuc
+Min-Conflicts chi nhin 1 quan hau moi buoc va gan no vao hang it xung dot nhat. Khi h = 1 (con dung 1 cap an nhau) co
+the khong quan nao co nuoc di giam h -> bi **ket o cuc tri dia phuong** (ca "plateau"), lap lai vo han. Them ngau nhien khi
+chon cot (thu p = 0.05..0.2) KHONG giup, vi van moi ket o buoc chon gia tri. **Random restart** (Lec 06): sau `restart_after`
+buoc khong cai thien ky luc h thi xep lai ban co -> 30/30 thanh cong o moi N, moi variant (xem notebook, bang B).

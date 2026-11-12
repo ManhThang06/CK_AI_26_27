@@ -1,258 +1,77 @@
-import copy
+"""Chay:  python -m task2_tank.gui.app   (tu thu muc chua task2_tank)"""
+import os
+
 import pygame
-from task2_tank.agents.base_agent import BaseAgent
-from task2_tank.agents.plugin_loader import PluginLoader
-from task2_tank.gui.menu import GameMenu
-from task2_tank.gui.renderer import GameRenderer
+
+from CK_AI_26_27.Liem_B.task2_tank.engine import Action
+from CK_AI_26_27.Liem_B.task2_tank.plugin_loader import AgentLoadError
+from CK_AI_26_27.Liem_B.task2_tank.gui.match import Match
+from CK_AI_26_27.Liem_B.task2_tank.gui.menu import GameMenu
+from CK_AI_26_27.Liem_B.task2_tank.gui.renderer import GameRenderer
+
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+KEYS = {pygame.K_UP: Action.MOVE_UP, pygame.K_DOWN: Action.MOVE_DOWN, pygame.K_LEFT: Action.MOVE_LEFT,
+        pygame.K_RIGHT: Action.MOVE_RIGHT, pygame.K_SPACE: Action.FIRE, pygame.K_s: Action.STAY}
 
 
-class TankGameState:
-    """Trang thai chuan cua Tank Battle theo dung quy tac de bai"""
-    DIR_DELTA = {
-        "UP": (-1, 0),
-        "DOWN": (1, 0),
-        "LEFT": (0, -1),
-        "RIGHT": (0, 1),
-    }
-
-    def __init__(self, rows=11, cols=11):
-        self.rows = rows
-        self.cols = cols
-        self.turn = 0
-        # Tank: Initial HP = 6, Damage = 1
-        self.tanks = {
-            1: {"pos": (rows - 2, 1), "dir": "UP", "hp": 6},
-            2: {"pos": (1, cols - 2), "dir": "DOWN", "hp": 6},
-        }
-        # Base: Initial HP = 9, Damage = 1
-        self.bases = {
-            1: {"pos": (rows - 1, cols // 2), "hp": 9},
-            2: {"pos": (0, cols // 2), "hp": 9},
-        }
-        # Wall: Initial HP = 3, Damage = 1
-        self.walls = {}
-        for c in range(2, cols - 2):
-            if c != cols // 2:
-                self.walls[(rows // 2, c)] = 3
-        self.walls[(rows - 2, cols // 2)] = 3
-        self.walls[(1, cols // 2)] = 3
-
-        self.bullets = []
-
-    def clone(self):
-        return copy.deepcopy(self)
-
-    def is_terminal(self):
-        for pid in (1, 2):
-            if self.tanks[pid]["hp"] <= 0 or self.bases[pid]["hp"] <= 0:
-                return True
-        return False
-
-    def get_winner(self):
-        p1_alive = self.tanks[1]["hp"] > 0 and self.bases[1]["hp"] > 0
-        p2_alive = self.tanks[2]["hp"] > 0 and self.bases[2]["hp"] > 0
-        if p1_alive and not p2_alive:
-            return 1
-        if p2_alive and not p1_alive:
-            return 2
-        return 0
-
-    def apply_action(self, player_id, action):
-        tank = self.tanks[player_id]
-        if tank["hp"] <= 0:
-            return
-
-        if action in ("MOVE_UP", "MOVE_DOWN", "MOVE_LEFT", "MOVE_RIGHT"):
-            direction = action.replace("MOVE_", "")
-            tank["dir"] = direction
-            dr, dc = self.DIR_DELTA[direction]
-            nr, nc = tank["pos"][0] + dr, tank["pos"][1] + dc
-
-            if 0 <= nr < self.rows and 0 <= nc < self.cols:
-                occupied = (
-                    (nr, nc) in self.walls
-                    or any(b["pos"] == (nr, nc) for b in self.bases.values())
-                    or any(t["pos"] == (nr, nc) and t["hp"] > 0 for t in self.tanks.values())
-                )
-                if not occupied:
-                    tank["pos"] = (nr, nc)
-
-        elif action == "FIRE":
-            self.bullets.append({
-                "pos": tank["pos"],
-                "dir": tank["dir"],
-                "owner": player_id,
-            })
-
-    def update_bullets_cycle(self):
-        """
-        Moi chu ky game, dan bay toi da 3 o (speed = 3 cells/cycle).
-        Xu ly tung o mot va kiem tra va cham ngay sau moi o.
-        """
-        active_bullets = []
-        for b in self.bullets:
-            dr, dc = self.DIR_DELTA[b["dir"]]
-            hit = False
-            for _ in range(3):
-                nr, nc = b["pos"][0] + dr, b["pos"][1] + dc
-                if not (0 <= nr < self.rows and 0 <= nc < self.cols):
-                    hit = True
-                    break
-
-                b["pos"] = (nr, nc)
-
-                # Kiem tra trung tuong (Wall)
-                if (nr, nc) in self.walls:
-                    self.walls[(nr, nc)] -= 1
-                    if self.walls[(nr, nc)] <= 0:
-                        del self.walls[(nr, nc)]
-                    hit = True
-                    break
-
-                # Kiem tra trung Base
-                for pid, base in self.bases.items():
-                    if base["pos"] == (nr, nc) and base["hp"] > 0:
-                        base["hp"] -= 1
-                        hit = True
-                        break
-                if hit:
-                    break
-
-                # Kiem tra trung Tank
-                for pid, tank in self.tanks.items():
-                    if pid != b["owner"] and tank["pos"] == (nr, nc) and tank["hp"] > 0:
-                        tank["hp"] -= 1
-                        hit = True
-                        break
-                if hit:
-                    break
-
-            if not hit:
-                active_bullets.append(b)
-
-        self.bullets = active_bullets
-        self.turn += 1
-
-
-class SimpleBuiltinAgent(BaseAgent):
-    """Agent mac dinh dung de test GUI khi chua nap file ngoai"""
-    def get_action(self, state):
-        my_tank = state.tanks[self.player_id]
-        enemy_id = 2 if self.player_id == 1 else 1
-        enemy_tank = state.tanks[enemy_id]
-
-        mr, mc = my_tank["pos"]
-        er, ec = enemy_tank["pos"]
-
-        # Neu cung hang hoac cung cot voi xe tang dich thi ban
-        if mr == er or mc == ec:
-            return "FIRE"
-        if mr > er:
-            return "MOVE_UP"
-        if mr < er:
-            return "MOVE_DOWN"
-        if mc > ec:
-            return "MOVE_LEFT"
-        return "MOVE_RIGHT"
-
-
-class TankBattleApp:
-    def __init__(self):
-        pygame.init()
-        self.cell_size = 48
-        self.rows = 11
-        self.cols = 11
-        width = self.cols * self.cell_size
-        height = self.rows * self.cell_size + 74
-        self.screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption("TDTU AI - Tank Battle 3D Arena")
-
-    def _resolve_agent(self, spec_str, player_id):
-        if spec_str == "Built-in Heuristic Agent":
-            return SimpleBuiltinAgent(player_id=player_id)
-        return PluginLoader.load_agent_from_file(spec_str, player_id=player_id)
-
-    def _get_human_action(self):
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return "QUIT"
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        return "MOVE_UP"
-                    if event.key == pygame.K_DOWN:
-                        return "MOVE_DOWN"
-                    if event.key == pygame.K_LEFT:
-                        return "MOVE_LEFT"
-                    if event.key == pygame.K_RIGHT:
-                        return "MOVE_RIGHT"
-                    if event.key == pygame.K_SPACE:
-                        return "FIRE"
-                    if event.key == pygame.K_s:
-                        return "STAY"
-
-    def _show_winner_banner(self, winner):
-        w, h = self.screen.get_size()
-        font_big = pygame.font.SysFont("Arial", 26, bold=True)
-        box = pygame.Rect(w // 2 - 170, h // 2 - 55, 340, 90)
-        pygame.draw.rect(self.screen, (10, 12, 16), (box.x + 5, box.y + 7, box.w, box.h), border_radius=10)
-        pygame.draw.rect(self.screen, (28, 35, 48), box, border_radius=10)
-        pygame.draw.rect(self.screen, (255, 215, 60), box, 3, border_radius=10)
-
-        msg = f"PLAYER {winner} WINS!" if winner in (1, 2) else "DRAW GAME!"
-        surf = font_big.render(msg, True, (255, 225, 80))
-        self.screen.blit(surf, (box.centerx - surf.get_width() // 2, box.centery - surf.get_height() // 2))
-        pygame.display.flip()
-
-    def run(self):
-        menu = GameMenu(self.screen)
-        config = menu.run()
-        if config is None:
-            pygame.quit()
-            return
-
-        state = TankGameState(self.rows, self.cols)
-        renderer = GameRenderer(self.screen, self.cell_size)
-
-        agent1 = None if config["mode"] == "Player vs Agent" else self._resolve_agent(config["p1_agent"], 1)
-        agent2 = self._resolve_agent(config["p2_agent"], 2)
-
-        clock = pygame.time.Clock()
-        running = True
-
-        while running and not state.is_terminal():
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-            renderer.draw(state)
-
-            # Lay hanh dong cua Player 1
-            if agent1 is None:
-                act1 = self._get_human_action()
-                if act1 == "QUIT":
-                    break
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((640, 360))
+    pygame.display.set_caption("TDTU AI - Tank Battle")
+    while True:
+        cfg = GameMenu(screen, BASE).run()
+        if cfg is None:
+            break
+        menu = GameMenu(screen, BASE)
+        log = []
+        try:
+            a1, a2 = menu.build(cfg["a1"], log), menu.build(cfg["a2"], log)
+        except AgentLoadError as err:
+            print("Khong nap duoc agent:", err)
+            continue                                  # quay lai menu, khong sap
+        match = Match(cfg["map"], a1, a2)
+        names = (menu.label(cfg["a1"]), menu.label(cfg["a2"]))
+        cs = 48
+        screen = pygame.display.set_mode(GameRenderer.size_for(match.state, cs))
+        rend = GameRenderer(screen, cs, names)
+        clock, quit_all, last_msg = pygame.time.Clock(), False, ""
+        while not match.finished() and not quit_all:
+            human = None
+            for ev in pygame.event.get():             # luon bom event de cua so khong "not responding"
+                if ev.type == pygame.QUIT:
+                    quit_all = True
+                if ev.type == pygame.KEYDOWN and ev.key in KEYS:
+                    human = KEYS[ev.key]
+                if ev.type == pygame.KEYDOWN and ev.key == pygame.K_ESCAPE:
+                    quit_all = True
+            if match.waiting_for_human():
+                if human is None:
+                    rend.draw(match.state, "Luot cua ban: phim mui ten / SPACE ban / S dung yen")
+                    clock.tick(30)
+                    continue
+                match.step(human)
             else:
-                act1 = agent1.get_action(state)
-
-            # Lay hanh dong cua Player 2
-            act2 = agent2.get_action(state)
-
-            state.apply_action(1, act1)
-            state.apply_action(2, act2)
-            state.update_bullets_cycle()
-
-            renderer.draw(state)
-            clock.tick(4)
-
-        winner = state.get_winner()
-        print(f"Game ket thuc! Nguoi chien thang: Player {winner}")
-        if running:
-            self._show_winner_banner(winner)
-            pygame.time.wait(2200)
-        pygame.quit()
+                last_msg = "%s: %s" % ("MAX" if match.state.player() == 0 else "MIN", match.step().name)
+                clock.tick(6)
+            rend.draw(match.state, last_msg + ("  | " + log[-1] if log else ""))
+        if not quit_all:
+            msg = match.result_text()
+            match.save_log(os.path.join(BASE, "logs", "last_match.csv"))
+            rend.draw(match.state, msg + " - ESC/dong cua so de ve menu")
+            waiting = True
+            while waiting:
+                for ev in pygame.event.get():
+                    if ev.type == pygame.QUIT:
+                        quit_all = waiting = False
+                        pygame.quit()
+                        return
+                    if ev.type == pygame.KEYDOWN:
+                        waiting = False
+        if quit_all:
+            break
+        screen = pygame.display.set_mode((640, 360))
+    pygame.quit()
 
 
 if __name__ == "__main__":
-    app = TankBattleApp()
-    app.run()
+    main()

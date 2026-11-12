@@ -1,14 +1,18 @@
-VALID_ACTIONS = ("MOVE_UP", "MOVE_DOWN", "MOVE_LEFT", "MOVE_RIGHT", "FIRE", "STAY")
+class Agent:
+    """Interface every tank agent follows (also used for agents loaded from other groups).
 
+    choose_action(state) gets a GameState in which it is this agent's turn
+    (state.player() tells which side) and returns one Action.
+    """
+    name = "agent"
 
-class BaseAgent:
-    def __init__(self, player_id, name="BaseAgent"):
-        self.player_id = player_id
-        self.name = name
+    def __init__(self):
+        self.nodes = 0          # states visited in the last search
+        self.last_depth = 0     # depth (in plies) reached in the last search
 
-    def get_action(self, state):
-        """
-        Nhan vao ban sao an toan (state.clone()) cua GameState hien tai.
-        Tra ve 1 trong 6 chuoi hanh dong hop le trong VALID_ACTIONS.
-        """
-        return "STAY"
+    def reset_stats(self):
+        self.nodes = 0
+        self.last_depth = 0
+
+    def choose_action(self, state):
+        raise NotImplementedError
