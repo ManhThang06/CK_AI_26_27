@@ -16,7 +16,6 @@ class Board:
         if len(self.state) != N or any(type(row) is not int or not 0 <= row < N for row in self.state):
             raise ValueError("Trạng thái phải có đúng N hàng, mỗi hàng thuộc 0 đến N - 1")
 
-        # Ba mảng đếm hậu trên từng hàng và hai hướng đường chéo.
         self.row_count = [0] * N
         self.diag1_count = [0] * (2 * N - 1)
         self.diag2_count = [0] * (2 * N - 1)
@@ -33,7 +32,6 @@ class Board:
         return r + c
 
     def _add_queen(self, c, r):
-        # Mỗi hậu đang có trên hàng hoặc đường chéo tạo thêm một cặp xung đột.
         self._conflict_pairs += (
             self.row_count[r]
             + self.diag1_count[self._diag1(r, c)]
@@ -58,13 +56,11 @@ class Board:
         d2 = self._diag2(r, c)
         conflicts = self.row_count[r] + self.diag1_count[d1] + self.diag2_count[d2]
 
-        # Tại hàng hiện tại, trừ chính hậu đang được tính trong cả ba mảng.
         if self.state[c] == r:
             conflicts -= 3
         return conflicts
 
     def total_conflicts(self):
-        """Trả về số cặp xung đột trong O(1), cập nhật khi thêm hoặc bỏ hậu."""
         return self._conflict_pairs
 
     def conflicted_columns(self):
@@ -97,8 +93,6 @@ class MinConflictsSolver:
         if restart_after is not None and (type(restart_after) is not int or restart_after < 1):
             raise ValueError("Ngưỡng khởi động lại phải là số nguyên dương hoặc None")
         self.N = N
-        # Khởi động lại sau K bước không cải thiện kỷ lục của lần khởi động hiện tại.
-        # Mặc định None để dùng Min-Conflicts chuẩn theo Lecture 08.
         self.restart_after = restart_after
         self.max_steps = max_steps
         self.mode = mode
@@ -106,15 +100,12 @@ class MinConflictsSolver:
         self.tabu_list = []
 
     def select_variable(self, board, conflicted_cols):
-        # Lecture 08, trang 30 chọn ngẫu nhiên một biến đang xung đột.
         if self.mode == "standard":
             return board.rng.choice(conflicted_cols)
 
-        # Ưu tiên cột nhiều xung đột, hạn chế chọn lại các cột gần đây.
         if self.mode == "max_tabu":
             valid_cols = [c for c in conflicted_cols if c not in self.tabu_list]
             if not valid_cols:
-                # Nới điều kiện tabu nếu mọi cột xung đột đều đang bị hạn chế.
                 valid_cols = conflicted_cols
 
             max_c = -1
@@ -133,7 +124,6 @@ class MinConflictsSolver:
                 self.tabu_list.pop(0)
             return chosen
 
-        # Chọn biến theo xác suất tỷ lệ với số xung đột của biến đó.
         if self.mode == "roulette":
             weights = [board.conflicts_at(c, board.state[c]) for c in conflicted_cols]
             return board.rng.choices(conflicted_cols, weights=weights, k=1)[0]
@@ -152,7 +142,6 @@ class MinConflictsSolver:
             elif c_val == min_c:
                 best_rows.append(r)
 
-        # Phá hòa ngẫu nhiên giữa các hàng có số xung đột nhỏ nhất.
         return board.rng.choice(best_rows)
 
     def solve(self, initial_state=None, seed=None):
@@ -194,7 +183,6 @@ class MinConflictsSolver:
                     best_h, since_best = board.total_conflicts(), 0
                     restarts += 1
 
-        # Kiểm tra cả nghiệm xuất hiện sau bước cuối được phép.
         solved = len(board.conflicted_columns()) == 0
         return {
             "success": solved,
@@ -205,11 +193,6 @@ class MinConflictsSolver:
         }
     
 def slow_conflicts(state):
-    """
-    Đếm số cặp hậu tấn công nhau bằng cách duyệt từng cặp trong O(N²).
-    Mỗi cột có một hậu, state[c] là hàng của hậu ở cột c.
-    Dùng để kiểm tra độc lập bộ đếm nhanh của Board.
-    """
     N = len(state)
     conflicts = 0
     for c1 in range(N):
@@ -219,7 +202,6 @@ def slow_conflicts(state):
             if r1 == r2 or abs(r1 - r2) == abs(c1 - c2):
                 conflicts += 1
     return conflicts
-
 
 if __name__ == "__main__":
     for mode in ["standard", "max_tabu", "roulette"]:

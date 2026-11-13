@@ -1,15 +1,7 @@
-"""Thực nghiệm 1.3 so sánh Min-Conflicts chuẩn với các heuristic chọn biến.
-
-Mỗi dòng CSV là một lần chạy, tương thích với analysis.py của Quỳnh.
-Cùng (N, seed) sử dụng cùng trạng thái ban đầu và ngân sách bước.
-restart=True bổ sung khởi động lại ngẫu nhiên khi trì trệ theo Lecture 06.
-Thống kê tính cả lần thất bại để phản ánh chi phí của toàn bộ lần thử.
-"""
 import csv
 import random
 import statistics
 from pathlib import Path
-
 from .min_conflicts import MinConflictsSolver, slow_conflicts
 
 N_VALUES = [8, 16, 32, 64, 100, 200]
@@ -17,11 +9,8 @@ SEEDS = list(range(1, 31))
 VARIANTS = ["standard", "max_tabu", "roulette"]
 MAX_STEPS = 20000
 
-
 def restart_limit(n):
-    """Số bước không cải thiện kỷ lục trước khi khởi động lại ngẫu nhiên."""
     return max(50, n)
-
 
 def run_all(n_values=N_VALUES, seeds=SEEDS, variants=VARIANTS, max_steps=MAX_STEPS, restart=False):
     rows = []
@@ -41,7 +30,6 @@ def run_all(n_values=N_VALUES, seeds=SEEDS, variants=VARIANTS, max_steps=MAX_STE
                              "time": "%.6f" % res["time_sec"], "success": int(ok)})
     return rows
 
-
 def save_csv(rows, path):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -50,9 +38,7 @@ def save_csv(rows, path):
         w.writeheader()
         w.writerows(rows)
 
-
 def summarize(rows):
-    """Tỷ lệ thành công và thống kê mọi lần chạy, kể cả lần hết ngân sách."""
     out = []
     for n in sorted({int(r["N"]) for r in rows}):
         for v in dict.fromkeys(r["variant"] for r in rows if int(r["N"]) == n):
@@ -64,19 +50,17 @@ def summarize(rows):
                         statistics.pstdev(st), statistics.mean(tm), len(g) - len(ok)))
     return out
 
-
 def print_summary(summary):
     print("Số bước và thời gian tính trên mọi lần chạy, gồm cả lần hết ngân sách.")
     print("%4s %-9s %8s %8s %8s %8s %9s %5s" % ("N", "variant", "succ(%)", "med_st", "mean_st", "std_st", "ms/run", "fail"))
     for n, v, sr, med, mean, sd, ms, fail in summary:
         print("%4d %-9s %8.1f %8.1f %8.1f %8.1f %9.2f %5d" % (n, v, sr, med, mean, sd, ms, fail))
 
-
 if __name__ == "__main__":
     output_dir = Path(__file__).resolve().parents[1] / "experiments"
-    rows = run_all()                      # Min-Conflicts chuẩn theo Lecture 08.
+    rows = run_all()                      
     save_csv(rows, output_dir / "t1_minconflicts_runs.csv")
     print_summary(summarize(rows))
-    rows_rr = run_all(restart=True)       # Bổ sung khởi động lại khi trì trệ.
+    rows_rr = run_all(restart=True)      
     save_csv(rows_rr, output_dir / "t1_minconflicts_runs_restart.csv")
     print_summary(summarize(rows_rr))
