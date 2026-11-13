@@ -157,7 +157,6 @@ class MinConflictsSolver:
         for step in range(self.max_steps):
             conflicted_cols = board.conflicted_columns()
 
-            # Dừng khi không còn cột nào xung đột.
             if not conflicted_cols:
                 return {
                     "success": True,
