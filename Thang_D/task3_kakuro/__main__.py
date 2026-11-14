@@ -1,30 +1,20 @@
-"""Dong lenh: python -m task3_kakuro <solve|traces|bench> ... (chay tu thu muc cha cua task3_kakuro)."""
+"""Dong lenh: python -m task3_kakuro <solve|bench> ... (chay tu thu muc cha cua task3_kakuro).
+
+Giao dien: python -m task3_kakuro.ui.app
+"""
 import argparse
 import statistics
 from pathlib import Path
 
 from .puzzle import Puzzle
-from .solver import (BacktrackingSolver, TraceRecorder,
-                     VARIABLE_SELECTORS, VALUE_ORDERERS)
+from .solver import BacktrackingSolver, VARIABLE_SELECTORS, VALUE_ORDERERS
 
-ROOT = Path(__file__).resolve().parent
-PUZZLES = ROOT / "puzzles"
-TRACES = ROOT / "traces"
-
-# (ten file trace, file puzzle, bien, gia tri)
-DEFAULT_TRACES = [
-    ("assignment_5x5.json", "assignment_5x5.json", "mrv-degree", "lcv"),
-    ("assignment_9x9.json", "assignment_9x9.json", "mrv-degree", "lcv"),
-    ("backtrack_demo.json", "assignment_9x9.json", "mrv", "asc"),   # thu nhieu lan quay lui
-]
+PUZZLES = Path(__file__).resolve().parent / "puzzles"
 
 
-def build_solver(puzzle, variable, value, max_nodes, record=False):
-    solver = BacktrackingSolver(puzzle, VARIABLE_SELECTORS[variable](),
-                                      VALUE_ORDERERS[value](), max_nodes=max_nodes)
-    if record:
-        solver.rec = TraceRecorder(puzzle, solver.stats, solver.config)
-    return solver
+def build_solver(puzzle, variable, value, max_nodes):
+    return BacktrackingSolver(puzzle, VARIABLE_SELECTORS[variable](),
+                              VALUE_ORDERERS[value](), max_nodes=max_nodes)
 
 
 def print_grid(puzzle, solution):
@@ -34,30 +24,14 @@ def print_grid(puzzle, solution):
 
 def cmd_solve(args):
     puzzle = Puzzle.load(args.puzzle)
-    solver = build_solver(puzzle, args.variable, args.value, args.max_nodes, record=bool(args.trace))
-    result = solver.solve()
+    result = build_solver(puzzle, args.variable, args.value, args.max_nodes).solve()
     s = result.stats
     print(f"{puzzle.name}: {result.status}, verified={result.verified}")
     print(f"  config={args.variable}+{args.value}  nodes={s.nodes}  backtracks={s.backtracks}  "
           f"max_depth={s.max_depth}  pruned_init={s.pruned_init}  time={result.seconds * 1000:.2f} ms")
     if result.solution:
         print_grid(puzzle, result.solution)
-    if args.trace:
-        solver.rec.save(args.trace)
-        print(f"  trace: {len(solver.rec.events)} events -> {args.trace}")
     return 0 if result.status == "solved" else 1
-
-
-def cmd_traces(args):
-    for trace_name, puzzle_name, variable, value in DEFAULT_TRACES:
-        puzzle = Puzzle.load(PUZZLES / puzzle_name)
-        solver = build_solver(puzzle, variable, value, args.max_nodes, record=True)
-        result = solver.solve()
-        solver.rec.save(TRACES / trace_name)
-        print(f"{trace_name}: {variable}+{value}, {result.status}, "
-              f"{len(solver.rec.events)} events, nodes={result.stats.nodes}, "
-              f"backtracks={result.stats.backtracks}")
-    return 0
 
 
 def cmd_bench(args):
@@ -82,17 +56,12 @@ def main():
     parser = argparse.ArgumentParser(prog="task3_kakuro", description="Kakuro CSP solver")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p = sub.add_parser("solve", help="giai mot puzzle, tuy chon xuat trace cho UI")
+    p = sub.add_parser("solve", help="giai mot puzzle va in nghiem, thong ke")
     p.add_argument("puzzle", type=Path)
     p.add_argument("--variable", choices=VARIABLE_SELECTORS, default="mrv-degree")
     p.add_argument("--value", choices=VALUE_ORDERERS, default="lcv")
     p.add_argument("--max-nodes", type=int, default=None)
-    p.add_argument("--trace", type=Path, help="ghi trace JSON de phat lai trong UI")
     p.set_defaults(func=cmd_solve)
-
-    p = sub.add_parser("traces", help="sinh lai cac trace mac dinh trong traces/")
-    p.add_argument("--max-nodes", type=int, default=None)
-    p.set_defaults(func=cmd_traces)
 
     p = sub.add_parser("bench", help="so sanh cac to hop heuristic tren moi puzzle")
     p.add_argument("--repeat", type=int, default=20)

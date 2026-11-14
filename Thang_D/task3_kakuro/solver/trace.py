@@ -1,4 +1,4 @@
-"""Ghi su kien tim kiem theo dinh dang trace chung (schema_version 1) de UI phat lai.
+"""Tao luong su kien tim kiem cho UI.
 
 Moi su kien chua anh chup mien cua TAT CA o trang, nen UI khong can biet gi ve solver.
 Cac loai su kien (kind):
@@ -11,12 +11,7 @@ Cac loai su kien (kind):
   exhausted      da thu het ma khong co nghiem
   limit          dung do cham gioi han so nut
 """
-import json
-from pathlib import Path
-
 from ..puzzle import cell_key
-
-SCHEMA_VERSION = 1
 
 
 class Recorder:
@@ -35,10 +30,9 @@ class Recorder:
 class TraceRecorder(Recorder):
     enabled = True
 
-    def __init__(self, puzzle, stats, meta=None):
+    def __init__(self, puzzle, stats):
         self.puzzle = puzzle
         self.stats = stats            # SearchStats cua solver (nodes, backtracks, depth)
-        self.meta = meta or {}
         self.events = []
 
     # ------------------------------------------------------------ noi bo
@@ -67,7 +61,7 @@ class TraceRecorder(Recorder):
                    "node consistency filters each run once.", domains)
 
     def removals(self, domains, removed, assign_message=None):
-        """Phat lai danh sach `removed` (cell, value, reason) thanh tung su kien.
+        """Chuyen danh sach `removed` (cell, value, reason) thanh tung su kien.
 
         `domains` la trang thai SAU khi xoa. Ta dung lai trang thai TRUOC bang cach
         them gia tri vao lai, roi ap dung tung nhom (cell, reason) de moi su kien
@@ -123,13 +117,3 @@ class TraceRecorder(Recorder):
 
     def limit(self, domains):
         self._emit("limit", None, f"Stopped at the limit of {self.stats.nodes} nodes.", domains)
-
-    # ------------------------------------------------------------ xuat file
-    def to_dict(self):
-        return {"schema_version": SCHEMA_VERSION, "puzzle": self.puzzle.data,
-                "meta": self.meta, "events": self.events}
-
-    def save(self, path):
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(self.to_dict(), separators=(",", ":")), encoding="utf-8")

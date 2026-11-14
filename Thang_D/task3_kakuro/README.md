@@ -1,38 +1,36 @@
 # Task 3 - Kakuro như một bài toán CSP
 
 Bộ giải Kakuro gồm: lọc miền theo từng run (constraint propagation), Backtracking Search
-với các heuristic MRV, Degree, LCV, và giao diện PyGame phát lại quá trình tìm kiếm.
+với các heuristic MRV, Degree, LCV, và giao diện PyGame trong đó **solver chạy song song với UI**
+và UI hiển thị từng bước của thuật toán khi nó diễn ra.
 
 ## 1. Cấu trúc thư mục
 
 ```
 task3_kakuro/
 ├── __init__.py
-├── __main__.py            # dòng lệnh: solve / traces / bench
+├── __main__.py            # dòng lệnh: solve / bench (không cần UI)
 ├── puzzle.py              # Puzzle: đọc JSON, dựng run, peers, check(); dùng chung cho solver và UI
 ├── requirements.txt       # pygame
 ├── model/
-│   ├── kakuro_model.py    # mô hình CSP: build_runs, check_model, verify, bảng mẫu 5x5 và 9x9
+│   ├── kakuro_model.py    # build_runs, check_model: dựng các Run từ bảng ô
 │   └── propagation.py     # Run, Propagator: bảng tổ hợp, node consistency, forward checking, undo
 ├── solver/
 │   ├── heuristics.py      # MRV, Degree (chọn biến), LCV (sắp xếp giá trị)
 │   ├── backtracking.py    # BacktrackingSolver, SearchStats, SolveResult
-│   └── trace.py           # TraceRecorder: ghi sự kiện theo schema chung cho UI
+│   ├── trace.py           # TraceRecorder: biến mỗi bước của solver thành một sự kiện (snapshot miền)
+│   └── live.py            # LiveSession: chạy solver trong thread riêng, UI kéo từng sự kiện
 ├── puzzles/
 │   ├── assignment_5x5.json
 │   └── assignment_9x9.json
-├── traces/                # trace sinh sẵn, UI đọc từ đây
-│   ├── assignment_5x5.json
-│   ├── assignment_9x9.json
-│   └── backtrack_demo.json
 └── ui/
     ├── app.py             # giao diện PyGame
-    └── player.py          # TracePlayer: kiểm tra schema và phát lại sự kiện
+    └── player.py          # LivePlayer: vị trí đang xem, yêu cầu solver sinh thêm sự kiện
 ```
 
-Luồng dữ liệu: `puzzles/*.json` -> `Puzzle` -> `BacktrackingSolver` (dùng `Propagator`)
--> `TraceRecorder` -> `traces/*.json` -> `TracePlayer` -> giao diện. UI chỉ phát lại
-snapshot, không chạy solver.
+Luồng dữ liệu: `puzzles/*.json` -> `Puzzle` -> `BacktrackingSolver` (dùng `Propagator`) chạy trong
+thread riêng của `LiveSession` -> `LiveRecorder` đẩy từng sự kiện vào danh sách dùng chung
+-> `LivePlayer` -> giao diện. Không có file trace nào được lưu hay đọc lại.
 
 ## 2. Cách chạy
 
@@ -42,33 +40,39 @@ vì code dùng import tương đối.
 ```bash
 pip install -r task3_kakuro/requirements.txt     # chỉ UI cần pygame
 
-# Giải một puzzle (mặc định MRV+Degree và LCV), in nghiệm và thống kê
+# Mở giao diện: solver chạy live trên 9x9 (MRV+Degree, LCV)
+python -m task3_kakuro.ui.app
+python -m task3_kakuro.ui.app --puzzle task3_kakuro/puzzles/assignment_5x5.json --variable mrv --value asc
+
+# Không cần UI: giải một puzzle, in nghiệm và thống kê
 python -m task3_kakuro solve task3_kakuro/puzzles/assignment_9x9.json
-
-# Chọn heuristic, giới hạn số nút, xuất trace để xem trong UI
-python -m task3_kakuro solve task3_kakuro/puzzles/assignment_9x9.json \
-    --variable mrv --value asc --max-nodes 10000 --trace task3_kakuro/traces/my_run.json
-
-# Sinh lại 3 trace mặc định trong traces/
-python -m task3_kakuro traces
+python -m task3_kakuro solve task3_kakuro/puzzles/assignment_9x9.json --variable mrv --value asc --max-nodes 10000
 
 # So sánh các tổ hợp heuristic trên mọi puzzle trong puzzles/
 python -m task3_kakuro bench --repeat 20
-
-# Mở giao diện (mặc định đọc traces/assignment_9x9.json)
-python -m task3_kakuro.ui.app
-python -m task3_kakuro.ui.app --trace task3_kakuro/traces/backtrack_demo.json
-
-# Kiểm tra riêng tầng model (bảng 5x5 và 9x9 trong kakuro_model.py)
-python -m task3_kakuro.model.kakuro_model
 ```
 
 Lựa chọn của `--variable`: `first` (baseline), `mrv`, `mrv-degree`.
 Lựa chọn của `--value`: `asc` (tăng dần), `lcv`.
 
-Phím tắt trong UI: Space phát/dừng, mũi tên trái/phải lùi/tiến một sự kiện, `R` về đầu,
-`1`/`2`/`3` chọn trace, `+`/`-` đổi tốc độ, click ô trắng để xem miền và các run chứa ô đó.
-Chế độ không cửa sổ: `python -m task3_kakuro.ui.app --headless --screenshot out.png --event 40`.
+Điều khiển trong UI: Space phát/dừng, mũi tên trái/phải lùi/tiến một sự kiện, `R` về đầu,
+`1`/`2` chọn puzzle 5x5 hoặc 9x9, `F` (nút Finish) cho solver chạy hết, `V`/`C` đổi heuristic
+biến/giá trị, `+`/`-` đổi tốc độ, click ô trắng để xem miền và các run chứa ô đó.
+Các nút Variable / Value trong panel phải cũng đổi heuristic. Đổi puzzle hoặc heuristic sẽ chạy
+lại solver từ đầu. Chụp ảnh không cửa sổ:
+`python -m task3_kakuro.ui.app --headless --screenshot out.png --event 40`.
+
+Ý nghĩa màu: xanh dương là phép đoán, xanh ngọc là lan truyền, cam là hoàn tác,
+đỏ gạch ngang là giá trị vừa bị loại.
+
+### Lỗi thường gặp
+
+- `Could not open requirements file: task3_kakuro/requirements.txt`: bạn đang đứng **bên trong**
+  thư mục `task3_kakuro`. Hoặc chạy `pip install -r requirements.txt` tại đó, hoặc `cd ..`
+  rồi chạy đúng lệnh ở trên.
+- `ImportError: attempted relative import with no known parent package` hoặc `No module named
+  task3_kakuro`: phải chạy `python -m ...` từ thư mục **cha** của `task3_kakuro`, không chạy
+  trực tiếp `python ui/app.py`.
 
 ## 3. Mô hình CSP
 
@@ -77,6 +81,9 @@ Chế độ không cửa sổ: `python -m task3_kakuro.ui.app --headless --scree
 - **Ràng buộc**: mỗi run (dãy ô trắng liên tiếp theo hàng hoặc cột) có hai ràng buộc,
   Alldiff (các ô khác nhau đôi một) và Sum (tổng bằng số gợi ý). Mỗi ô thuộc đúng 2 run.
   Đây là ràng buộc bậc cao nên không dùng AC-3 nguyên bản, xem `t3_propagation.docx`.
+
+Định dạng ô trong `puzzles/*.json`: `.` ô trắng, `#` ô đen, `d21` gợi ý tổng cột bên dưới,
+`a12` gợi ý tổng hàng bên phải, `d14/a12` cả hai.
 
 ## 4. Thuật toán
 
@@ -128,18 +135,27 @@ không đồng nghĩa với "đúng", nên LCV tốn thêm chi phí thử gán m
 `first + asc` ít nút nhất (9) chủ yếu do thứ tự quét hàng-cột hợp với puzzle này, không
 nên coi là tổng quát. Cần thêm puzzle để kết luận chắc hơn.
 
-## 6. Định dạng trace (schema_version 1)
+## 6. Solver chạy song song với UI
 
-```json
-{
-  "schema_version": 1,
-  "puzzle": { "name": "...", "grid": [["#", "d21", "."]] },
-  "meta": { "variable": "mrv-degree", "value": "lcv", "max_nodes": null },
-  "events": [ { "kind": "...", "cell": "r,c" | null, "message": "...", "removed": [..],
-                "nodes": 0, "backtracks": 0, "depth": 0,
-                "domains": { "r,c": [1, 2] } } ]
-}
-```
+`solver/live.py` chạy `BacktrackingSolver` trong một thread (daemon). Thuật toán không có
+phần code riêng cho UI; `LiveRecorder` (kế thừa `TraceRecorder`) chỉ thêm một bước chờ sau mỗi sự kiện:
+
+1. Mỗi lần solver phát một sự kiện, nó thêm sự kiện vào `session.events` rồi kiểm tra
+   hạn mức `limit`. Nếu số sự kiện đã sinh >= `limit` thì thread chờ trên `threading.Condition`.
+2. Khi người xem bấm Next/Play tới sự kiện cuối mà solver chưa xong, `LivePlayer` gọi
+   `session.demand(n + 1)`; solver sinh đúng một sự kiện nữa rồi lại chờ, và UI tiến lên khi sự kiện tới.
+   Nút Finish gọi `session.finish()` để bỏ hạn mức.
+3. Lùi lại (Back, Reset) chỉ đọc lại các sự kiện đã có nên không làm solver chạy thêm.
+4. Đổi heuristic, đổi puzzle hoặc thoát: `session.stop()` đánh thức thread và hủy bằng `SearchAborted`.
+
+UI chỉ đọc danh sách sự kiện; mỗi sự kiện là snapshot độc lập và được thêm vào danh sách
+sau khi dựng xong, nên không cần khóa khi đọc. Bộ đếm hiển thị dạng `007 / 021+` khi tổng
+số sự kiện chưa biết, và mất dấu `+` khi tìm kiếm kết thúc.
+
+### Sự kiện
+
+Mỗi sự kiện là một dict gồm `kind`, `cell` (`"r,c"` hoặc `None`), `message`, `removed`, `nodes`,
+`backtracks`, `depth` và `domains` (miền của **tất cả** ô trắng tại thời điểm đó).
 
 | kind | Khi nào phát | Trường thêm |
 |---|---|---|
@@ -150,8 +166,4 @@ nên coi là tổng quát. Cần thêm puzzle để kết luận chắc hơn.
 | `backtrack` | hoàn tác phép gán, miền được khôi phục | `value`, `restored` |
 | `solution` | tìm thấy nghiệm | |
 | `exhausted` | duyệt hết mà không có nghiệm | |
-| `limit` | dừng vì chạm `--max-nodes` | |
-
-Mỗi sự kiện chứa miền của **tất cả** ô trắng tại thời điểm đó, nên `TracePlayer` phát lại
-được mà không cần biết solver cài đặt thế nào. Ý nghĩa màu trong UI: xanh dương là đoán,
-xanh ngọc là lan truyền, cam là hoàn tác, đỏ gạch ngang là giá trị vừa bị loại.
+| `limit` | dừng vì chạm giới hạn nút | |
