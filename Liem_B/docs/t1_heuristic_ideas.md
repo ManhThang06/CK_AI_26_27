@@ -5,15 +5,16 @@ Ban de xuat chi doi buoc **chon bien**; chon gia tri van nhu ban chuan, de so sa
 
 | Ung vien | Y tuong | Ly do | Rui ro |
 |---|---|---|---|
-| `max_tabu` (chon lam heuristic chinh) | Chon cot xung dot NHIEU NHAT; hoa thi ngau nhien; cot vua chon nam trong danh sach tabu (do dai `max(2, min(10, N//5))`) mot thoi gian | Sua cot "te nhat" truoc giam h nhanh hon; tabu chong lap lai cung mot cot | Ket o cuc tri dia phuong (h dung yen = 1) -> that bai o N=8 (4/30 lan); khong lien quan do dai tabu (thu 2..6 deu 26-27/30) |
+| `max_tabu` | Chọn cột nhiều xung đột nhất trong các cột ngoài danh sách tabu, phá hòa ngẫu nhiên | Ưu tiên biến nhiều xung đột, hạn chế chọn lại cột gần đây | Tabu trên cột chưa loại được mọi vòng lặp trạng thái. Nới tabu khi không còn cột phù hợp. |
 | `roulette` | Chon cot xung dot voi xac suat ti le so xung dot | Uu tien cot te nhung van giu ngau nhien de thoat cuc tri dia phuong | Gan nhu bang ban chuan khi xung dot deu nhau |
 
-Cach do: 30 seed co dinh moi N, cung trang thai khoi tao, cung max_steps = 20000; do ti le thanh cong, trung vi va TB so buoc
-(lan thanh cong), thoi gian/lan. Ket qua (xem `experiments/t1_minconflicts.ipynb`): `max_tabu` giam so buoc khoang 30-35%
-o N >= 16 nhung thoi gian gan nhu bang ban chuan khi N lon (moi buoc ton hon: phai tinh xung dot cua moi cot).
+Cách đo dùng 30 seed cho mỗi N, cùng trạng thái ban đầu và ngân sách 20.000 bước giữa các biến thể.
+Tỷ lệ thành công được báo cáo cùng trung vị, trung bình, độ lệch chuẩn số bước và thời gian trung bình trên mọi lần chạy.
+Các lần thất bại được tính đủ ngân sách, thống nhất với `analysis.py` của Quỳnh. Thời gian gồm khởi tạo và tìm kiếm.
+Xem kết quả chạy lại trong `experiments/t1_minconflicts.ipynb` và hai CSV. Hiệu quả phụ thuộc N, biến thể và cơ chế khởi động lại.
 
 ## Vi sao co that bai, va cach khac phuc
-Min-Conflicts chi nhin 1 quan hau moi buoc va gan no vao hang it xung dot nhat. Khi h = 1 (con dung 1 cap an nhau) co
-the khong quan nao co nuoc di giam h -> bi **ket o cuc tri dia phuong** (ca "plateau"), lap lai vo han. Them ngau nhien khi
-chon cot (thu p = 0.05..0.2) KHONG giup, vi van moi ket o buoc chon gia tri. **Random restart** (Lec 06): sau `restart_after`
-buoc khong cai thien ky luc h thi xep lai ban co -> 30/30 thanh cong o moi N, moi variant (xem notebook, bang B).
+Mỗi bước thay đổi một biến và chọn giá trị ít xung đột nhất. Thuật toán có thể đi ngang qua plateau hoặc lặp lại trạng thái.
+Hết ngân sách bước chỉ xác nhận lần chạy chưa tìm được nghiệm. Giá trị h = 1 chưa đủ để kết luận không thể thoát khỏi vùng đang xét.
+Khởi động lại ngẫu nhiên theo Lecture 06 tạo bàn cờ mới sau `restart_after` bước không cải thiện kỷ lục của lần khởi động hiện tại.
+Đây là cấu hình bổ sung, được so sánh riêng với bản mặc định không khởi động lại. Tỷ lệ thành công được giới hạn trong các seed đã thử.
