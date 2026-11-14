@@ -15,7 +15,7 @@ Tùy chọn:
 
 import math
 import time
-from collections import deque
+from collections import Counter, deque
 from dataclasses import dataclass
 
 from ..engine import Action
@@ -41,12 +41,16 @@ class _HeuristicSearch(AdversarialSearch):
     use_pruning = False
 
     def __init__(self, depth=2, evaluator=None, move_ordering=True, prune_noop=True,
-                 ordering_use_path=True, time_limit=None, max_depth=10, history_len=6):
+                 ordering_use_path=True, time_limit=None, max_depth=10, history_len=6,
+                 avoid_doomed=True, repeat_window=40):
         super().__init__(move_ordering=move_ordering, horizon=None)
         self.depth = depth
         self.evaluator = evaluator or HeuristicEvaluator()
         self.prune_noop = prune_noop
         self.ordering_use_path = ordering_use_path
+        self.avoid_doomed = avoid_doomed
+        self.seen = deque(maxlen=repeat_window)   # chữ ký các trạng thái chung đã gặp ở lượt của mình
+        self.repeats = Counter()
         self.time_limit = time_limit
         self.max_depth = max_depth
         self.recent = deque(maxlen=history_len)   # các ô tank đã đứng ở những lượt trước
@@ -64,6 +68,11 @@ class _HeuristicSearch(AdversarialSearch):
         current = (tank.x, tank.y)
         self.evaluator.me = me
         self.evaluator.set_history(self.recent, current)
+        # Đếm các lần đã gặp trạng thái chung (không tính lần hiện tại): tránh kẹt giằng co lâu dài.
+        # Tank của me chưa di chuyển nên chữ ký ở lượt MIN (pending) trùng chữ ký ranh giới cycle.
+        sig = self.evaluator.signature(state)
+        self.evaluator.set_repeats(self.repeats)
+        self._note_state(sig)
 
         self.stats = HeuristicStats()
         start = time.perf_counter()
@@ -84,12 +93,27 @@ class _HeuristicSearch(AdversarialSearch):
             if abs(result.value) >= WIN_SCORE - 100:    # đã thấy thắng/thua cưỡng bức
                 break
 
+        self._commit_state()
         if not self.recent or self.recent[-1] != current:
             self.recent.append(current)
         self.stats.elapsed = time.perf_counter() - start
         return SearchResult(best.action, best.value, self.stats, best.action_values)
 
     # ------------------------------------------------------------ nội bộ
+    def _note_state(self, sig):
+        """Ghi nhận trạng thái hiện tại SAU khi search xong, để lần search này không tự phạt chính nó."""
+        self._pending_sig = sig
+
+    def _commit_state(self):
+        sig = self._pending_sig
+        if len(self.seen) == self.seen.maxlen:
+            old = self.seen[0]
+            self.repeats[old] -= 1
+            if self.repeats[old] <= 0:
+                del self.repeats[old]
+        self.seen.append(sig)
+        self.repeats[sig] += 1
+
     def _tick(self):
         s = self.stats
         s.nodes_generated += 1
@@ -146,6 +170,8 @@ class _HeuristicSearch(AdversarialSearch):
         if self.prune_noop:
             kept = [a for a in actions if not self.evaluator.is_noop(state, me, a)]
             actions = kept or actions
+        if self.avoid_doomed and state.bullets:
+            actions = self._drop_doomed_moves(state, me, actions)
         if self.move_ordering:
             actions = sorted(actions, key=lambda a: -self._score(state, me, a))
         if hint:
@@ -154,6 +180,26 @@ class _HeuristicSearch(AdversarialSearch):
             # sort ổn định: nước đi cùng giá trị giữ thứ tự theo heuristic ở trên (tie-break xác định)
             actions = sorted(actions, key=lambda a: hint.get(a, worst), reverse=rev)
         return actions
+
+    def _drop_doomed_moves(self, state, me, actions):
+        """Bỏ các nước chủ động bước vào ô mà đạn đang bay chắc chắn quét qua trong cycle này.
+
+        Tránh kiểu "né xong lại lao vào đường đạn": heuristic (thẳng hàng với base, tiến gần...) đôi khi
+        lớn hơn 1 HP bị trừ nên cây tìm kiếm chọn đứng vào đạn. Chỉ loại khi còn nước khác để chọn."""
+        ev = self.evaluator
+        doomed = ev.doomed_cells(state)
+        if not doomed:
+            return actions
+        t = state.tanks[me]
+        kept = []
+        for a in actions:
+            delta = ACTION_DELTA.get(a)
+            if delta is not None:
+                dest = (t.x + delta[0], t.y + delta[1])
+                if dest in doomed and ev.can_step(state, dest):
+                    continue
+            kept.append(a)
+        return kept or actions
 
     def _score(self, state, me, a):
         ev = self.evaluator
@@ -178,8 +224,20 @@ class _HeuristicSearch(AdversarialSearch):
         t = state.tanks[me]
         cur = (t.x, t.y)
         dest = (cur[0] + delta[0], cur[1] + delta[1])
-        if cur in ev.bullet_lanes(state) and dest not in ev.bullet_lanes(state):
+        if not ev.can_step(state, dest):
+            # Ô đích là biên map / tường / base: tank không dịch chuyển được, chỉ xoay nòng.
+            # Không được tính điểm né đạn hay tiến công cho nước này (nếu không, khi mọi nước đều
+            # dính đạn nó thắng tie-break và tank quay mặt ra biên map). Chỉ đáng thử khi xoay
+            # xong có thể bắn trúng địch; còn lại xếp sau cả STAY để tie-break giữ nguyên hướng nòng.
+            hit = ev.hit_toward(state, me, delta)
+            if hit is not None and hit[0] in ("tank", "base") and hit[1] != me:
+                return 90
+            return -12
+        lanes = ev.bullet_lanes(state)
+        if cur in lanes and dest not in lanes:
             score += 40                           # né khỏi quỹ đạo đạn
+        elif cur not in lanes and dest in lanes:
+            score -= 40                           # đang an toàn mà lại bước vào quỹ đạo đạn
         if self.ordering_use_path:
             if ev.attack_plan(state, me, dest)[0] < ev.attack_plan(state, me, cur)[0]:
                 score += 20                       # tiến gần vị trí bắn base địch hơn

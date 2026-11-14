@@ -72,6 +72,8 @@ class GameState:
 
     def _resolve_cycle(self, action_max, action_min):
         self._move_tanks([action_max, action_min])
+        # Tank vừa bước vào ô đang chứa đạn bay tới: đạn trúng ngay, không được "đổi chỗ" xuyên qua.
+        self._hit_by_bullets_in_place()
         for owner, act in enumerate([action_max, action_min]):
             if act == Action.FIRE:
                 self._fire(owner)
@@ -98,10 +100,31 @@ class GameState:
                 nx, ny = old[i][0] + d.value[0], old[i][1] + d.value[1]
                 if not self._blocked(nx, ny):
                     new[i] = (nx, ny)
-        if new[0] == new[1] or (new[0] == old[1] and new[1] == old[0]):
+        if new[0] == new[1] and old[0] != new[0] and old[1] != new[1]:
+            # Cả hai cùng di chuyển vào một ô: ưu tiên luân phiên theo cycle (chẵn: MAX, lẻ: MIN),
+            # bên kia bị hủy nước đi và đứng nguyên. Tránh bế tắc khi hai agent tất định cùng muốn một ô.
+            loser = 1 if self.cycle % 2 == 0 else 0
+            new[loser] = old[loser]
+        elif new[0] == new[1] or (new[0] == old[1] and new[1] == old[0]):
+            # Đích trùng với tank đang đứng yên, hoặc hai tank đổi chỗ: cả hai ở lại.
             new = old
         for i in range(2):
             self.tanks[i].x, self.tanks[i].y = new[i]
+
+    def _hit_by_bullets_in_place(self):
+        """Đạn đã bay từ cycle trước mà đang nằm đúng ô của một tank (do tank vừa đi vào) thì trúng tank đó.
+
+        Đạn đi 3 ô/cycle, tank đi 1 ô/cycle và đi trước. Nếu không có bước này, tank đi
+        ngược chiều vào ô của viên đạn sẽ hoán đổi vị trí với nó và đạn bay xuyên qua.
+        Phải gọi trước khi bắn đạn mới của cycle này."""
+        alive = []
+        for b in self.bullets:
+            victim = next((t for t in self.tanks if t.x == b.x and t.y == b.y), None)
+            if victim is None:
+                alive.append(b)
+            else:
+                victim.hp -= DAMAGE
+        self.bullets = alive
 
     def _fire(self, owner):
         if any(b.owner == owner for b in self.bullets):

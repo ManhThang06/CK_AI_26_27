@@ -186,6 +186,11 @@ class EvalWeights:
     aligned: float = 4.0
     bullet: float = 20.0
     mobility: float = 2.0
+    lane_floor: float = 0.5   # mức đe dọa tối thiểu của đạn đang bay tới tank/base, kể cả khi còn xa
+    repeat_pen: float = 3.0   # phạt mỗi lần lặp lại một trạng thái chung đã gặp (chống giằng co/đứng yên)
+    repeat_cap: float = 15.0  # chặn trên của phạt lặp, để vẫn luôn thấp hơn giá trị thắng/thua
+    use_repeat: bool = True   # cờ ablation: phạt lặp trạng thái chung
+    edge_aim: float = 1.5     # phạt nhỏ khi nòng súng hướng thẳng ra biên map (đạn bay ra ngoài, vô ích)
     wall: float = 0.5         # nhỏ: chỉ là tie-break, việc phá tường đã nằm trong chi phí đường đi
     history: float = 1.5      # phạt mỗi lần ô đó đã xuất hiện trong lịch sử gần đây
     noise: float = 0.0        # biên độ nhiễu tie-break, 0 = tắt (dùng khi chạy thí nghiệm)
@@ -203,11 +208,26 @@ class HeuristicEvaluator:
         self.rng = random.Random(seed)
         self.history = Counter()
         self.current = None
+        self.repeats = Counter()   # số lần đã gặp trước đây của từng trạng thái chung (xem signature)
 
     def set_history(self, recent_positions, current_position):
         """Các ô tank của `me` đã đứng ở những lượt trước và ô đang đứng hiện tại."""
         self.history = Counter(recent_positions)
         self.current = current_position
+
+    def set_repeats(self, repeats):
+        """Bộ đếm {signature: số lần đã gặp} của các trạng thái chung trong vài chục cycle gần nhất."""
+        self.repeats = repeats
+
+    @staticmethod
+    def signature(state):
+        """Chữ ký trạng thái chung tại ranh giới cycle: vị trí, hướng, HP của hai tank, HP base, đạn
+        và tổng HP tường. Không gồm cycle/pending nên cùng một thế cờ ở lượt khác nhau vẫn trùng."""
+        t0, t1 = state.tanks
+        b0, b1 = state.bases
+        return (t0.x, t0.y, t0.direction, t0.hp, t1.x, t1.y, t1.direction, t1.hp, b0.hp, b1.hp,
+                sum(state.walls.values()),
+                tuple(sorted((b.x, b.y, b.direction.value, b.owner) for b in state.bullets)))
 
     # ------------------------------------------------------------ ngữ cảnh
     def _ctx(self, state):
@@ -249,7 +269,17 @@ class HeuristicEvaluator:
             dx, dy = bl.direction.value
             hit = first_hit(walls, ents, size, bl.x, bl.y, dx, dy)
             if hit is not None and hit[0] in ("tank", "base"):
-                bullet_on[hit[1]] += 1.0 / math.ceil(hit[2] / 3)
+                # Đứng trong đường đạn là sẽ bị trúng nếu không né kịp, dù đạn còn xa. Nếu chỉ tính
+                # 1/số cycle, đạn ở xa gần như không bị phạt và agent vừa né xong lại bước vào đường
+                # đạn (đạn còn ngoài tầm nhìn của cây tìm kiếm). lane_floor chặn dưới mức đe dọa này.
+                bullet_on[hit[1]] += max(1.0 / math.ceil(hit[2] / 3), self.w.lane_floor)
+
+        # nòng súng hướng thẳng ra biên map mà không có vật nào trên đường bắn
+        aim_void = [0, 0]
+        for i in (0, 1):
+            dx, dy = tanks[i].direction.value
+            if first_hit(walls, ents, size, pos[i][0], pos[i][1], dx, dy) is None:
+                aim_void[i] = 1
 
         # mobility: số ô lân cận trống
         w_, h_ = size
@@ -288,6 +318,7 @@ class HeuristicEvaluator:
             "aligned": aligned[0] - aligned[1],
             "bullet": bullet_on[1] - bullet_on[0],
             "mobility": mob[0] - mob[1],
+            "aim_void": aim_void[1] - aim_void[0],
             "wall": factor[0] * prot[0] - factor[1] * prot[1],
             "pos": pos,
             "threatened": threatened,
@@ -299,13 +330,21 @@ class HeuristicEvaluator:
         w = self.w
         v = (w.base_hp * f["base_hp"] + w.tank_hp * f["tank_hp"] + w.attack * f["attack"]
              + w.fire * f["fire"] + w.aligned * f["aligned"] + w.bullet * f["bullet"]
-             + w.mobility * f["mobility"] + w.wall * f["wall"])
+             + w.mobility * f["mobility"] + w.wall * f["wall"] + w.edge_aim * f["aim_void"])
 
         # chống oscillation: phạt quay lại ô cũ khi không bị đe dọa
         if w.use_history and self.history and not f["threatened"][self.me]:
             p = f["pos"][self.me]
             if p != self.current:
                 pen = w.history * self.history.get(p, 0)
+                v -= pen if self.me == MAX_PLAYER else -pen
+
+        # chống giằng co: cả hai bên cùng đứng yên chờ nhau vì bước vào là vào đường bắn của đối phương.
+        # Phạt tăng dần theo số lần lặp trạng thái chung nên cuối cùng đứng yên đắt hơn tiến lên.
+        if w.use_repeat and self.repeats:
+            n = self.repeats.get(self.signature(state), 0)
+            if n > 0:
+                pen = min(w.repeat_cap, w.repeat_pen * n)
                 v -= pen if self.me == MAX_PLAYER else -pen
 
         if w.noise > 0:
@@ -319,6 +358,22 @@ class HeuristicEvaluator:
         t = state.tanks[p]
         dx, dy = t.direction.value
         return first_hit(walls, ents, size, t.x, t.y, dx, dy)
+
+    def can_step(self, state, cell):
+        """Tank có thể bước vào `cell` không (trong map, không phải tường hay base).
+        Ô đang có tank khác vẫn coi là bước được vì tank kia có thể rời đi trong cùng cycle."""
+        w, h = StateView.size(state)
+        if not (0 <= cell[0] < w and 0 <= cell[1] < h):
+            return False
+        if cell in StateView.walls(state):
+            return False
+        return all((b.x, b.y) != cell for b in state.bases)
+
+    def hit_toward(self, state, p, delta):
+        """Vật đầu tiên trên đường bắn nếu tank p đứng nguyên và quay nòng về hướng delta."""
+        walls, size, ents, _ = self._ctx(state)
+        t = state.tanks[p]
+        return first_hit(walls, ents, size, t.x, t.y, delta[0], delta[1])
 
     def attack_plan(self, state, p, src=None):
         """(chi phí, tập tường trên đường) của tank p, xuất phát từ src (mặc định vị trí hiện tại)."""
@@ -345,6 +400,27 @@ class HeuristicEvaluator:
                 if (x, y) in walls or (x, y) in ents:
                     break
         return lanes
+
+    def doomed_cells(self, state, steps=3):
+        """Ô mà một viên đạn đang bay chắc chắn quét qua trong cycle kế tiếp (đạn đi `steps` ô/cycle).
+
+        Tank đi trước rồi đạn mới bay, nên tank bước vào các ô này là bị trúng (trừ khi đạn bị chặn
+        giữa đường, trường hợp đó các ô phía sau vật chắn không nằm trong tập)."""
+        walls, size, ents, _ = self._ctx(state)
+        w, h = size
+        cells = set()
+        for bl in StateView.bullets(state):
+            dx, dy = bl.direction.value
+            x, y = bl.x, bl.y
+            for _ in range(steps):
+                x += dx
+                y += dy
+                if not (0 <= x < w and 0 <= y < h):
+                    break
+                cells.add((x, y))
+                if (x, y) in walls or (x, y) in ents:
+                    break
+        return cells
 
     def has_bullet_in_flight(self, state, p):
         """Engine chỉ cho mỗi bên một viên đạn đang bay (xem GameState._fire)."""

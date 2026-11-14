@@ -7,14 +7,9 @@ ply 2 là hành động của P2 (MIN, state.player() == 1) rồi engine xử l�
 import time
 from collections import deque
 
-from ..algorithms.scenarios import load_state, set_hp
+from ..algorithms.scenarios import load_state
 from ..engine import Action
 
-HP_PRESETS = {
-    "Standard (6/9/3)": dict(),
-    "Medium (3/3/2)": dict(tank_hp=3, base_hp=3, wall_hp=2),
-    "Low (1/1/1)": dict(tank_hp=1, base_hp=1, wall_hp=1),
-}
 MAP_NAMES = ["small", "medium", "full"]
 
 
@@ -46,13 +41,12 @@ class SafeAgent:
 
 
 class GameController:
-    def __init__(self, map_name, hp_preset, factories, labels):
+    def __init__(self, map_name, factories, labels):
         """factories[i]: hàm không tham số trả về agent, hoặc None nếu bên i do người chơi."""
         self.map_name = map_name
-        self.hp_preset = hp_preset
         self.factories = factories
         self.labels = labels
-        self.initial = set_hp(load_state(map_name), **HP_PRESETS[hp_preset])
+        self.initial = load_state(map_name)
         self.max_tank_hp = self.initial.tanks[0].hp
         self.max_base_hp = self.initial.bases[0].hp
         self.max_wall_hp = max(self.initial.walls.values(), default=1)
@@ -63,7 +57,8 @@ class GameController:
         self.agents = [SafeAgent(f()) if f else None for f in self.factories]
         self.last_actions = [None, None]
         self.events = []          # (x, y, loại) các va chạm của cycle vừa xử lý
-        self.events_time = 0.0
+        self.events_time = -10_000.0
+        self.prev_state = None    # trạng thái trước cycle vừa xử lý (renderer dùng để làm mượt chuyển động)
         self.log = deque(maxlen=12)
         self.cycle_count = 0
 
@@ -100,6 +95,7 @@ class GameController:
             return
         self.last_actions = [prev.pending, action]
         self.cycle_count = self.state.cycle
+        self.prev_state = prev
         self.events = self._collect_events(prev, self.state)
         self.events_time = time.monotonic() * 1000   # mốc thời gian để renderer vẽ hiệu ứng nổ
         self.log.append("c%d  P1 %s | P2 %s" % (self.state.cycle, prev.pending.name, action.name))

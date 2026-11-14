@@ -9,23 +9,26 @@ và UI hiển thị từng bước của thuật toán khi nó diễn ra.
 ```
 task3_kakuro/
 ├── __init__.py
-├── __main__.py            # dòng lệnh: solve / bench (không cần UI)
-├── puzzle.py              # Puzzle: đọc JSON, dựng run, peers, check(); dùng chung cho solver và UI
+├── __main__.py            # dòng lệnh: solve / bench / test (không cần UI)
+├── puzzle.py              # Puzzle: đọc JSON, dựng run, peers, check(); discover_puzzles / load_all
 ├── requirements.txt       # pygame
+├── tests/                 # bộ kiểm thử tự động (unittest), chạy bằng `python -m task3_kakuro test`
 ├── model/
-│   ├── kakuro_model.py    # build_runs, check_model: dựng các Run từ bảng ô
-│   └── propagation.py     # Run, Propagator: bảng tổ hợp, node consistency, forward checking, undo
+│   ├── kakuro_model.py    # build_runs, check_model: dựng các Run từ bảng ô, trả về danh sách cảnh báo
+│   └── propagation.py     # Run, Propagator, run_state: bảng tổ hợp, node consistency, forward checking, undo
 ├── solver/
 │   ├── heuristics.py      # MRV, Degree (chọn biến), LCV (sắp xếp giá trị)
 │   ├── backtracking.py    # BacktrackingSolver, SearchStats, SolveResult
-│   ├── trace.py           # TraceRecorder: biến mỗi bước của solver thành một sự kiện (snapshot miền)
+│   ├── trace.py           # TraceRecorder: biến mỗi bước của solver thành một sự kiện (snapshot miền + ngăn xếp phép đoán)
 │   └── live.py            # LiveSession: chạy solver trong thread riêng, UI kéo từng sự kiện
-├── puzzles/
+├── puzzles/               # MỌI file *.json ở đây đều được CLI và UI tự động nạp
 │   ├── assignment_5x5.json
-│   └── assignment_9x9.json
+│   ├── assignment_9x9.json
+│   ├── assignment_10x10.json
+│   └── assignment_12x12.json
 └── ui/
-    ├── app.py             # giao diện PyGame
-    └── player.py          # LivePlayer: vị trí đang xem, yêu cầu solver sinh thêm sự kiện
+    ├── app.py             # giao diện PyGame (chỉ vẽ)
+    └── player.py          # LivePlayer: vị trí đang xem, seek, ngăn xếp phép đoán, tổ hợp còn lại, tổng kết
 ```
 
 Luồng dữ liệu: `puzzles/*.json` -> `Puzzle` -> `BacktrackingSolver` (dùng `Propagator`) chạy trong
@@ -44,26 +47,54 @@ pip install -r task3_kakuro/requirements.txt     # chỉ UI cần pygame
 python -m task3_kakuro.ui.app
 python -m task3_kakuro.ui.app --puzzle task3_kakuro/puzzles/assignment_5x5.json --variable mrv --value asc
 
-# Không cần UI: giải một puzzle, in nghiệm và thống kê
+# Không cần UI: giải một puzzle (hoặc mọi puzzle trong puzzles/), in nghiệm và thống kê
 python -m task3_kakuro solve task3_kakuro/puzzles/assignment_9x9.json
+python -m task3_kakuro solve --all
 python -m task3_kakuro solve task3_kakuro/puzzles/assignment_9x9.json --variable mrv --value asc --max-nodes 10000
 
 # So sánh các tổ hợp heuristic trên mọi puzzle trong puzzles/
 python -m task3_kakuro bench --repeat 20
+
+# Chạy bộ kiểm thử tự động (test giao diện tự bỏ qua nếu chưa cài pygame)
+python -m task3_kakuro test
 ```
 
 Lựa chọn của `--variable`: `first` (baseline), `mrv`, `mrv-degree`.
 Lựa chọn của `--value`: `asc` (tăng dần), `lcv`.
 
-Điều khiển trong UI: Space phát/dừng, mũi tên trái/phải lùi/tiến một sự kiện, `R` về đầu,
-`1`/`2` chọn puzzle 5x5 hoặc 9x9, `F` (nút Finish) cho solver chạy hết, `V`/`C` đổi heuristic
-biến/giá trị, `+`/`-` đổi tốc độ, click ô trắng để xem miền và các run chứa ô đó.
-Các nút Variable / Value trong panel phải cũng đổi heuristic. Đổi puzzle hoặc heuristic sẽ chạy
-lại solver từ đầu. Chụp ảnh không cửa sổ:
-`python -m task3_kakuro.ui.app --headless --screenshot out.png --event 40`.
+Thêm puzzle mới: chỉ cần bỏ một file `.json` vào `puzzles/`; `solve --all`, `bench` và UI (nút `1`..`9`,
+phím Tab) tự nhận. File hỏng bị bỏ qua kèm thông báo, không làm hỏng các puzzle còn lại.
 
-Ý nghĩa màu: xanh dương là phép đoán, xanh ngọc là lan truyền, cam là hoàn tác,
-đỏ gạch ngang là giá trị vừa bị loại.
+### Điều khiển giao diện
+
+| Thao tác | Tác dụng |
+|---|---|
+| Space, nút Play/Pause | phát / dừng |
+| Mũi tên trái / phải | lùi / tiến một sự kiện |
+| `G`, nút **Next guess** | nhảy tới phép đoán kế tiếp (bỏ qua chuỗi lan truyền) |
+| `B`, nút **Next backtrack** | nhảy tới lần quay lui kế tiếp |
+| Bấm / kéo **thanh tiến độ** dưới bàn cờ | nhảy tới vị trí bất kỳ trong các sự kiện đã sinh |
+| `R` | về đầu |
+| `1`..`9`, Tab, các nút phía trên bàn cờ | chọn puzzle (nút có dấu `!` là puzzle có cảnh báo) |
+| `F`, nút Finish | cho solver chạy hết |
+| `V` / `C`, các nút Variable / Value | đổi heuristic (chạy lại solver từ đầu) |
+| `+` / `-` | đổi tốc độ phát |
+| Bấm một ô trắng | xem miền và các run chứa ô đó |
+
+Chụp ảnh không cửa sổ: `python -m task3_kakuro.ui.app --headless --screenshot out.png --event 40`.
+
+### Cách đọc giao diện
+
+- **Ô viền xanh + chữ số xanh dương**: phép đoán (nằm trong ngăn xếp). **Chữ số xanh ngọc**: giá trị
+  suy ra do lan truyền. Chữ nhỏ 1..9 là miền còn lại; giá trị vừa bị loại hiện gạch đỏ.
+- **Cả run được tô nhạt** khi sự kiện là `propagate` (xanh ngọc) hoặc `contradiction` (đỏ); ô chính là ô đậm hơn.
+- **GUESS STACK**: các phép đoán đang mở theo thứ tự; khi quay lui có dòng `undone (r,c)=v`.
+- **CELL INSPECTOR**: với mỗi run chứa ô đang chọn: các chữ số đã cố định, tổng còn lại, số ô tự do và
+  **các tập chữ số còn hợp lệ** (`sets:`), chính là thứ quyết định giá trị nào bị loại.
+- **Thanh tiến độ**: mỗi cột là loại sự kiện nổi bật nhất (xanh dương = đoán, cam = quay lui, đỏ = mâu thuẫn,
+  xanh lá = nghiệm); vạch trắng là vị trí đang xem.
+- **RESULT**: khi xem sự kiện cuối, hiện kết quả (đã xác minh bằng `Puzzle.check` hay vô nghiệm), số nút,
+  số lần quay lui, độ sâu tối đa và thời gian giải thuần của solver (không tính thời gian chờ UI).
 
 ### Lỗi thường gặp
 
@@ -76,11 +107,11 @@ lại solver từ đầu. Chụp ảnh không cửa sổ:
 
 ## 3. Mô hình CSP
 
-- **Biến**: mỗi ô trắng `(r, c)`. 5x5 có 12 biến, 9x9 có 48 biến.
+- **Biến**: mỗi ô trắng `(r, c)`. 5x5 có 12 biến, 9x9 có 48 biến (10x10: 57, 12x12: 82).
 - **Miền**: ban đầu `{1..9}`.
 - **Ràng buộc**: mỗi run (dãy ô trắng liên tiếp theo hàng hoặc cột) có hai ràng buộc,
   Alldiff (các ô khác nhau đôi một) và Sum (tổng bằng số gợi ý). Mỗi ô thuộc đúng 2 run.
-  Đây là ràng buộc bậc cao nên không dùng AC-3 nguyên bản, xem `t3_propagation.docx`.
+  Đây là ràng buộc bậc cao nên không dùng AC-3 nguyên bản; xem `model/propagation.py`.
 
 Định dạng ô trong `puzzles/*.json`: `.` ô trắng, `#` ô đen, `d21` gợi ý tổng cột bên dưới,
 `a12` gợi ý tổng hàng bên phải, `d14/a12` cả hai.
@@ -120,8 +151,11 @@ vào `VARIABLE_SELECTORS` / `VALUE_ORDERERS`.
 Kết quả từ `python -m task3_kakuro bench` (mọi nghiệm đều qua `Puzzle.check`;
 thời gian thay đổi theo máy, số nút và số lần quay lui thì cố định):
 
+Hai puzzle chuẩn (đề bài, trang 4 và 5), mỗi puzzle có đúng 1 nghiệm:
+
 | Puzzle | Biến | Giá trị | Nút | Quay lui | Độ sâu tối đa |
 |---|---|---|---:|---:|---:|
+| 5x5 | mọi tổ hợp | | 1 đến 4 | 0 đến 3 | 1 |
 | 9x9 | first | asc | 9 | 2 | 7 |
 | 9x9 | first | lcv | 48 | 41 | 7 |
 | 9x9 | mrv | asc | 28 | 17 | 11 |
@@ -134,6 +168,14 @@ này LCV không giúp giảm số nút: puzzle có nghiệm duy nhất, và "ít
 không đồng nghĩa với "đúng", nên LCV tốn thêm chi phí thử gán mà không tránh được nhánh sai.
 `first + asc` ít nút nhất (9) chủ yếu do thứ tự quét hàng-cột hợp với puzzle này, không
 nên coi là tổng quát. Cần thêm puzzle để kết luận chắc hơn.
+
+### Puzzle `10x10` và `12x12` (vô nghiệm)
+
+Hai file này được nạp và giải như mọi puzzle khác, nhưng **bảng của chúng không hợp lệ về mặt toán học**
+nên solver kết luận `unsolvable` ngay ở bước node consistency (0 nút): ví dụ ở 10x10, run D1 gồm 8 ô
+mà tổng gợi ý là 23, trong khi tổng nhỏ nhất của 8 chữ số khác nhau là 1+2+...+8 = 36. Ngoài ra có ô chỉ
+thuộc 1 run và run chỉ có 1 ô. `Puzzle.warnings` liệt kê các vấn đề này, UI hiện `WARNING` và nút có dấu `!`.
+Muốn đo hiệu quả heuristic trên bảng lớn hơn, cần thay bằng bảng 10x10 / 12x12 hợp lệ.
 
 ## 6. Solver chạy song song với UI
 
@@ -155,7 +197,8 @@ số sự kiện chưa biết, và mất dấu `+` khi tìm kiếm kết thúc.
 ### Sự kiện
 
 Mỗi sự kiện là một dict gồm `kind`, `cell` (`"r,c"` hoặc `None`), `message`, `removed`, `nodes`,
-`backtracks`, `depth` và `domains` (miền của **tất cả** ô trắng tại thời điểm đó).
+`backtracks`, `depth`, `guesses` (ngăn xếp các phép đoán đang mở, `[["r,c", giá trị], ...]`)
+và `domains` (miền của **tất cả** ô trắng tại thời điểm đó).
 
 | kind | Khi nào phát | Trường thêm |
 |---|---|---|
@@ -167,3 +210,15 @@ Mỗi sự kiện là một dict gồm `kind`, `cell` (`"r,c"` hoặc `None`), `
 | `solution` | tìm thấy nghiệm | |
 | `exhausted` | duyệt hết mà không có nghiệm | |
 | `limit` | dừng vì chạm giới hạn nút | |
+
+## 7. Kiểm thử tự động
+
+`python -m task3_kakuro test` (hoặc `python -m unittest discover -s task3_kakuro/tests -t .`) chạy:
+
+| File | Kiểm tra |
+|---|---|
+| `test_puzzle.py` | nạp mọi file trong `puzzles/`, thứ tự theo kích thước, cảnh báo của bảng lỗi, `Puzzle.check`, file hỏng bị bỏ qua mà không làm hỏng các file khác |
+| `test_propagation.py` | bảng `COMBOS`, `run_state`, lọc miền là đúng đắn (nghiệm luôn còn trong miền), `assign` rồi `undo` khôi phục miền chính xác |
+| `test_solver.py` | 6 tổ hợp heuristic giải được mọi puzzle chuẩn, cùng ra một nghiệm duy nhất (đếm độc lập), số nút/quay lui khớp bảng ở mục 5, kết quả lặp lại được, bảng lỗi báo `unsolvable`, giới hạn nút |
+| `test_trace_player.py` | luồng sự kiện hợp lệ, ngăn xếp phép đoán khớp độ sâu, `seek`/`jump`/thanh tiến độ, tổ hợp còn lại của run, tổng kết, solver chỉ chạy khi UI yêu cầu và thread được giải phóng khi `stop` |
+| `test_cli_ui.py` | `bench` và `solve --all` chạy hết mọi puzzle không lỗi; chụp ảnh UI headless cho từng puzzle (cần pygame, tự bỏ qua nếu chưa cài) |

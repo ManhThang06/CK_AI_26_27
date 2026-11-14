@@ -1,6 +1,7 @@
 """Tao luong su kien tim kiem cho UI.
 
-Moi su kien chua anh chup mien cua TAT CA o trang, nen UI khong can biet gi ve solver.
+Moi su kien chua anh chup mien cua TAT CA o trang va ngan xep cac phep doan dang mo
+(`guesses`), nen UI khong can biet gi ve solver.
 Cac loai su kien (kind):
   start          mien ban dau 1..9
   propagate      mot run loc bot gia tri khoi mien mot o (cell, removed, run)
@@ -45,6 +46,7 @@ class TraceRecorder(Recorder):
             "nodes": self.stats.nodes,
             "backtracks": self.stats.backtracks,
             "depth": self.stats.depth,
+            "guesses": [[cell_key(c), v] for c, v in self.stats.stack],
             "domains": {cell_key(c): sorted(domains[c]) for c in sorted(domains)},
         }
         event.update(extra)

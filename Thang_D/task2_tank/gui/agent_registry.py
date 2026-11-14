@@ -63,9 +63,13 @@ class AgentSpec:
 def _builtin_specs() -> List[AgentSpec]:
     return [
         AgentSpec("Human", None, False, "human"),
-        AgentSpec("Minimax", lambda d: MinimaxAgent(horizon=min(d, MAX_PURE_HORIZON), move_ordering=True), True,
+        # randomize + horizon_score: với HP chuẩn 6/9/3, horizon nông không thấy thắng/thua nên mọi nước đều
+        # bằng điểm; nếu cứ lấy nước đầu tiên thì tank đâm đầu vào tường (MOVE_UP) mãi. Xem AdversarialSearch.
+        AgentSpec("Minimax", lambda d: MinimaxAgent(horizon=min(d, MAX_PURE_HORIZON), move_ordering=True,
+                                                    randomize=True, horizon_score=True), True,
                   "built-in", MAX_PURE_HORIZON),
-        AgentSpec("Alpha-Beta", lambda d: AlphaBetaAgent(horizon=d, move_ordering=True), True),
+        AgentSpec("Alpha-Beta", lambda d: AlphaBetaAgent(horizon=d, move_ordering=True,
+                                                         randomize=True, horizon_score=True), True),
         AgentSpec("Heuristic Minimax", lambda d: HeuristicMinimaxAgent(depth=d), True),
         AgentSpec("Heuristic Alpha-Beta", lambda d: HeuristicAlphaBetaAgent(depth=d), True),
     ]

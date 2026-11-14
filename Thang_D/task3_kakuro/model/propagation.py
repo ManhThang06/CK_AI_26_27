@@ -15,6 +15,28 @@ def _build_combos():
 COMBOS = _build_combos()    # (number of cells, sum) -> list of digit sets
 
 
+def run_state(cells, total, domains):
+    """Trang thai cua mot run theo cac mien hien tai (dung chung cho loc mien va UI).
+
+    Tra ve (used, free, rest, combos):
+      used    cac chu so cua o da xac dinh (mien 1 gia tri)
+      free    cac o chua xac dinh
+      rest    tong con lai can dat bang cac o free
+      combos  cac tap chu so hop le: dung len(free) chu so khac nhau, tong = rest,
+              khong trung used, va nam trong hop mien cua cac o free
+    """
+    used = [next(iter(domains[c])) for c in cells if len(domains[c]) == 1]
+    free = [c for c in cells if len(domains[c]) != 1]
+    rest = total - sum(used)
+    combos = []
+    if free:
+        used_set = set(used)
+        reachable = set().union(*(domains[c] for c in free))
+        combos = [combo for combo in COMBOS.get((len(free), rest), ())
+                  if not combo & used_set and combo <= reachable]
+    return used, free, rest, combos
+
+
 class Run:
     def __init__(self, name, cells, total):
         self.name = name              # e.g. "A1" (across) or "D2" (down)
@@ -75,19 +97,12 @@ class Propagator:
 
     def _filter_run(self, run, domains, removed):
         # returns the cells whose domain shrank, or None if the run is impossible
-        fixed = [domains[c] for c in run.cells if len(domains[c]) == 1]
-        used = [next(iter(d)) for d in fixed]
+        used, free, rest, combos = run_state(run.cells, run.total, domains)
         if len(set(used)) < len(used):
             return None                              # two cells share a digit
-        free = [c for c in run.cells if len(domains[c]) != 1]
-        rest = run.total - sum(used)
         if not free:
             return [] if rest == 0 else None
-        reachable = set().union(*(domains[c] for c in free))
-        allowed = set()
-        for combo in COMBOS.get((len(free), rest), ()):
-            if not combo & set(used) and combo <= reachable:
-                allowed |= combo
+        allowed = set().union(*combos)
         if not allowed:
             return None
         changed = []

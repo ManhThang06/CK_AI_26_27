@@ -38,13 +38,36 @@ def build_runs(grid):
 
 
 def check_model(grid, runs):
-    """Kiểm tra bảng hợp lệ, trả về số biến (ô trắng)."""
+    """Kiem tra bang. Tra ve list canh bao (chuoi); rong nghia la bang hop le chuan.
+
+    Loi nang (bang khong the dua vao CSP) -> ValueError:
+      - o trang khong thuoc run nao (khong co goi y ngang lan doc).
+    Canh bao (van giai duoc, solver se tu ket luan vo nghiem neu can):
+      - o trang chi thuoc 1 run, run chi co 1 o,
+      - run co tong khong the dat duoc bang cac chu so khac nhau tu 1 den 9.
+    """
     whites = {(r, c) for r, row in enumerate(grid) for c, x in enumerate(row) if x == W}
     in_runs = {}
     for run in runs:
         for cell in run.cells:
             in_runs[cell] = in_runs.get(cell, 0) + 1
-    assert set(in_runs) == whites, "có ô trắng không thuộc run nào"
-    assert all(n == 2 for n in in_runs.values()), "mỗi ô trắng phải thuộc đúng 2 run"
-    assert all(len(r.cells) >= 2 for r in runs), "run ngắn hơn 2 ô"
-    return len(whites)
+    orphans = sorted(whites - set(in_runs))
+    if orphans:
+        raise ValueError(f"o trang khong thuoc run nao: {orphans[:5]}")
+
+    warnings = []
+    single = sorted(c for c, n in in_runs.items() if n != 2)
+    if single:
+        warnings.append(f"{len(single)} o trang chi thuoc 1 run, vi du {single[:3]}")
+    short = [run.name for run in runs if len(run.cells) < 2]
+    if short:
+        warnings.append(f"{len(short)} run chi co 1 o: {', '.join(short[:6])}")
+    impossible = []
+    for run in runs:
+        k = len(run.cells)
+        if k > 9 or not (k * (k + 1) // 2 <= run.total <= sum(range(10 - k, 10))):
+            impossible.append(f"{run.name}(k={k},sum={run.total})")
+    if impossible:
+        warnings.append(f"{len(impossible)} run co tong khong the dat duoc "
+                        f"(vo nghiem): {', '.join(impossible[:6])}")
+    return warnings

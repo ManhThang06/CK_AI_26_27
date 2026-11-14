@@ -1,0 +1,6 @@
+agent,win,draw,loss,ms_per_move
+Minimax,4,7,13,4.883
+Alpha-Beta,4,7,13,1.479
+Heuristic Minimax,19,4,1,24.813
+Heuristic Alpha-Beta,19,4,1,4.487
+Random [plugin],0,6,18,0.003

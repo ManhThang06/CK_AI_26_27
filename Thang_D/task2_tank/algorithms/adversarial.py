@@ -6,11 +6,13 @@ tìm kiếm xen kẽ nút MAX và nút MIN, mỗi nút có 6 nhánh.
 """
 
 import math
+import random
 import time
 from dataclasses import dataclass, field
 from typing import Dict
 
 from ..engine import Action
+from ..engine.constants import MOVE_DIRECTION
 
 MAX_PLAYER = 0
 MIN_PLAYER = 1
@@ -42,7 +44,10 @@ class AdversarialSearch:
 
     name = "base"
 
-    def __init__(self, move_ordering=False, horizon=None):
+    TIE_EPS = 1e-9
+    MATERIAL_SCALE = 100.0   # điểm vật chất < 0.02, luôn nhỏ hơn giá trị thắng/thua (1/-1)
+
+    def __init__(self, move_ordering=False, horizon=None, rng=None, horizon_score=False):
         """
         move_ordering: đưa FIRE lên đầu khi tank đang đối mặt địch (giúp cắt tỉa nhiều hơn).
         horizon: số cycle nhìn trước tính từ trạng thái gốc. Minimax thuần phải duyệt tới nút
@@ -52,6 +57,8 @@ class AdversarialSearch:
         """
         self.move_ordering = move_ordering
         self.horizon = horizon
+        self.rng = rng
+        self.horizon_score = horizon_score
         self.cycle_limit = None
         self.stats = SearchStats()
 
@@ -65,6 +72,39 @@ class AdversarialSearch:
             return True
         return (self.cycle_limit is not None and state.pending is None
                 and state.cycle >= self.cycle_limit)
+
+    def _terminal_value(self, state):
+        """Giá trị của nút kết thúc hoặc nút bị cắt ở horizon."""
+        if state.is_terminal() or not self.horizon_score:
+            return state.utility()
+        t0, t1 = state.tanks
+        b0, b1 = state.bases
+        return ((t0.hp - t1.hp) + (b0.hp - b1.hp)) / self.MATERIAL_SCALE
+
+    @staticmethod
+    def _is_noop(state, action):
+        """Hành động không làm đổi gì ở phía người đi: STAY, FIRE khi đạn cũ còn bay, hoặc MOVE
+        vào ô bị chắn cứng khi tank đã quay sẵn hướng đó."""
+        if action == Action.STAY:
+            return True
+        me = state.player()
+        if action == Action.FIRE:
+            return any(b.owner == me for b in state.bullets)
+        d = MOVE_DIRECTION.get(action)
+        if d is None:
+            return False
+        t = state.tanks[me]
+        return t.direction == d and state._blocked(t.x + d.value[0], t.y + d.value[1])
+
+    def _pick(self, state, values, order):
+        """Chọn nước đi tốt nhất ở gốc: theo thứ tự đầu tiên, hoặc ngẫu nhiên giữa các nước bằng điểm."""
+        is_max = state.player() == MAX_PLAYER
+        best = max(values.values()) if is_max else min(values.values())
+        tied = [a for a in order if values[a] == best]
+        if self.rng is None or len(tied) == 1:
+            return tied[0], best
+        useful = [a for a in tied if not self._is_noop(state, a)]
+        return self.rng.choice(useful or tied), best
 
     def _ordered_actions(self, state):
         actions = state.legal_actions()
@@ -102,17 +142,14 @@ class MinimaxSearch(AdversarialSearch):
     def search(self, state):
         self._begin(state)
         start = time.perf_counter()
-        is_max = state.player() == MAX_PLAYER
-        best_action, best_value = None, None
         values = {}
+        order = self._ordered_actions(state)
 
-        for a in self._ordered_actions(state):
+        for a in order:
             self.stats.nodes_generated += 1
-            v = self._value(state.result(a), 1)
-            values[a] = v
-            if best_value is None or (v > best_value if is_max else v < best_value):
-                best_action, best_value = a, v
+            values[a] = self._value(state.result(a), 1)
 
+        best_action, best_value = self._pick(state, values, order)
         self.stats.nodes_expanded += 1  # nút gốc
         self.stats.elapsed = time.perf_counter() - start
         return SearchResult(best_action, best_value, self.stats, values)
@@ -124,7 +161,7 @@ class MinimaxSearch(AdversarialSearch):
 
         if self._is_terminal(state):
             stats.terminal_nodes += 1
-            return state.utility()
+            return self._terminal_value(state)
 
         stats.nodes_expanded += 1
         if state.player() == MAX_PLAYER:
@@ -153,22 +190,27 @@ class AlphaBetaSearch(AdversarialSearch):
         start = time.perf_counter()
         is_max = state.player() == MAX_PLAYER
         alpha, beta = -math.inf, math.inf
-        best_action, best_value = None, None
+        best_value = None
         values = {}
+        order = self._ordered_actions(state)
+        # Khi chọn ngẫu nhiên giữa các nước bằng điểm, cần biết giá trị CHÍNH XÁC của nước bằng điểm
+        # tốt nhất; cửa sổ nới thêm TIE_EPS để nhánh bằng điểm không bị cắt thành cận.
+        eps = self.TIE_EPS if self.rng is not None else 0.0
 
-        for a in self._ordered_actions(state):
+        for a in order:
             self.stats.nodes_generated += 1
             v = self._value(state.result(a), alpha, beta, 1)
             values[a] = v
             if is_max:
                 if best_value is None or v > best_value:
-                    best_action, best_value = a, v
-                alpha = max(alpha, best_value)
+                    best_value = v
+                alpha = max(alpha, best_value - eps)
             else:
                 if best_value is None or v < best_value:
-                    best_action, best_value = a, v
-                beta = min(beta, best_value)
+                    best_value = v
+                beta = min(beta, best_value + eps)
 
+        best_action, best_value = self._pick(state, values, order)
         self.stats.nodes_expanded += 1  # nút gốc
         self.stats.elapsed = time.perf_counter() - start
         return SearchResult(best_action, best_value, self.stats, values)
@@ -180,7 +222,7 @@ class AlphaBetaSearch(AdversarialSearch):
 
         if self._is_terminal(state):
             stats.terminal_nodes += 1
-            return state.utility()
+            return self._terminal_value(state)
 
         stats.nodes_expanded += 1
         actions = self._ordered_actions(state)

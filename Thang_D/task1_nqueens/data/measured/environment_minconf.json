@@ -1,0 +1,24 @@
+{
+  "platform": "Linux-6.18.44-fc-v470-x86_64-with-glibc2.39",
+  "python": "3.13.18",
+  "N": [
+    8,
+    16,
+    32,
+    64,
+    100,
+    200
+  ],
+  "seeds": 30,
+  "max_steps": 20000,
+  "tabu_sizes": [
+    0,
+    2,
+    5,
+    10,
+    20
+  ],
+  "restart_after": "max(50, N)",
+  "default_tabu": "max(2, min(10, N // 5))",
+  "note": "cùng trạng thái khởi tạo cho mọi biến thể trong một seed; thời gian phụ thuộc máy"
+}

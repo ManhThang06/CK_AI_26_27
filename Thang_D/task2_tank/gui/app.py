@@ -10,8 +10,8 @@ import pygame
 
 from ..engine import Action
 from .agent_registry import build_registry
-from .game_controller import GameController, HP_PRESETS, MAP_NAMES
-from .renderer import Renderer, make_fonts, WIN_W, WIN_H, BG, TEXT, MUTED, PLAYER, PLAYER_LIGHT
+from .game_controller import GameController, MAP_NAMES
+from .renderer import (Renderer, make_fonts, game_window_size, MENU_SIZE, BG, TEXT, MUTED, TANK)
 
 P1_KEYS = {pygame.K_w: Action.MOVE_UP, pygame.K_s: Action.MOVE_DOWN,
            pygame.K_a: Action.MOVE_LEFT, pygame.K_d: Action.MOVE_RIGHT,
@@ -21,43 +21,28 @@ P2_KEYS = {pygame.K_UP: Action.MOVE_UP, pygame.K_DOWN: Action.MOVE_DOWN,
            pygame.K_RETURN: Action.FIRE, pygame.K_RSHIFT: Action.STAY}
 
 ROW_W, ROW_H = 640, 46
+MENU_W, MENU_H = MENU_SIZE
 
 
 class Menu:
     """Các dòng cấu hình; bấm nửa trái/phải của dòng (hoặc phím mũi tên) để đổi giá trị.
 
-    Chế độ "same": cả hai tank dùng cùng một thuật toán (mỗi tank vẫn có agent riêng,
-    mỗi agent tự mô phỏng cả MAX lẫn MIN trong cây tìm kiếm của nó).
-    Chế độ "different": chọn thuật toán riêng cho từng tank (đấu thuật toán này với thuật toán khác).
+    Mỗi tank được chọn thuật toán và độ sâu riêng (có thể chọn cùng một thuật toán cho cả hai).
     """
-
-    MODES = ["Same algorithm for both tanks", "Different algorithm per tank"]
 
     def __init__(self, registry):
         self.registry = registry
         last = len(registry) - 1
-        self.sel = {"mode": 0, "map": 1, "hp": 2, "p1": min(4, last), "d1": 1,
-                    "p2": min(3, last), "d2": 1}
+        self.sel = {"map": 2, "p1": min(3, last), "d1": 1, "p2": min(3, last), "d2": 1}
         self.focus = 0
-
-    @property
-    def same(self):
-        return self.sel["mode"] == 0
 
     def rows(self):
         reg = self.registry
-        rows = [("mode", "Mode", self.MODES[self.sel["mode"]], 2),
-                ("map", "Map", MAP_NAMES[self.sel["map"]], len(MAP_NAMES)),
-                ("hp", "HP preset", list(HP_PRESETS)[self.sel["hp"]], len(HP_PRESETS))]
-        if self.same:
-            rows += [("p1", "Algorithm", reg[self.sel["p1"]].label, len(reg)),
-                     ("d1", "  Depth", self._depth_text("p1", "d1"), 4)]
-        else:
-            rows += [("p1", "Player 1 (blue)", reg[self.sel["p1"]].label, len(reg)),
-                     ("d1", "  P1 depth", self._depth_text("p1", "d1"), 4),
-                     ("p2", "Player 2 (red)", reg[self.sel["p2"]].label, len(reg)),
-                     ("d2", "  P2 depth", self._depth_text("p2", "d2"), 4)]
-        return rows
+        return [("map", "Map", MAP_NAMES[self.sel["map"]], len(MAP_NAMES)),
+                ("p1", "Player 1 (green)", reg[self.sel["p1"]].label, len(reg)),
+                ("d1", "  P1 depth", self._depth_text("p1", "d1"), 4),
+                ("p2", "Player 2 (orange)", reg[self.sel["p2"]].label, len(reg)),
+                ("d2", "  P2 depth", self._depth_text("p2", "d2"), 4)]
 
     def _depth_text(self, pkey, dkey):
         if not self.registry[self.sel[pkey]].uses_depth:
@@ -65,18 +50,15 @@ class Menu:
         return str(self.sel[dkey] + 1)
 
     def change(self, idx, step):
-        rows = self.rows()
-        key, _, _, n = rows[idx]
+        key, _, _, n = self.rows()[idx]
         if key in ("d1", "d2") and self._depth_text("p1" if key == "d1" else "p2", key) == "n/a":
             return
         self.sel[key] = (self.sel[key] + step) % n
-        self.focus = min(self.focus, len(self.rows()) - 1)
 
     def build_controller(self):
         reg = self.registry
-        pairs = (("p1", "d1"), ("p1", "d1")) if self.same else (("p1", "d1"), ("p2", "d2"))
         factories, labels = [], []
-        for pkey, dkey in pairs:
+        for pkey, dkey in (("p1", "d1"), ("p2", "d2")):
             spec = reg[self.sel[pkey]]
             depth = min(self.sel[dkey] + 1, spec.max_depth)
             if spec.is_human:
@@ -84,15 +66,14 @@ class Menu:
             else:
                 factories.append(lambda s=spec, d=depth: s.factory(d))
             labels.append(spec.label + (" d=%d" % depth if spec.uses_depth else ""))
-        return GameController(MAP_NAMES[self.sel["map"]], list(HP_PRESETS)[self.sel["hp"]],
-                              factories, labels)
+        return GameController(MAP_NAMES[self.sel["map"]], factories, labels)
 
 
 class App:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Tank Battle - Adversarial Search")
-        self.screen = pygame.display.set_mode((WIN_W, WIN_H))
+        self.screen = pygame.display.set_mode(MENU_SIZE)
         self.clock = pygame.time.Clock()
         self.renderer = Renderer(self.screen, make_fonts())
         self.registry, self.plugin_errors = build_registry()
@@ -129,11 +110,11 @@ class App:
 
     # ------------------------------------------------------------ menu
     def _row_rect(self, i):
-        return pygame.Rect((WIN_W - ROW_W) // 2, 130 + i * (ROW_H + 8), ROW_W, ROW_H)
+        return pygame.Rect((MENU_W - ROW_W) // 2, 178 + i * (ROW_H + 8), ROW_W, ROW_H)
 
     def _button_rects(self):
-        y = 130 + len(self.menu.rows()) * (ROW_H + 8) + 10
-        x = (WIN_W - ROW_W) // 2
+        y = 178 + len(self.menu.rows()) * (ROW_H + 8) + 10
+        x = (MENU_W - ROW_W) // 2
         return pygame.Rect(x, y, 400, 52), pygame.Rect(x + 420, y, 220, 52)
 
     def _menu_event(self, event):
@@ -170,37 +151,40 @@ class App:
     def _draw_menu(self):
         r = self.renderer
         self.screen.fill(BG)
-        r.text("TANK BATTLE", "huge", TEXT, WIN_W // 2, 60, center=True)
-        r.text("Choose a map and the algorithm for each tank", "body", MUTED, WIN_W // 2, 100, center=True)
+        r.draw_menu_logo(MENU_W // 2, 30)
+        r.text("TANK BATTLE", "title", TEXT, MENU_W // 2, 112, center=True)
+        r.text("Choose a map and the algorithm for each tank", "body", MUTED, MENU_W // 2, 148, center=True)
         for i, (key, title, value, _) in enumerate(self.menu.rows()):
-            rect = self._row_rect(i)
-            focused = i == self.menu.focus
-            pygame.draw.rect(self.screen, (44, 50, 64) if focused else (32, 36, 46), rect, border_radius=8)
-            if not self.menu.same and key in ("p1", "d1"):
-                pygame.draw.rect(self.screen, PLAYER[0], (rect.x, rect.y, 5, rect.height), border_radius=3)
-            if not self.menu.same and key in ("p2", "d2"):
-                pygame.draw.rect(self.screen, PLAYER[1], (rect.x, rect.y, 5, rect.height), border_radius=3)
-            r.text(title, "body", MUTED, rect.x + 20, rect.centery - 9)
-            r.text("<", "bold", MUTED, rect.x + 190, rect.centery - 10)
-            r.text(value, "bold", TEXT, rect.x + 220, rect.centery - 10)
-            r.text(">", "bold", MUTED, rect.right - 30, rect.centery - 10)
+            accent = TANK[0] if key in ("p1", "d1") else TANK[1] if key in ("p2", "d2") else None
+            r.draw_menu_row(self._row_rect(i), title, value, i == self.menu.focus, accent)
         start, reload_ = self._button_rects()
-        pygame.draw.rect(self.screen, (60, 160, 100), start, border_radius=8)
-        r.text("START  (Enter)", "bold", (10, 24, 16), start.centerx, start.centery, center=True)
-        pygame.draw.rect(self.screen, (60, 66, 82), reload_, border_radius=8)
+        pygame.draw.rect(self.screen, (52, 199, 89), start, border_radius=10)
+        r.text("START  (Enter)", "bold", (8, 28, 14), start.centerx, start.centery, center=True)
+        pygame.draw.rect(self.screen, (44, 50, 64), reload_, border_radius=10)
         r.text("Reload plugins (F5)", "body", TEXT, reload_.centerx, reload_.centery, center=True)
-        y = reload_.bottom + 18
+        y = reload_.bottom + 16
         extra = [s for s in self.registry if s.source == "plugin"]
-        r.text("Plugins loaded: %d" % len(extra), "small", MUTED, (WIN_W - ROW_W) // 2, y)
+        r.text("Plugins loaded: %d" % len(extra), "small", MUTED, (MENU_W - ROW_W) // 2, y)
         for fn, msg in self.plugin_errors[:3]:
             y += 18
-            r.text("%s -> %s" % (fn, msg[:100]), "small", (255, 120, 100), (WIN_W - ROW_W) // 2, y)
+            r.text("%s -> %s" % (fn, msg[:100]), "small", (255, 120, 100), (MENU_W - ROW_W) // 2, y)
 
     # ------------------------------------------------------------ ván chơi
     def _start_game(self):
         self.ctrl = self.menu.build_controller()
+        st = self.ctrl.state
+        self._set_window(game_window_size(st.width, st.height))
         self._reset_runtime()
         self.mode = "game"
+
+    def _set_window(self, size):
+        self.screen = pygame.display.set_mode(size)
+        self.renderer.screen = self.screen
+
+    def _back_to_menu(self):
+        self.token += 1
+        self._set_window(MENU_SIZE)
+        self.mode = "menu"
 
     def _reset_runtime(self):
         self.token += 1
@@ -215,8 +199,7 @@ class App:
             return
         key = event.key
         if key == pygame.K_ESCAPE:
-            self.token += 1
-            self.mode = "menu"
+            self._back_to_menu()
         elif key == pygame.K_r:
             self.ctrl.reset()
             self._reset_runtime()
@@ -290,10 +273,10 @@ class App:
         self.screen.fill(BG)
         now = time.monotonic() * 1000
         self.renderer.draw_board(self.ctrl, now)
-        self.renderer.draw_panel(self.ctrl, {"thinking": self.thinking, "paused": self.paused,
-                                             "delay": self.delay})
+        self.renderer.draw_hud(self.ctrl, {"thinking": self.thinking, "paused": self.paused,
+                                           "delay": self.delay})
         if self.ctrl.is_over():
-            self.renderer.draw_banner(self.ctrl.result_text())
+            self.renderer.draw_banner(self.ctrl.result_text(), self.screen.get_width())
 
 
 def main():

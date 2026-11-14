@@ -4,6 +4,7 @@ choose_action(state) trả về Action cho người đang đến lượt tại `
 (MAX nếu state.player() == 0, ngược lại là MIN).
 """
 
+import random
 import time
 from abc import ABC, abstractmethod
 
@@ -21,9 +22,13 @@ class Agent(ABC):
 class SearchAgent(Agent):
     search_cls = None
 
-    def __init__(self, horizon=None, move_ordering=False):
+    def __init__(self, horizon=None, move_ordering=False, randomize=False, horizon_score=False, seed=None):
+        """randomize: chọn ngẫu nhiên (có seed) giữa các nước bằng điểm thay vì luôn lấy nước đầu tiên.
+        horizon_score: nút bị cắt ở horizon được tính theo chênh lệch HP thay vì 0 (xem AdversarialSearch)."""
         self.horizon = horizon
         self.move_ordering = move_ordering
+        self.horizon_score = horizon_score
+        self.rng = random.Random(seed) if randomize else None
         self.last_result = None
 
     @property
@@ -33,10 +38,15 @@ class SearchAgent(Agent):
             label += " (h=%d cycle)" % self.horizon
         if self.move_ordering:
             label += " +ordering"
+        if self.rng is not None:
+            label += " +random-tie"
+        if self.horizon_score:
+            label += " +hp-score"
         return label
 
     def choose_action(self, state):
-        search = self.search_cls(move_ordering=self.move_ordering, horizon=self.horizon)
+        search = self.search_cls(move_ordering=self.move_ordering, horizon=self.horizon,
+                                 rng=self.rng, horizon_score=self.horizon_score)
         self.last_result = search.search(state)
         return self.last_result.action
 

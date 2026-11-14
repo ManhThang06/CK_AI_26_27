@@ -23,6 +23,7 @@ class SearchStats:
     depth: int = 0           # so phep doan dang nam tren ngan xep
     max_depth: int = 0
     pruned_init: int = 0     # so gia tri bi loai o buoc node consistency
+    stack: list = field(default_factory=list)   # cac phep doan dang mo [((r, c), gia tri), ...]
 
 
 @dataclass
@@ -91,6 +92,7 @@ class BacktrackingSolver:
             self.stats.nodes += 1
             self.stats.depth += 1
             self.stats.max_depth = max(self.stats.max_depth, self.stats.depth)
+            self.stats.stack.append((cell, value))
 
             ok, removed = self.prop.assign(domains, cell, value)
             message = f"Guess ({cell[0]},{cell[1]}) = {value}. {var_why}"
@@ -108,5 +110,6 @@ class BacktrackingSolver:
             Propagator.undo(domains, removed)
             self.stats.backtracks += 1
             self.stats.depth -= 1
+            self.stats.stack.pop()
             self.rec.backtrack(domains, cell, value, len(removed))
         return False

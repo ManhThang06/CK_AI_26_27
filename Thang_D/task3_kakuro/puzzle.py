@@ -8,12 +8,19 @@ Dinh dang o trong JSON:
   "d14/a12"    ca hai goi y
 
 Khoa o dung trong trace va UI co dang chuoi "hang,cot", vi du "2,3".
+
+Moi file trong thu muc puzzles/ deu doc duoc (discover_puzzles / load_all). Bang co
+cau truc la la (o chi thuoc 1 run, tong khong the dat...) van duoc nap, kem danh sach
+`Puzzle.warnings`; chi bang khong the dua vao CSP moi bi tu choi (ValueError).
 """
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 from .model.kakuro_model import B, W, build_runs, check_model
+
+PUZZLE_DIR = Path(__file__).resolve().parent / "puzzles"
 
 
 def cell_key(cell):
@@ -35,8 +42,11 @@ class RunInfo:
 
 
 class Puzzle:
-    def __init__(self, data):
+    def __init__(self, data, path=None):
+        if not isinstance(data, dict) or not data.get("grid"):
+            raise ValueError("File puzzle phai la JSON co truong 'grid' khong rong")
         self.data = data
+        self.path = Path(path) if path else None
         self.name = data.get("name", "Kakuro")
         self.grid = [list(row) for row in data["grid"]]
         self.rows = len(self.grid)
@@ -47,7 +57,7 @@ class Puzzle:
         # Chuyen sang dang tuple (down, across) cua kakuro_model de dung lai build_runs
         self.model_grid = [[self._parse_token(t) for t in row] for row in self.grid]
         self.model_runs = build_runs(self.model_grid)
-        check_model(self.model_grid, self.model_runs)
+        self.warnings = check_model(self.model_grid, self.model_runs)
 
         self.cells = [f"{r},{c}" for r, row in enumerate(self.grid)
                       for c, t in enumerate(row) if t == W]
@@ -59,6 +69,12 @@ class Puzzle:
             for cell in run.cells:
                 self.peers[cell].update(x for x in run.cells if x != cell)
 
+    @property
+    def label(self):
+        """Ten ngan de hien tren nut / bang so sanh, vd 'assignment_9x9' -> '9x9'."""
+        stem = self.path.stem if self.path else self.name
+        return stem[len("assignment_"):] if stem.startswith("assignment_") else stem
+
     @staticmethod
     def _parse_token(token):
         if token == "#":
@@ -66,7 +82,7 @@ class Puzzle:
         if token == ".":
             return W
         down = across = None
-        for part in token.split("/"):
+        for part in str(token).split("/"):
             if len(part) < 2 or part[0] not in "da" or not part[1:].isdigit():
                 raise ValueError(f"Token khong hop le: {token!r}")
             if part[0] == "d":
@@ -77,7 +93,7 @@ class Puzzle:
 
     @classmethod
     def load(cls, path):
-        return cls(json.loads(Path(path).read_text(encoding="utf-8")))
+        return cls(json.loads(Path(path).read_text(encoding="utf-8")), path)
 
     def check(self, assignment):
         """assignment: {"r,c": gia tri}. True neu moi run co tong dung va cac so khac nhau."""
@@ -90,3 +106,27 @@ class Puzzle:
             if len(set(values)) != len(values) or sum(values) != run.target:
                 return False
         return True
+
+
+def _natural_key(path):
+    """Sap xep theo kich thuoc: 5x5 < 9x9 < 10x10 < 12x12 (khong theo thu tu chu cai)."""
+    return [int(n) for n in re.findall(r"\d+", path.stem)], path.stem
+
+
+def discover_puzzles(directory=None):
+    """Danh sach duong dan moi file *.json trong thu muc puzzles, theo thu tu kich thuoc."""
+    return sorted(Path(directory or PUZZLE_DIR).glob("*.json"), key=_natural_key)
+
+
+def load_all(directory=None):
+    """Nap moi puzzle trong thu muc. Tra ve (puzzles, errors); errors la [(path, thong bao)].
+
+    Mot file hong khong lam hong ca danh sach: no bi bo qua va ghi vao errors.
+    """
+    puzzles, errors = [], []
+    for path in discover_puzzles(directory):
+        try:
+            puzzles.append(Puzzle.load(path))
+        except (ValueError, KeyError, IndexError, TypeError, OSError) as exc:
+            errors.append((path, str(exc)))
+    return puzzles, errors
