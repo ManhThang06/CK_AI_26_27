@@ -1,9 +1,3 @@
-"""Agent điều khiển tank bằng tìm kiếm đối kháng.
-
-choose_action(state) trả về Action cho người đang đến lượt tại `state`
-(MAX nếu state.player() == 0, ngược lại là MIN).
-"""
-
 import random
 import time
 from collections import Counter, deque
@@ -27,8 +21,6 @@ class SearchAgent(Agent):
     search_cls = None
 
     def __init__(self, horizon=None, move_ordering=False, randomize=False, horizon_score=False, seed=None, time_limit=None, tactical_ties=False):
-        """randomize: chọn ngẫu nhiên (có seed) giữa các nước bằng điểm thay vì luôn lấy nước đầu tiên.
-        horizon_score: nút bị cắt ở horizon được tính theo chênh lệch HP thay vì 0 (xem AdversarialSearch)."""
         self.time_limit = time_limit
         self.tactical_ties = tactical_ties
         self.recent = deque(maxlen=12)

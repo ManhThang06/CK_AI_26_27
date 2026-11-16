@@ -6,10 +6,6 @@ from .variable_selectors import make_selector
 
 
 class ConflictBoard(Board):
-    """Board có đếm xung đột tăng dần: số quân theo cột và hai đường chéo, mỗi truy vấn O(1).
-
-    Biến = hàng (mỗi hàng một quân), giá trị = cột, đúng biểu diễn columns[row] = col của Board.
-    """
 
     def __init__(self, n, rng=None, columns=None):
         if type(n) is not int or n < 1:
@@ -51,7 +47,6 @@ class ConflictBoard(Board):
                                  + self.diag2_count[self._diag2(row, col)])
 
     def conflicts_at(self, row, col):
-        """Số quân khác tấn công ô (row, col) nếu quân của `row` đứng ở đó."""
         conflicts = (self.col_count[col]
                      + self.diag1_count[self._diag1(row, col)]
                      + self.diag2_count[self._diag2(row, col)])

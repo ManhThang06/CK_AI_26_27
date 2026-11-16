@@ -1,8 +1,3 @@
-"""Bang Kakuro: phan tich o, dung cac Run (Sum + Alldiff), kiem tra tinh hop le cua bang.
-
-Ky hieu o: "."  o trang (bien)        "#"  o den khong goi y
-           "d21" tong cot ben duoi    "a12" tong hang ben phai    "d14/a12" ca hai
-"""
 from typing import NamedTuple, Optional
 
 from .cell import Cell
@@ -10,8 +5,8 @@ from .constraint import Run
 
 
 class ClueCell(NamedTuple):
-    down: Optional[int] = None      # tong cot ben duoi
-    across: Optional[int] = None    # tong hang ben phai
+    down: Optional[int] = None
+    across: Optional[int] = None
 
     @classmethod
     def parse(cls, token):
@@ -47,7 +42,6 @@ class KakuroBoard:
             return token
         return ClueCell.parse(token)
 
-    # ------------------------------------------------------------ truy van
     def is_white(self, r, c):
         return 0 <= r < self.rows and 0 <= c < self.cols and self._squares[r][c] == self.WHITE
 
@@ -56,7 +50,6 @@ class KakuroBoard:
         square = self._squares[r][c]
         return square if isinstance(square, ClueCell) else None
 
-    # ------------------------------------------------------------ dung rang buoc
     def _build_runs(self):
         runs, across_count, down_count = [], 0, 0
         for r in range(self.rows):
@@ -83,12 +76,6 @@ class KakuroBoard:
         return cells
 
     def _check(self):
-        """Tra ve list canh bao; rong nghia la bang hop le chuan.
-
-        Loi nang (khong the dua vao CSP) -> ValueError: o trang khong thuoc run nao.
-        Canh bao (van giai duoc, solver tu ket luan vo nghiem): o chi thuoc 1 run,
-        run chi co 1 o, run co tong khong the dat duoc.
-        """
         membership = {}
         for run in self.runs:
             for cell in run.cells:

@@ -35,7 +35,7 @@ python -c "from task1_nqueens.cnf_encoder import CNFEncoder; clauses = CNFEncode
 
 ```bash
 python -m task1_nqueens.sat_solver 4
-python -m task1_nqueens.sat_experiment --ns 4 8 16 32 --repeats 5 --output demo_results/sat
+python -m task1_nqueens.sat_experiment --ns 4 8 16 32 64 --repeats 5 --output ./task1_nqueens/demo_results/sat
 ```
 
 **Khi demo:** Lệnh đầu in kết quả `sat` và bàn cờ nghiệm. `SATSolver` nạp CNF vào Glucose3, giải mã nghiệm và kiểm tra bàn cờ bằng `Board.is_valid()`. Với lệnh thứ hai, mở `demo_results/sat/sat_summary.csv` để chỉ hai cột `num_clauses` và `mean_s`. `mean_s` là thời gian giải trung bình tính bằng **giây**. `sat.csv` lưu từng lượt và tách riêng thời gian sinh CNF, nạp CNF và gọi bộ giải.
@@ -43,7 +43,7 @@ python -m task1_nqueens.sat_experiment --ns 4 8 16 32 --repeats 5 --output demo_
 Để trình bày đủ dãy kích thước, mở [kết quả đã lưu](data/measured/sat_summary.csv) hoặc chạy lại:
 
 ```bash
-python -m task1_nqueens.sat_experiment --repeats 5 --output demo_results/sat_full
+python -m task1_nqueens.sat_experiment --repeats 5 --output ./task1_nqueens/demo_results/sat_full
 ```
 
 Dùng biểu đồ [số mệnh đề](data/measured/figures/sat_clauses.png) và [thời gian giải](data/measured/figures/sat_time.png) khi trình bày. Ví dụ, số mệnh đề tăng từ **80** ở N = 4 lên **428.800** ở N = 64. Thời gian đo lại phụ thuộc vào máy.
@@ -51,7 +51,7 @@ Dùng biểu đồ [số mệnh đề](data/measured/figures/sat_clauses.png) v�
 ## 3. So sánh Min-Conflicts với heuristic chọn biến
 
 ```bash
-python -X utf8 -m task1_nqueens.mc_experiment --ns 8 64 --seeds 30 --output demo_results/minconf
+python -X utf8 -m task1_nqueens.mc_experiment --ns 8 64 --seeds 30 --output ./task1_nqueens/demo_results/minconf
 ```
 
 **Khi demo:** Trong bản code này, **mỗi hàng là một biến**, giá trị là cột đặt hậu. Mỗi bước chọn một hàng đang xung đột, sau đó chọn cột có ít xung đột nhất cho quân hậu của hàng đó. Cả ba cách dùng chung quy tắc chọn cột và cùng bàn khởi tạo cho một cặp kích thước và seed.
@@ -67,7 +67,7 @@ python -X utf8 -m task1_nqueens.mc_experiment --ns 8 64 --seeds 30 --output demo
 Lệnh trên cũng xuất `minconf_restart.csv` và `minconf_tabu.csv` để xem riêng tác động của restart và độ dài tabu. Muốn chạy lại toàn bộ kích thước của nhóm:
 
 ```bash
-python -X utf8 -m task1_nqueens.mc_experiment --output demo_results/minconf_full
+python -X utf8 -m task1_nqueens.mc_experiment --output ./task1_nqueens/demo_results/minconf_full
 ```
 
 Có thể mở [notebook SAT](experiments/t1_sat.ipynb) và [notebook Min-Conflicts](experiments/t1_minconflicts.ipynb) trong VS Code bằng kernel của `.venv`. Giữ output các cell khi đóng gói bài nộp.
