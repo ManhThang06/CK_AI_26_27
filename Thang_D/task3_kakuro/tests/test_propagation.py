@@ -1,20 +1,26 @@
 import unittest
 
-from ..model.propagation import COMBOS, Propagator, run_state
+from ..model.cell import Cell
+from ..model.constraint import Run
+from ..model.domains import Domains
+from ..model.propagation import Propagator
+
+COMBOS = Run.COMBINATIONS
 from ..solver import BacktrackingSolver
-from .helpers import BY_LABEL, SOLVABLE
+from .helpers import BROKEN, BY_LABEL, SOLVABLE
 
 
 class CombosTests(unittest.TestCase):
     def test_known_combinations(self):
-        self.assertEqual(COMBOS[(2, 3)], [frozenset({1, 2})])
-        self.assertEqual(COMBOS[(3, 6)], [frozenset({1, 2, 3})])
-        self.assertEqual(COMBOS[(9, 45)], [frozenset(range(1, 10))])
-        self.assertNotIn((2, 2), COMBOS)                  # 2 chu so khac nhau khong the co tong 2
+        self.assertEqual(COMBOS.lookup(2, 3), [frozenset({1, 2})])
+        self.assertEqual(COMBOS.lookup(3, 6), [frozenset({1, 2, 3})])
+        self.assertEqual(COMBOS.lookup(9, 45), [frozenset(range(1, 10))])
+        self.assertEqual(COMBOS.lookup(2, 2), [])                # 2 chu so khac nhau khong the co tong 2
 
     def test_run_state(self):
-        domains = {(0, 0): {7}, (0, 1): {1, 2, 3, 4, 5, 6, 7, 8, 9}, (0, 2): {1, 2, 3, 4, 5}}
-        used, free, rest, combos = run_state([(0, 0), (0, 1), (0, 2)], 12, domains)
+        cells = [Cell(0, 0), Cell(0, 1), Cell(0, 2)]
+        domains = Domains({cells[0]: {7}, cells[1]: set(range(1, 10)), cells[2]: {1, 2, 3, 4, 5}})
+        used, free, rest, combos = Run("A1", cells, 12).state(domains)
         self.assertEqual((used, rest, len(free)), ([7], 5, 2))
         self.assertEqual(sorted(sorted(c) for c in combos), [[1, 4], [2, 3]])
 
@@ -30,20 +36,20 @@ class PropagatorTests(unittest.TestCase):
         for p in SOLVABLE:
             with self.subTest(p.label):
                 solution = BacktrackingSolver(p).solve().solution
-                prop = Propagator(p.model_runs)
+                prop = Propagator(p.runs)
                 domains = prop.initial_domains()
                 previous = {c: set(d) for c, d in domains.items()}
                 for _ in range(4):
                     ok, _ = prop.propagate_all(domains)
                     self.assertTrue(ok)
-                    for (r, c), d in domains.items():
-                        self.assertIn(solution[f"{r},{c}"], d)
-                        self.assertLessEqual(d, previous[(r, c)])
+                    for cell, d in domains.items():
+                        self.assertIn(solution[cell.key], d)
+                        self.assertLessEqual(d, previous[cell])
                     previous = {c: set(d) for c, d in domains.items()}
 
     def test_assign_then_undo_restores_domains_exactly(self):
         p = BY_LABEL["9x9"]
-        prop = Propagator(p.model_runs)
+        prop = Propagator(p.runs)
         domains = prop.initial_domains()
         prop.propagate_all(domains)
         before = {c: set(d) for c, d in domains.items()}
@@ -55,7 +61,7 @@ class PropagatorTests(unittest.TestCase):
 
     def test_assign_value_outside_domain_fails(self):
         p = BY_LABEL["9x9"]
-        prop = Propagator(p.model_runs)
+        prop = Propagator(p.runs)
         domains = prop.initial_domains()
         prop.propagate_all(domains)
         cell = next(c for c, d in domains.items() if len(d) > 1 and 9 not in d)
@@ -64,9 +70,9 @@ class PropagatorTests(unittest.TestCase):
         self.assertEqual(removed, [])
 
     def test_impossible_run_makes_propagate_all_fail(self):
-        for label in ("10x10", "12x12"):
-            with self.subTest(label):
-                prop = Propagator(BY_LABEL[label].model_runs)
+        for p in BROKEN:
+            with self.subTest(p.label):
+                prop = Propagator(p.runs)
                 ok, _ = prop.propagate_all(prop.initial_domains())
                 self.assertFalse(ok)
                 self.assertIsNotNone(prop.failed_run)

@@ -88,7 +88,6 @@ class ConflictBoard(Board):
 
 
 class MinConflictsSolver(NQueensSolver):
-    """Min-Conflicts với chiến lược chọn biến có thể thay thế (VariableSelector)."""
 
     def __init__(self, N, max_steps=50000, mode="standard", tabu_size=5,
                  restart_after=None, selector=None):

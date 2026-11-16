@@ -1,159 +1,74 @@
-# Task 1 - N-Queens: Local Search & Propositional Logic
+# Demo Task 1 – N-Queens
 
-Giải bài toán N-quân hậu theo hai hướng:
+Demo theo ba yêu cầu của đề: mô hình hóa logic mệnh đề và sinh CNF, giải bằng Glucose3, rồi so sánh các cách chọn biến của Min-Conflicts.
 
-| Yêu cầu của đề | Nội dung | Mã nguồn |
-|---|---|---|
-| Req 1 | Mô hình hóa logic mệnh đề và chuyển sang CNF | `cnf_encoder.py` |
-| Req 2 | Giải bằng **Glucose3** (PySAT), đo số clause và thời gian khi N tăng | `sat_solver.py`, `sat_experiment.py` |
-| Req 3 | **Min-Conflicts** + heuristic chọn biến, thực nghiệm so sánh | `min_conflicts.py`, `mc_experiment.py` |
+## Chuẩn bị
 
-## 1. Cấu trúc thư mục
+Giải nén `task1_nqueens.zip`. Mở terminal tại **thư mục cha chứa `task1_nqueens/`**. Trong gói nộp, đó thường là `source/`. Các lệnh bên dưới đều chạy từ thư mục cha này.
 
-```
-Thang_D/                        <- chạy mọi lệnh từ thư mục này
-└── task1_nqueens/
-    ├── README.md
-    ├── requirement.txt        <- thư viện cần cài
-    ├── board.py               Board: kiểm tra nghiệm (columns[row] = col), lớp cha của ConflictBoard
-    ├── nqueens_solver.py      NQueensSolver (lớp trừu tượng): SATSolver, MinConflictsSolver kế thừa
-    ├── variable_selectors.py  VariableSelector: Standard/MaxTabu/RouletteSelector (Strategy)
-    ├── experiment_base.py     Experiment (lớp trừu tượng): ghi CSV/môi trường
-    ├── cnf_encoder.py         CNFEncoder: sinh các clause CNF
-    ├── sat_solver.py          SATSolver: giải bằng Glucose3
-    ├── sat_experiment.py      SATExperiment: đo SAT theo N  -> data/measured/sat*.csv
-    ├── min_conflicts.py       ConflictBoard (kế thừa Board) + MinConflictsSolver
-    ├── mc_experiment.py       MinConflictsExperiment: đo Min-Conflicts -> data/measured/minconf*.csv
-    ├── analysis.py            SATPlotter, MinConflictsPlotter, TabuPlotter: vẽ biểu đồ từ CSV
-    ├── experiments/
-    │   ├── t1_sat.ipynb           notebook Req 2 (đã giữ output)
-    │   └── t1_minconflicts.ipynb  notebook Req 3 (đã giữ output)
-    └── data/measured/         số liệu đo thật + biểu đồ (figures/)
-```
+**Windows (PowerShell)**
 
-## 2. Cài đặt
-
-Cần Python 3.10 trở lên (đã thử trên Python 3.13).
-
-```bash
-cd Thang_D
+```powershell
 python -m venv .venv
-.venv\Scripts\activate
-pip install -r task1_nqueens/requirement.txt
+.venv/Scripts/python.exe -m pip install -r task1_nqueens/requirement.txt
 ```
 
-> **Quan trọng:** luôn chạy bằng `python -m task1_nqueens.<tên_module>` **từ thư mục `source/`**
-> (thư mục chứa `task1_nqueens/`). Chạy trực tiếp `python sat_solver.py` trong thư mục con
-> sẽ lỗi vì các module dùng import tương đối.
-
-## 3. Cách chạy
-
-### Req 1 và Req 2 - SAT với Glucose3
-
-Giải một bàn cờ (mặc định N = 8), in số biến, số clause, thời gian và bàn cờ:
+**macOS / Linux**
 
 ```bash
-python -m task1_nqueens.sat_solver 8
-python -m task1_nqueens.sat_solver 12
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r task1_nqueens/requirement.txt
 ```
 
-Thực nghiệm với N tăng dần (N = 4, 5, 8, 12, 16, 24, 32, 48, 64; mỗi N chạy 5 lần):
+Trên Windows, dùng `.venv/Scripts/python.exe` thay cho `python` trong các lệnh demo nếu chưa kích hoạt môi trường ảo. Chạy theo cú pháp `python -m task1_nqueens.<module>` để các import trong gói hoạt động.
+
+## 1. Mô hình hóa và sinh CNF
 
 ```bash
-python -m task1_nqueens.sat_experiment --repeats 5
-# tùy chọn: --ns 4 8 16 32   --output <thư mục>
+python -c "from task1_nqueens.cnf_encoder import CNFEncoder; clauses = CNFEncoder(4).encode(); print('Clauses:', len(clauses)); print('First row:', clauses[0]); print('First exclusion pair:', clauses[4])"
 ```
 
-Kết quả: `data/measured/sat.csv` (từng lượt), `sat_summary.csv` (trung bình, độ lệch chuẩn),
-`environment.json` (máy đo) và `figures/sat_clauses.png`, `figures/sat_time.png`.
+**Khi demo:** Chỉ vào `CNFEncoder.encode()` trong `cnf_encoder.py`. Với bàn 4×4, mỗi ô là một biến Boolean. Mệnh đề `[1, 2, 3, 4]` yêu cầu ít nhất một ô ở hàng đầu có hậu. Mệnh đề `[-1, -2]` cấm đặt hai hậu cùng lúc ở hai ô đầu. Bộ sinh áp dụng quy tắc cấm theo cặp cho từng hàng, cột và đường chéo. Kết quả là **16 biến và 80 mệnh đề**.
 
-Số clause của mã hóa: với mỗi hàng 1 clause "ít nhất một quân" và với mỗi nhóm k ô (hàng, cột, đường chéo)
-có C(k, 2) clause "nhiều nhất một quân" dạng `(¬a ∨ ¬b)`. Ví dụ N = 4 → 80 clause, N = 8 → 736 clause.
-
-### Req 3 - Min-Conflicts
-
-Chạy toàn bộ thực nghiệm (khoảng 10-20 giây): 30 seed × N ∈ {8, 16, 32, 64, 100, 200} × 3 biến thể,
-cả **không restart** và **có restart**, cùng thí nghiệm `tabu_size`:
+## 2. Giải bằng Glucose3 và đo theo kích thước bàn
 
 ```bash
-python -m task1_nqueens.mc_experiment
-# tùy chọn: --seeds 10   --ns 8 16 32   --output <thư mục>
+python -m task1_nqueens.sat_solver 4
+python -m task1_nqueens.sat_experiment --ns 4 8 16 32 --repeats 5 --output demo_results/sat
 ```
 
-Kết quả trong `data/measured/`:
+**Khi demo:** Lệnh đầu in kết quả `sat` và bàn cờ nghiệm. `SATSolver` nạp CNF vào Glucose3, giải mã nghiệm và kiểm tra bàn cờ bằng `Board.is_valid()`. Với lệnh thứ hai, mở `demo_results/sat/sat_summary.csv` để chỉ hai cột `num_clauses` và `mean_s`. `mean_s` là thời gian giải trung bình tính bằng **giây**. `sat.csv` lưu từng lượt và tách riêng thời gian sinh CNF, nạp CNF và gọi bộ giải.
 
-| File | Nội dung |
+Để trình bày đủ dãy kích thước, mở [kết quả đã lưu](data/measured/sat_summary.csv) hoặc chạy lại:
+
+```bash
+python -m task1_nqueens.sat_experiment --repeats 5 --output demo_results/sat_full
+```
+
+Dùng biểu đồ [số mệnh đề](data/measured/figures/sat_clauses.png) và [thời gian giải](data/measured/figures/sat_time.png) khi trình bày. Ví dụ, số mệnh đề tăng từ **80** ở N = 4 lên **428.800** ở N = 64. Thời gian đo lại phụ thuộc vào máy.
+
+## 3. So sánh Min-Conflicts với heuristic chọn biến
+
+```bash
+python -X utf8 -m task1_nqueens.mc_experiment --ns 8 64 --seeds 30 --output demo_results/minconf
+```
+
+**Khi demo:** Trong bản code này, **mỗi hàng là một biến**, giá trị là cột đặt hậu. Mỗi bước chọn một hàng đang xung đột, sau đó chọn cột có ít xung đột nhất cho quân hậu của hàng đó. Cả ba cách dùng chung quy tắc chọn cột và cùng bàn khởi tạo cho một cặp kích thước và seed.
+
+| Cấu hình | Cách chọn hàng đang xung đột |
 |---|---|
-| `minconf.csv` | từng lượt chạy, **không** restart |
-| `minconf_restart.csv` | từng lượt chạy, **có** restart (`restart_after = max(50, N)`) |
-| `minconf_tabu.csv` | ảnh hưởng của `tabu_size` ∈ {0, 2, 5, 10, 20} lên `max_tabu` |
-| `environment_minconf.json` | cấu hình và máy đo |
-| `figures/minconf_*.png` | median số bước, median thời gian, tỉ lệ thành công, ảnh hưởng tabu |
+| `standard` | Chọn ngẫu nhiên đều. |
+| `max_tabu` | Ưu tiên hàng xung đột nhiều nhất trong các hàng ngoài danh sách tabu. Nếu tất cả đều nằm trong danh sách, xét lại tất cả các hàng đang xung đột. |
+| `roulette` | Chọn ngẫu nhiên theo trọng số là số xung đột của mỗi hàng. |
 
-Cột CSV: `N, variant, seed, steps, time, success, restarts`. Với mỗi seed, cả 3 biến thể bắt đầu từ
-**cùng một trạng thái khởi tạo** để so sánh công bằng. Mọi nghiệm đều được kiểm tra độc lập bằng `Board.is_valid()`.
+Đọc bảng **không restart** trong terminal. Chỉ hai chỉ số `med_st` (trung vị số bước) và `succ(%)` (tỷ lệ giải được). Trong [dữ liệu nhóm đã lưu](data/measured/minconf.csv), tại N = 64, `standard` có trung vị **111 bước**, `max_tabu` có **69,5 bước**, cả hai giải **30/30** lượt. Tại N = 8, `max_tabu` có trung vị **14,5 bước** nhưng chỉ giải **26/30** lượt, nên cần đọc số bước cùng tỷ lệ thành công.
 
-Vẽ lại biểu đồ từ CSV có sẵn (không đo lại):
+Lệnh trên cũng xuất `minconf_restart.csv` và `minconf_tabu.csv` để xem riêng tác động của restart và độ dài tabu. Muốn chạy lại toàn bộ kích thước của nhóm:
 
 ```bash
-python -m task1_nqueens.analysis
+python -X utf8 -m task1_nqueens.mc_experiment --output demo_results/minconf_full
 ```
 
-### Notebook
+Có thể mở [notebook SAT](experiments/t1_sat.ipynb) và [notebook Min-Conflicts](experiments/t1_minconflicts.ipynb) trong VS Code bằng kernel của `.venv`. Giữ output các cell khi đóng gói bài nộp.
 
-```bash
-pip install notebook          # nếu muốn mở bằng trình duyệt; VS Code thì chỉ cần cài extension Jupyter
-jupyter notebook task1_nqueens/experiments
-```
-
-- `t1_sat.ipynb`: chạy lại ví dụ nhỏ, đọc `sat.csv` thật, vẽ biểu đồ.
-- `t1_minconflicts.ipynb`: ví dụ N = 8, bảng kết quả, thống kê restart, biểu đồ, thí nghiệm tabu, chạy lại nhanh, nhận xét.
-
-Notebook tự tìm thư mục `source/` nên mở từ đâu cũng được. Output của mọi cell đã được giữ lại theo yêu cầu đề.
-
-## 4. Các cách chọn biến trong Min-Conflicts
-
-Mỗi bước: chọn một **hàng** đang xung đột, rồi dời quân hậu của hàng đó về **cột ít xung đột nhất** (hòa thì chọn ngẫu nhiên).
-
-| `mode` | Cách chọn hàng xung đột | Ý tưởng |
-|---|---|---|
-| `standard` | ngẫu nhiên | Min-Conflicts chuẩn (Lecture 08) |
-| `max_tabu` | hàng có **nhiều xung đột nhất**, bỏ qua các hàng vừa chọn gần đây (tabu list) | sửa chỗ tệ nhất trước, tabu để không bị lặp |
-| `roulette` | ngẫu nhiên có trọng số = số xung đột | ưu tiên hàng xung đột nhiều nhưng vẫn ngẫu nhiên |
-
-Tham số: `tabu_size` (độ dài tabu list), `restart_after` (số bước không cải thiện tổng xung đột trước khi
-khởi tạo lại bàn cờ; `None` = không restart), `max_steps`.
-
-`ConflictBoard` lưu số quân theo hàng và hai đường chéo nên tính số xung đột của một ô trong O(1).
-
-## 5. Tóm tắt kết quả đo
-
-Số liệu đầy đủ nằm trong `data/measured/` và notebook.
-
-**SAT (Glucose3)**: N = 4..64 đều giải được; số clause tăng theo O(N³) (80 clause ở N = 4, 428 800 ở N = 64).
-Thời gian giải rất nhỏ (cỡ micro-giây đến vài trăm mili-giây) và dao động nhẹ giữa các N lớn do tính chất tìm kiếm của SAT.
-
-**Min-Conflicts (30 seed)**:
-- Không restart có thể bị kẹt cực trị cục bộ (ví dụ N = 8: `max_tabu` 4/30 lần, `roulette` 2/30 lần; N = 16: `standard` 2/30 lần).
-  Có restart thì mọi cấu hình đạt 100%.
-- `max_tabu` ít bước hơn `standard` khoảng 34-57% ở mọi N và ổn định hơn; `roulette` gần như ngang `standard`.
-- `tabu_size = 0` kém rõ rệt so với `tabu_size >= 2`; từ 2 đến 20 gần như không khác nhau.
-- Với các dòng có thất bại, mean số bước bị kéo lên bởi lần hết ngân sách 20000 bước; hãy đọc **median** và **tỉ lệ thành công**.
-
-## 6. Lưu ý về môi trường đo
-
-- SAT (`sat*.csv`, `environment.json`): đo trên Windows 10, Python 3.14, `python-sat 1.9.dev17`.
-- Min-Conflicts (`minconf*.csv`, `environment_minconf.json`): đo trên Linux, Python 3.13.
-- Số bước và tỉ lệ thành công của Min-Conflicts **tái lập được** nhờ seed cố định; **thời gian** phụ thuộc máy nên chạy lại
-  sẽ ra con số khác, nhưng xu hướng so sánh giữa các biến thể không đổi.
-- Biểu diễn nghiệm thống nhất: `Board.columns[row] = col`; `ConflictBoard` kế thừa `Board` và dùng chung `is_valid()`.
-  Min-Conflicts coi mỗi **hàng** là một biến.
-
-## 7. Xử lý sự cố
-
-| Lỗi | Cách xử lý |
-|---|---|
-| `ModuleNotFoundError: task1_nqueens` | Chạy từ thư mục `source/` (chứa `task1_nqueens/`), dùng `python -m task1_nqueens.<module>` |
-| `ImportError: attempted relative import` | Không chạy file trực tiếp; dùng `python -m ...` như trên |
-| `ModuleNotFoundError: pysat` | `pip install -r task1_nqueens/requirement.txt` |
-| Notebook không tìm thấy kernel | `pip install ipykernel`, rồi chọn kernel Python của `.venv` |

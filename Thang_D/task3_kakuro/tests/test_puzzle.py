@@ -3,25 +3,23 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from ..puzzle import Puzzle, discover_puzzles, load_all, PUZZLE_DIR
+from ..puzzle import Puzzle, PuzzleRepository, PUZZLE_DIR
 from .helpers import BY_LABEL, PUZZLES, LOAD_ERRORS, SOLVABLE, BROKEN
 
 
 class LoadingTests(unittest.TestCase):
     def test_every_json_in_puzzle_folder_is_loaded(self):
-        files = discover_puzzles()
-        self.assertGreaterEqual(len(files), 4)
+        files = PuzzleRepository().paths()
+        self.assertEqual(len(files), 2)
         self.assertEqual(LOAD_ERRORS, [])
         self.assertEqual([p.path for p in PUZZLES], files)
 
     def test_natural_order_by_size(self):
-        self.assertEqual([p.label for p in PUZZLES][:4], ["5x5", "9x9", "10x10", "12x12"])
+        self.assertEqual([p.label for p in PUZZLES], ["5x5", "9x9"])
 
     def test_dimensions_and_variable_counts(self):
-        self.assertEqual((BY_LABEL["5x5"].rows, len(BY_LABEL["5x5"].cells)), (5, 12))
-        self.assertEqual((BY_LABEL["9x9"].rows, len(BY_LABEL["9x9"].cells)), (9, 48))
-        self.assertEqual((BY_LABEL["10x10"].rows, BY_LABEL["10x10"].cols), (10, 10))
-        self.assertEqual((BY_LABEL["12x12"].rows, BY_LABEL["12x12"].cols), (12, 12))
+        self.assertEqual((BY_LABEL["5x5"].board.rows, len(BY_LABEL["5x5"].cells)), (5, 12))
+        self.assertEqual((BY_LABEL["9x9"].board.rows, len(BY_LABEL["9x9"].cells)), (9, 48))
 
     def test_standard_puzzles_have_no_warnings(self):
         self.assertEqual({p.label for p in SOLVABLE}, {"5x5", "9x9"})
@@ -29,9 +27,10 @@ class LoadingTests(unittest.TestCase):
             self.assertTrue(all(len([r for r in p.runs if c in r.cells]) == 2 for c in p.cells))
 
     def test_inconsistent_puzzles_load_with_warnings(self):
-        self.assertEqual({p.label for p in BROKEN}, {"10x10", "12x12"})
+        self.assertEqual(len(BROKEN), 1)
         for p in BROKEN:
             self.assertTrue(any("vo nghiem" in w for w in p.warnings), p.warnings)
+            self.assertTrue(any("chi co 1 o" in w for w in p.warnings), p.warnings)
 
     def test_check_accepts_only_valid_solutions(self):
         p = BY_LABEL["5x5"]
@@ -63,7 +62,7 @@ class BadInputTests(unittest.TestCase):
             (Path(tmp) / "a_good.json").write_text(json.dumps(good), encoding="utf-8")
             (Path(tmp) / "b_not_json.json").write_text("{oops", encoding="utf-8")
             (Path(tmp) / "c_bad_grid.json").write_text(json.dumps({"grid": [["#"], []]}), encoding="utf-8")
-            puzzles, errors = load_all(tmp)
+            puzzles, errors = PuzzleRepository(tmp).load_all()
         self.assertEqual([p.path.name for p in puzzles], ["a_good.json"])
         self.assertEqual(sorted(Path(p).name for p, _ in errors), ["b_not_json.json", "c_bad_grid.json"])
 

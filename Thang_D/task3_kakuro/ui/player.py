@@ -6,24 +6,22 @@ toi su kien cuoi. Player yeu cau them (demand) va tien len khi su kien do toi.
 Moi logic "doc du lieu de ve" (ngan xep phep doan, run dang loc, to hop con hop le,
 thanh tien do, tong ket) nam o day de kiem thu duoc ma khong can pygame.
 """
-from ..model.propagation import run_state
-from ..puzzle import parse_key
-from ..solver import BacktrackingSolver, VARIABLE_SELECTORS, VALUE_ORDERERS
-
-TERMINAL = {"solution", "exhausted", "limit"}
-# Do uu tien khi nhieu su kien roi vao cung mot cot cua thanh tien do
-_PRIORITY = {"start": 0, "propagate": 1, "assign": 2, "backtrack": 3,
-             "contradiction": 4, "solution": 5, "exhausted": 5, "limit": 5}
+from ..model.domains import Domains
+from ..solver import SolverFactory, TraceRecorder
 
 
 class LivePlayer:
-    KINDS = set(_PRIORITY)
+    # Do uu tien khi nhieu su kien roi vao cung mot cot cua thanh tien do
+    PRIORITY = {"start": 0, "propagate": 1, "assign": 2, "backtrack": 3,
+                "contradiction": 4, "solution": 5, "exhausted": 5, "limit": 5}
+    KINDS = frozenset(PRIORITY)
+    TERMINAL = TraceRecorder.TERMINAL
     SEEK_BATCH = 200          # so su kien yeu cau them moi lan khi dang tim "next guess/backtrack"
 
     def __init__(self, session):
         self.session = session
         self.puzzle = session.puzzle
-        self.meta = session.meta
+        self.config = session.solver.config
         self.events = session.events          # list tang dan, thread solver them vao
         self.checked = 0
         self._timeline = (None, None)         # (khoa cache, ket qua)
@@ -34,7 +32,7 @@ class LivePlayer:
 
     # ------------------------------------------------------------ kiem tra su kien
     def validate(self, event):
-        cells = set(self.puzzle.cells)
+        cells = {cell.key for cell in self.puzzle.cells}
         if event.get("kind") not in self.KINDS or set(event.get("domains", {})) != cells:
             raise ValueError("Invalid event or domain keys")
         if event.get("cell") is not None and event["cell"] not in cells:
@@ -177,16 +175,16 @@ class LivePlayer:
         return {cell: value for cell, value in (event or self.current)["guesses"]}
 
     def highlighted_run(self, event=None):
-        """RunInfo ma su kien (propagate / contradiction) dang noi toi, hoac None."""
+        """Run ma su kien (propagate / contradiction) dang noi toi, hoac None."""
         run_id = (event or self.current).get("run")
         return self.puzzle.run_by_id.get(run_id) if run_id else None
 
     def run_details(self, run, event=None):
         """Mot run xet theo mien tai su kien: chu so da co, tong con lai, cac to hop con hop le."""
         event = event or self.current
-        domains = {parse_key(c): set(event["domains"][c]) for c in run.cells}
-        used, free, rest, combos = run_state([parse_key(c) for c in run.cells], run.target, domains)
-        return {"id": run.id, "target": run.target, "size": len(run.cells),
+        domains = Domains.from_snapshot({c.key: event["domains"][c.key] for c in run.cells})
+        used, free, rest, combos = run.state(domains)
+        return {"id": run.name, "target": run.total, "size": run.size,
                 "used": sorted(used), "free": len(free), "rest": rest,
                 "combos": sorted(sorted(c) for c in combos)}
 
@@ -206,7 +204,7 @@ class LivePlayer:
         for i in range(n):
             x = min(width - 1, i * width // n)
             kind = self.events[i]["kind"]
-            if marks[x] is None or _PRIORITY[kind] > _PRIORITY[marks[x]]:
+            if marks[x] is None or self.PRIORITY[kind] > self.PRIORITY[marks[x]]:
                 marks[x] = kind
         self._timeline = (key, marks)
         return marks
@@ -214,7 +212,7 @@ class LivePlayer:
     def summary(self):
         """Tong ket khi dang xem su kien cuoi (solution / exhausted / limit); nguoc lai None."""
         event = self.current
-        if event["kind"] not in TERMINAL:
+        if event["kind"] not in self.TERMINAL:
             return None
         key = (self.index, len(self.events))
         if self._summary[0] == key:
@@ -232,7 +230,6 @@ class LivePlayer:
     def _solo_time_ms(self):
         """Thoi gian giai thuan (khong co UI, khong ghi trace). Thoi gian trong luc UI chay
         khong dung duoc vi thread solver phai cho nguoi xem."""
-        solver = BacktrackingSolver(self.puzzle, VARIABLE_SELECTORS[self.meta["variable"]](),
-                                    VALUE_ORDERERS[self.meta["value"]](),
-                                    max_nodes=self.meta.get("max_nodes"))
+        solver = SolverFactory.create(self.puzzle, self.config["variable"], self.config["value"],
+                                      self.config.get("max_nodes"))
         return solver.solve().seconds * 1000

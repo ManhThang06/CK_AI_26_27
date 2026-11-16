@@ -8,11 +8,8 @@ su kien (moi su kien la mot snapshot doc lap), khong cham vao trang thai cua sol
 import sys
 import threading
 
-from .backtracking import BacktrackingSolver
-from .heuristics import VARIABLE_SELECTORS, VALUE_ORDERERS
+from .factory import SolverFactory
 from .trace import TraceRecorder
-
-TERMINAL = {"solution", "exhausted", "limit"}
 
 
 class SearchAborted(Exception):
@@ -26,18 +23,16 @@ class LiveRecorder(TraceRecorder):
 
     def _emit(self, kind, *args, **kwargs):
         super()._emit(kind, *args, **kwargs)        # them su kien truoc khi cho
-        self.session._after_emit(kind in TERMINAL)
+        self.session._after_emit(kind in self.TERMINAL)
 
 
 class LiveSession:
     def __init__(self, puzzle, variable="mrv-degree", value="lcv", max_nodes=None):
         self.puzzle = puzzle
-        self.solver = BacktrackingSolver(puzzle, VARIABLE_SELECTORS[variable](),
-                                         VALUE_ORDERERS[value](), max_nodes=max_nodes)
+        self.solver = SolverFactory.create(puzzle, variable, value, max_nodes)
         self.recorder = LiveRecorder(puzzle, self.solver.stats, self)
         self.solver.rec = self.recorder
         self.events = self.recorder.events           # list tang dan, UI chi doc
-        self.meta = self.solver.config
         self.result = None
         self.error = None
         self._cond = threading.Condition()

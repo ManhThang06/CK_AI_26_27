@@ -1,4 +1,5 @@
 import threading
+from dataclasses import replace
 import time
 import unittest
 
@@ -17,7 +18,7 @@ def run_to_end(puzzle, variable="mrv-degree", value="lcv"):
 
 class TraceTests(unittest.TestCase):
     def test_event_stream_is_valid_for_every_puzzle(self):
-        for p in PUZZLES:
+        for p in PUZZLES + BROKEN:
             with self.subTest(p.label):
                 session, player = run_to_end(p)
                 player.sync()                                 # validate() nem loi neu sai
@@ -100,8 +101,8 @@ class PlayerTests(unittest.TestCase):
         p.index = 0
         run = p.puzzle.runs[0]
         d = p.run_details(run)
-        self.assertEqual(d["id"], run.id)
-        self.assertEqual((d["used"], d["free"], d["rest"]), ([], len(run.cells), run.target))
+        self.assertEqual(d["id"], run.name)
+        self.assertEqual((d["used"], d["free"], d["rest"]), ([], len(run.cells), run.total))
         # o cuoi: moi run da xong -> khong con o tu do, tong con lai 0
         p.index = len(p.events) - 1
         for run in p.puzzle.runs:
@@ -172,10 +173,10 @@ class LiveThreadTests(unittest.TestCase):
     def test_player_rejects_corrupt_events(self):
         session, player = run_to_end(BY_LABEL["5x5"])
         try:
-            bad = dict(session.events[1], kind="nonsense")
+            bad = replace(session.events[1], kind="nonsense")
             with self.assertRaises(ValueError):
                 player.validate(bad)
-            bad = dict(session.events[1], guesses=[["99,99", 1]])
+            bad = replace(session.events[1], guesses=[["99,99", 1]])
             with self.assertRaises(ValueError):
                 player.validate(bad)
         finally:

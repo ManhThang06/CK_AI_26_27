@@ -20,10 +20,14 @@ from .trace import Recorder
 class SearchStats:
     nodes: int = 0           # so phep gan da thu
     backtracks: int = 0      # so phep gan bi hoan tac
-    depth: int = 0           # so phep doan dang nam tren ngan xep
     max_depth: int = 0
     pruned_init: int = 0     # so gia tri bi loai o buoc node consistency
-    stack: list = field(default_factory=list)   # cac phep doan dang mo [((r, c), gia tri), ...]
+    stack: list = field(default_factory=list)   # cac phep doan dang mo [(Cell, gia tri), ...]
+
+    @property
+    def depth(self):
+        """So phep doan dang nam tren ngan xep."""
+        return len(self.stack)
 
 
 @dataclass
@@ -44,7 +48,7 @@ class BacktrackingSolver:
         self.max_nodes = max_nodes
         self.stats = SearchStats()
         self.rec = recorder or Recorder()
-        self.prop = Propagator(puzzle.model_runs)
+        self.prop = Propagator(puzzle.runs)
         self._limit_hit = False
 
     @property
@@ -76,7 +80,7 @@ class BacktrackingSolver:
 
         result = SolveResult(status, stats=self.stats, seconds=time.perf_counter() - start)
         if status == "solved":
-            result.solution = {f"{r},{c}": next(iter(d)) for (r, c), d in dom.items()}
+            result.solution = {cell.key: dom.value(cell) for cell in dom}
             result.verified = self.puzzle.check(result.solution)
         return result
 
@@ -90,12 +94,11 @@ class BacktrackingSolver:
                 self._limit_hit = True
                 return False
             self.stats.nodes += 1
-            self.stats.depth += 1
-            self.stats.max_depth = max(self.stats.max_depth, self.stats.depth)
             self.stats.stack.append((cell, value))
+            self.stats.max_depth = max(self.stats.max_depth, self.stats.depth)
 
             ok, removed = self.prop.assign(domains, cell, value)
-            message = f"Guess ({cell[0]},{cell[1]}) = {value}. {var_why}"
+            message = f"Guess ({cell.row},{cell.col}) = {value}. {var_why}"
             val_why = self.val_order.describe(score)
             if val_why:
                 message += f"; {val_why}"
@@ -109,7 +112,6 @@ class BacktrackingSolver:
 
             Propagator.undo(domains, removed)
             self.stats.backtracks += 1
-            self.stats.depth -= 1
             self.stats.stack.pop()
             self.rec.backtrack(domains, cell, value, len(removed))
         return False

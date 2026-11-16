@@ -1,16 +1,20 @@
 """Tien ich dung chung cho cac bai test."""
 from ..model.propagation import Propagator
-from ..puzzle import load_all
+from ..puzzle import Puzzle, PuzzleRepository
 
-PUZZLES, LOAD_ERRORS = load_all()
+PUZZLES, LOAD_ERRORS = PuzzleRepository().load_all()
 BY_LABEL = {p.label: p for p in PUZZLES}
 SOLVABLE = [p for p in PUZZLES if not p.warnings]       # bang chuan: 5x5, 9x9
-BROKEN = [p for p in PUZZLES if p.warnings]             # bang co canh bao (vo nghiem)
+
+# Bang loi nho tao ngay trong test: run ngang 2 o co tong 30 (khong the dat), run doc chi 1 o.
+BROKEN_DATA = {"name": "Broken 2x3",
+               "grid": [["#", "d3", "d4"], ["a30", ".", "."]]}
+BROKEN = [Puzzle(BROKEN_DATA)]
 
 
 def count_solutions(puzzle, limit=3):
     """Dem nghiem bang tim kiem doc lap voi cac heuristic cua solver (dung toi da `limit`)."""
-    prop = Propagator(puzzle.model_runs)
+    prop = Propagator(puzzle.runs)
     domains = prop.initial_domains()
     ok, _ = prop.propagate_all(domains)
     found = 0

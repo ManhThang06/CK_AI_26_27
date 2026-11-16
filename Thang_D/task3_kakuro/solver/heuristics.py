@@ -2,23 +2,13 @@
 
 Mot o duoc coi la "chua gan" khi mien con tu 2 gia tri tro len. O co mien 1 gia tri
 da duoc xac dinh (do gan hoac do propagation) nen khong can chon nua.
-Cac ham o day lam viec voi o dang tuple (r, c) cua tang model.
+Cac lop o day lam viec voi Cell va Domains cua tang model.
 """
 from abc import ABC, abstractmethod
 
 from ..model.propagation import Propagator
 
 INF = float("inf")
-
-
-def unassigned(domains):
-    return [c for c, d in domains.items() if len(d) > 1]
-
-
-def degree(cell, domains, prop):
-    """So o chua gan cung run voi `cell` (cac rang buoc Alldiff/Sum dang noi chung)."""
-    peers = {x for run in prop.runs_of[cell] for x in run.cells if x != cell}
-    return sum(1 for x in peers if len(domains[x]) > 1)
 
 
 # ------------------------------------------------------------------ chon bien
@@ -32,13 +22,19 @@ class VariableSelector(ABC):
     def describe(self, cell, domains, prop):
         return self.name
 
+    @staticmethod
+    def degree(cell, domains, prop):
+        """So o chua gan cung run voi `cell` (cac rang buoc Alldiff/Sum dang noi chung)."""
+        peers = {x for run in prop.runs_of[cell] for x in run.cells if x != cell}
+        return sum(1 for x in peers if domains.size(x) > 1)
+
 
 class FirstUnassigned(VariableSelector):
     """Baseline: o chua gan dau tien theo thu tu hang, cot."""
     name = "first"
 
     def select(self, domains, prop):
-        free = unassigned(domains)
+        free = domains.unassigned()
         return min(free) if free else None
 
 
@@ -47,13 +43,13 @@ class MRV(VariableSelector):
     name = "mrv"
 
     def select(self, domains, prop):
-        free = unassigned(domains)
+        free = domains.unassigned()
         if not free:
             return None
-        return min(free, key=lambda c: (len(domains[c]), c))
+        return min(free, key=lambda c: (domains.size(c), c))
 
     def describe(self, cell, domains, prop):
-        return f"MRV |D|={len(domains[cell])}"
+        return f"MRV |D|={domains.size(cell)}"
 
 
 class MRVDegree(MRV):
@@ -61,13 +57,13 @@ class MRVDegree(MRV):
     name = "mrv-degree"
 
     def select(self, domains, prop):
-        free = unassigned(domains)
+        free = domains.unassigned()
         if not free:
             return None
-        return min(free, key=lambda c: (len(domains[c]), -degree(c, domains, prop), c))
+        return min(free, key=lambda c: (domains.size(c), -self.degree(c, domains, prop), c))
 
     def describe(self, cell, domains, prop):
-        return f"MRV |D|={len(domains[cell])}, Degree={degree(cell, domains, prop)}"
+        return f"MRV |D|={domains.size(cell)}, Degree={self.degree(cell, domains, prop)}"
 
 
 # ------------------------------------------------------------------ sap xep gia tri
@@ -103,7 +99,7 @@ class LCV(ValueOrderer):
         scored = []
         for v in sorted(domains[cell]):
             ok, removed = prop.assign(domains, cell, v)
-            cost = sum(1 for c, _, _ in removed if c != cell) if ok else INF
+            cost = sum(1 for r in removed if r.cell != cell) if ok else INF
             Propagator.undo(domains, removed)
             scored.append((v, cost))
         scored.sort(key=lambda t: (t[1], t[0]))     # hoa thi gia tri nho truoc
