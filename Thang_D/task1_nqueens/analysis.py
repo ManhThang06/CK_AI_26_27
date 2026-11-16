@@ -1,111 +1,143 @@
 import csv
 import os
 import statistics
+from abc import ABC, abstractmethod
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-def load_csv(path):
-    with open(path, newline="", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
-    if not rows:
-        raise ValueError("%s has no data rows" % path)
-    for row in rows:
-        for key, val in row.items():
+
+class Plotter(ABC):
+    """Lớp cha: đọc CSV, kiểm tra cột, nhóm số liệu và vẽ biểu đồ đường."""
+
+    required_columns = ()
+
+    def __init__(self, csv_path, out_dir):
+        self.csv_path = csv_path
+        self.out_dir = out_dir
+        self.rows = self.load_csv(csv_path)
+        self._require_columns()
+
+    @staticmethod
+    def _convert(value):
+        for cast in (int, float):
             try:
-                row[key] = float(val) if "." in val else int(val)
+                return cast(value)
             except ValueError:
                 pass
-    return rows
+        return value
 
-def group_mean(rows, group_key, x_key, y_key):
-    buckets = defaultdict(list)
-    for row in rows:
-        group = row[group_key] if group_key else "all"
-        buckets[(group, row[x_key])].append(row[y_key])
-    result = defaultdict(list)
-    for (group, x), ys in buckets.items():
-        result[group].append((x, sum(ys) / len(ys)))
-    return {g: sorted(pts) for g, pts in result.items()}
+    @classmethod
+    def load_csv(cls, path):
+        with open(path, newline="", encoding="utf-8") as f:
+            rows = [{k: cls._convert(v) for k, v in row.items()} for row in csv.DictReader(f)]
+        if not rows:
+            raise ValueError("%s has no data rows" % path)
+        return rows
 
-def require_columns(rows, columns, path):
-    missing = [c for c in columns if c not in rows[0]]
-    if missing:
-        raise ValueError("%s is missing columns: %s" % (path, ", ".join(missing)))
+    def _require_columns(self):
+        missing = [c for c in self.required_columns if c not in self.rows[0]]
+        if missing:
+            raise ValueError("%s is missing columns: %s" % (self.csv_path, ", ".join(missing)))
 
-def plot_lines(series, xlabel, ylabel, title, out_path, logy=False, legend_outside=False):
-    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-    plt.figure(figsize=(5, 3.2))
-    for label, pts in series.items():
-        xs, ys = zip(*pts)
-        plt.plot(xs, ys, marker="o", label=label)
-    if logy:
-        plt.yscale("log")
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
-    plt.grid(True, alpha=0.3)
-    if len(series) > 1:
-        if legend_outside:
-            plt.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
-        else:
-            plt.legend()
-    plt.tight_layout()
-    plt.savefig(out_path, dpi=200, bbox_inches="tight")
-    plt.close()
+    @staticmethod
+    def group_stat(rows, group_key, x_key, y_key, func):
+        """Gom y theo (nhóm, x) rồi áp `func`; group_key=None nghĩa là một nhóm "all"."""
+        buckets = defaultdict(list)
+        for row in rows:
+            group = row[group_key] if group_key else "all"
+            buckets[(group, row[x_key])].append(row[y_key])
+        result = defaultdict(list)
+        for (group, x), ys in buckets.items():
+            result[group].append((x, func(ys)))
+        return {g: sorted(pts) for g, pts in result.items()}
 
-def plot_sat(csv_path, out_dir):
-    rows = load_csv(csv_path)
-    require_columns(rows, ["N", "num_clauses", "gen_time", "solve_time"], csv_path)
-    clauses = {"clauses": group_mean(rows, None, "N", "num_clauses")["all"]}
-    plot_lines(clauses, "N", "number of CNF clauses", "Clauses vs N",
-               out_dir + "/sat_clauses.png", logy=True)
-    times = {
-        "encode": group_mean(rows, None, "N", "gen_time")["all"],
-        "solve": group_mean(rows, None, "N", "solve_time")["all"],
-    }
-    plot_lines(times, "N", "time (s)", "Running time vs N",
-               out_dir + "/sat_time.png", logy=True)
+    @staticmethod
+    def success_rate(values):
+        return 100.0 * sum(values) / len(values)
 
-def group_stat(rows, group_key, x_key, y_key, func):
-    buckets = defaultdict(list)
-    for row in rows:
-        buckets[(row[group_key], row[x_key])].append(row[y_key])
-    result = defaultdict(list)
-    for (group, x), ys in buckets.items():
-        result[group].append((x, func(ys)))
-    return {g: sorted(pts) for g, pts in result.items()}
+    @staticmethod
+    def plot_lines(series, xlabel, ylabel, title, out_path, logy=False, legend_outside=False):
+        os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+        plt.figure(figsize=(5, 3.2))
+        for label, pts in series.items():
+            xs, ys = zip(*pts)
+            plt.plot(xs, ys, marker="o", label=label)
+        if logy:
+            plt.yscale("log")
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.title(title)
+        plt.grid(True, alpha=0.3)
+        if len(series) > 1:
+            if legend_outside:
+                plt.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
+            else:
+                plt.legend()
+        plt.tight_layout()
+        plt.savefig(out_path, dpi=200, bbox_inches="tight")
+        plt.close()
 
-def median(values):
-    return statistics.median(values)
+    @abstractmethod
+    def plot(self):
+        """Vẽ và lưu các biểu đồ vào `self.out_dir`."""
 
-def success_rate(values):
-    return 100.0 * sum(values) / len(values)
 
-def plot_minconf(csv_path, out_dir, suffix=""):
-    """Vẽ median số bước, median thời gian và tỉ lệ thành công theo N cho từng cách chọn biến."""
-    rows = load_csv(csv_path)
-    require_columns(rows, ["N", "variant", "steps", "time", "success"], csv_path)
-    tag = "restart" if suffix else "no restart"
-    plot_lines(group_stat(rows, "variant", "N", "steps", median), "N", "median steps",
-               "Min-Conflicts: steps (%s)" % tag, out_dir + "/minconf_steps%s.png" % suffix)
-    plot_lines(group_stat(rows, "variant", "N", "time", median), "N", "median time (s)",
-               "Min-Conflicts: time (%s)" % tag, out_dir + "/minconf_time%s.png" % suffix)
-    plot_lines(group_stat(rows, "variant", "N", "success", success_rate), "N", "success rate (%)",
-               "Min-Conflicts: success (%s)" % tag, out_dir + "/minconf_success%s.png" % suffix)
+class SATPlotter(Plotter):
+    """Số clause và thời gian (encode, solve) theo N."""
 
-def plot_tabu(csv_path, out_dir):
-    """Vẽ median số bước của max_tabu theo tabu_size, mỗi đường là một giá trị N."""
-    rows = load_csv(csv_path)
-    require_columns(rows, ["N", "tabu_size", "steps", "success"], csv_path)
-    for row in rows:
-        row["N"] = "N=%d" % row["N"]
-    plot_lines(group_stat(rows, "N", "tabu_size", "steps", median), "tabu_size", "median steps",
-               "max_tabu: effect of tabu_size", out_dir + "/minconf_tabu.png", legend_outside=True)
+    required_columns = ("N", "num_clauses", "gen_time", "solve_time")
+
+    def plot(self):
+        mean = statistics.mean
+        clauses = {"clauses": self.group_stat(self.rows, None, "N", "num_clauses", mean)["all"]}
+        self.plot_lines(clauses, "N", "number of CNF clauses", "Clauses vs N",
+                        self.out_dir + "/sat_clauses.png", logy=True)
+        times = {
+            "encode": self.group_stat(self.rows, None, "N", "gen_time", mean)["all"],
+            "solve": self.group_stat(self.rows, None, "N", "solve_time", mean)["all"],
+        }
+        self.plot_lines(times, "N", "time (s)", "Running time vs N",
+                        self.out_dir + "/sat_time.png", logy=True)
+
+
+class MinConflictsPlotter(Plotter):
+    """Median số bước, median thời gian và tỉ lệ thành công theo N cho từng cách chọn biến."""
+
+    required_columns = ("N", "variant", "steps", "time", "success")
+
+    def __init__(self, csv_path, out_dir, suffix=""):
+        super().__init__(csv_path, out_dir)
+        self.suffix = suffix
+
+    def plot(self):
+        tag = "restart" if self.suffix else "no restart"
+        median = statistics.median
+        specs = (("steps", "median steps", median, "steps"),
+                 ("time", "median time (s)", median, "time"),
+                 ("success", "success rate (%)", self.success_rate, "success"))
+        for key, ylabel, func, name in specs:
+            self.plot_lines(self.group_stat(self.rows, "variant", "N", key, func), "N", ylabel,
+                            "Min-Conflicts: %s (%s)" % (name, tag),
+                            "%s/minconf_%s%s.png" % (self.out_dir, name, self.suffix))
+
+
+class TabuPlotter(Plotter):
+    """Median số bước của max_tabu theo tabu_size, mỗi đường là một giá trị N."""
+
+    required_columns = ("N", "tabu_size", "steps", "success")
+
+    def plot(self):
+        rows = [{**row, "N": "N=%d" % row["N"]} for row in self.rows]
+        self.plot_lines(self.group_stat(rows, "N", "tabu_size", "steps", statistics.median),
+                        "tabu_size", "median steps", "max_tabu: effect of tabu_size",
+                        self.out_dir + "/minconf_tabu.png", legend_outside=True)
+
 
 if __name__ == "__main__":
     base = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "measured")
-    plot_sat(os.path.join(base, "sat.csv"), os.path.join(base, "figures"))
-    plot_minconf(os.path.join(base, "minconf.csv"), os.path.join(base, "figures"))
-    plot_minconf(os.path.join(base, "minconf_restart.csv"), os.path.join(base, "figures"), suffix="_restart")
-    plot_tabu(os.path.join(base, "minconf_tabu.csv"), os.path.join(base, "figures"))
-    print("figures saved in", os.path.join(base, "figures"))
+    figures = os.path.join(base, "figures")
+    SATPlotter(os.path.join(base, "sat.csv"), figures).plot()
+    MinConflictsPlotter(os.path.join(base, "minconf.csv"), figures).plot()
+    MinConflictsPlotter(os.path.join(base, "minconf_restart.csv"), figures, "_restart").plot()
+    TabuPlotter(os.path.join(base, "minconf_tabu.csv"), figures).plot()
+    print("figures saved in", figures)

@@ -5,7 +5,7 @@ Giải bài toán N-quân hậu theo hai hướng:
 | Yêu cầu của đề | Nội dung | Mã nguồn |
 |---|---|---|
 | Req 1 | Mô hình hóa logic mệnh đề và chuyển sang CNF | `cnf_encoder.py` |
-| Req 2 | Giải bằng **Glucose3** (PySAT), đo số clause và thời gian khi N tăng | `sat_solver.py`, `experiment.py` |
+| Req 2 | Giải bằng **Glucose3** (PySAT), đo số clause và thời gian khi N tăng | `sat_solver.py`, `sat_experiment.py` |
 | Req 3 | **Min-Conflicts** + heuristic chọn biến, thực nghiệm so sánh | `min_conflicts.py`, `mc_experiment.py` |
 
 ## 1. Cấu trúc thư mục
@@ -15,13 +15,16 @@ Thang_D/                        <- chạy mọi lệnh từ thư mục này
 └── task1_nqueens/
     ├── README.md
     ├── requirement.txt        <- thư viện cần cài
-    ├── board.py               Board: kiểm tra nghiệm (columns[row] = col)
+    ├── board.py               Board: kiểm tra nghiệm (columns[row] = col), lớp cha của ConflictBoard
+    ├── nqueens_solver.py      NQueensSolver (lớp trừu tượng): SATSolver, MinConflictsSolver kế thừa
+    ├── variable_selectors.py  VariableSelector: Standard/MaxTabu/RouletteSelector (Strategy)
+    ├── experiment_base.py     Experiment (lớp trừu tượng): ghi CSV/môi trường
     ├── cnf_encoder.py         CNFEncoder: sinh các clause CNF
     ├── sat_solver.py          SATSolver: giải bằng Glucose3
-    ├── experiment.py          đo SAT theo N  -> data/measured/sat*.csv
-    ├── min_conflicts.py       ConflictBoard + MinConflictsSolver (3 cách chọn biến)
-    ├── mc_experiment.py       đo Min-Conflicts -> data/measured/minconf*.csv
-    ├── analysis.py            vẽ biểu đồ từ CSV
+    ├── sat_experiment.py      SATExperiment: đo SAT theo N  -> data/measured/sat*.csv
+    ├── min_conflicts.py       ConflictBoard (kế thừa Board) + MinConflictsSolver
+    ├── mc_experiment.py       MinConflictsExperiment: đo Min-Conflicts -> data/measured/minconf*.csv
+    ├── analysis.py            SATPlotter, MinConflictsPlotter, TabuPlotter: vẽ biểu đồ từ CSV
     ├── experiments/
     │   ├── t1_sat.ipynb           notebook Req 2 (đã giữ output)
     │   └── t1_minconflicts.ipynb  notebook Req 3 (đã giữ output)
@@ -40,7 +43,7 @@ pip install -r task1_nqueens/requirement.txt
 ```
 
 > **Quan trọng:** luôn chạy bằng `python -m task1_nqueens.<tên_module>` **từ thư mục `source/`**
-> (thư mục chứa `task1_nqueens/`). Chạy trực tiếp `python min_conflicts.py` trong thư mục con
+> (thư mục chứa `task1_nqueens/`). Chạy trực tiếp `python sat_solver.py` trong thư mục con
 > sẽ lỗi vì các module dùng import tương đối.
 
 ## 3. Cách chạy
@@ -57,7 +60,7 @@ python -m task1_nqueens.sat_solver 12
 Thực nghiệm với N tăng dần (N = 4, 5, 8, 12, 16, 24, 32, 48, 64; mỗi N chạy 5 lần):
 
 ```bash
-python -m task1_nqueens.experiment --repeats 5
+python -m task1_nqueens.sat_experiment --repeats 5
 # tùy chọn: --ns 4 8 16 32   --output <thư mục>
 ```
 
@@ -68,12 +71,6 @@ Số clause của mã hóa: với mỗi hàng 1 clause "ít nhất một quân" 
 có C(k, 2) clause "nhiều nhất một quân" dạng `(¬a ∨ ¬b)`. Ví dụ N = 4 → 80 clause, N = 8 → 736 clause.
 
 ### Req 3 - Min-Conflicts
-
-Chạy nhanh một ví dụ (N = 50, 3 cách chọn biến):
-
-```bash
-python -m task1_nqueens.min_conflicts
-```
 
 Chạy toàn bộ thực nghiệm (khoảng 10-20 giây): 30 seed × N ∈ {8, 16, 32, 64, 100, 200} × 3 biến thể,
 cả **không restart** và **có restart**, cùng thí nghiệm `tabu_size`:
@@ -94,7 +91,7 @@ Kết quả trong `data/measured/`:
 | `figures/minconf_*.png` | median số bước, median thời gian, tỉ lệ thành công, ảnh hưởng tabu |
 
 Cột CSV: `N, variant, seed, steps, time, success, restarts`. Với mỗi seed, cả 3 biến thể bắt đầu từ
-**cùng một trạng thái khởi tạo** để so sánh công bằng. Mọi nghiệm đều được kiểm tra độc lập bằng `slow_conflicts`.
+**cùng một trạng thái khởi tạo** để so sánh công bằng. Mọi nghiệm đều được kiểm tra độc lập bằng `Board.is_valid()`.
 
 Vẽ lại biểu đồ từ CSV có sẵn (không đo lại):
 
@@ -116,13 +113,13 @@ Notebook tự tìm thư mục `source/` nên mở từ đâu cũng được. Out
 
 ## 4. Các cách chọn biến trong Min-Conflicts
 
-Mỗi bước: chọn một **cột** đang xung đột, rồi dời quân hậu của cột đó về **hàng ít xung đột nhất** (hòa thì chọn ngẫu nhiên).
+Mỗi bước: chọn một **hàng** đang xung đột, rồi dời quân hậu của hàng đó về **cột ít xung đột nhất** (hòa thì chọn ngẫu nhiên).
 
-| `mode` | Cách chọn cột xung đột | Ý tưởng |
+| `mode` | Cách chọn hàng xung đột | Ý tưởng |
 |---|---|---|
 | `standard` | ngẫu nhiên | Min-Conflicts chuẩn (Lecture 08) |
-| `max_tabu` | cột có **nhiều xung đột nhất**, bỏ qua các cột vừa chọn gần đây (tabu list) | sửa chỗ tệ nhất trước, tabu để không bị lặp |
-| `roulette` | ngẫu nhiên có trọng số = số xung đột | ưu tiên cột xung đột nhiều nhưng vẫn ngẫu nhiên |
+| `max_tabu` | hàng có **nhiều xung đột nhất**, bỏ qua các hàng vừa chọn gần đây (tabu list) | sửa chỗ tệ nhất trước, tabu để không bị lặp |
+| `roulette` | ngẫu nhiên có trọng số = số xung đột | ưu tiên hàng xung đột nhiều nhưng vẫn ngẫu nhiên |
 
 Tham số: `tabu_size` (độ dài tabu list), `restart_after` (số bước không cải thiện tổng xung đột trước khi
 khởi tạo lại bàn cờ; `None` = không restart), `max_steps`.
@@ -149,8 +146,8 @@ Thời gian giải rất nhỏ (cỡ micro-giây đến vài trăm mili-giây) v
 - Min-Conflicts (`minconf*.csv`, `environment_minconf.json`): đo trên Linux, Python 3.13.
 - Số bước và tỉ lệ thành công của Min-Conflicts **tái lập được** nhờ seed cố định; **thời gian** phụ thuộc máy nên chạy lại
   sẽ ra con số khác, nhưng xu hướng so sánh giữa các biến thể không đổi.
-- Biểu diễn nghiệm: `Board.columns[row] = col` (SAT) và `ConflictBoard.state[col] = row` (Min-Conflicts). Bài toán đối xứng
-  theo phép chuyển vị nên cả hai đều được `Board.is_valid()` chấp nhận.
+- Biểu diễn nghiệm thống nhất: `Board.columns[row] = col`; `ConflictBoard` kế thừa `Board` và dùng chung `is_valid()`.
+  Min-Conflicts coi mỗi **hàng** là một biến.
 
 ## 7. Xử lý sự cố
 

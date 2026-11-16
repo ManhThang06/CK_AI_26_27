@@ -3,9 +3,13 @@ from time import perf_counter
 from pysat.solvers import Glucose3
 from .cnf_encoder import CNFEncoder
 from .board import Board
+from .nqueens_solver import NQueensSolver
 
-class SATSolver:
-    def solve(self, n):
+
+class SATSolver(NQueensSolver):
+    """Giải N-quân hậu bằng Glucose3 trên CNF do CNFEncoder sinh ra."""
+
+    def _solve(self, n):
         start = perf_counter()
         encoder = CNFEncoder(n)
         clauses = encoder.encode()
@@ -17,20 +21,22 @@ class SATSolver:
             sat = solver.solve()
             solve_time = perf_counter() - start
             model = solver.get_model() if sat else []
-        positive = set(value for value in model if value > 0)
-        columns = None
-        if sat:
-            columns = []
-            for row in range(n):
-                occupied = [col for col in range(n) if encoder.variable(row, col) in positive]
-                if len(occupied) != 1:
-                    raise RuntimeError("Invalid SAT model")
-                columns.append(occupied[0])
-            if not Board(columns).is_valid():
-                raise RuntimeError("Solution failed independent validation")
-        return {"N": n, "num_vars": n*n, "num_clauses": len(clauses),
+        solution = self._decode(encoder, model) if sat else None
+        return {"N": n, "num_vars": n * n, "num_clauses": len(clauses),
                 "gen_time": gen_time, "load_time": load_time, "solve_time": solve_time,
-                "sat": sat, "columns": columns}
+                "sat": sat, "solution": solution}
+
+    @staticmethod
+    def _decode(encoder, model):
+        positive = set(value for value in model if value > 0)
+        columns = []
+        for row in range(encoder.n):
+            occupied = [col for col in range(encoder.n) if encoder.variable(row, col) in positive]
+            if len(occupied) != 1:
+                raise RuntimeError("Invalid SAT model")
+            columns.append(occupied[0])
+        return columns
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -38,4 +44,4 @@ if __name__ == "__main__":
     result = SATSolver().solve(parser.parse_args().n)
     print(result)
     if result["sat"]:
-        print(Board(result["columns"]))
+        print(Board(result["solution"]))
