@@ -1,0 +1,61 @@
+map,p1,p2,winner,cycles
+small,Minimax,Alpha-Beta,draw,100
+small,Alpha-Beta,Minimax,Minimax,78
+medium,Minimax,Alpha-Beta,Alpha-Beta,66
+medium,Alpha-Beta,Minimax,draw,100
+full,Minimax,Alpha-Beta,draw,100
+full,Alpha-Beta,Minimax,draw,100
+small,Minimax,Heuristic Minimax,Heuristic Minimax,15
+small,Heuristic Minimax,Minimax,Heuristic Minimax,15
+medium,Minimax,Heuristic Minimax,Heuristic Minimax,17
+medium,Heuristic Minimax,Minimax,Heuristic Minimax,18
+full,Minimax,Heuristic Minimax,Heuristic Minimax,40
+full,Heuristic Minimax,Minimax,Heuristic Minimax,27
+small,Minimax,Heuristic Alpha-Beta,Heuristic Alpha-Beta,20
+small,Heuristic Alpha-Beta,Minimax,Heuristic Alpha-Beta,15
+medium,Minimax,Heuristic Alpha-Beta,Heuristic Alpha-Beta,25
+medium,Heuristic Alpha-Beta,Minimax,Heuristic Alpha-Beta,24
+full,Minimax,Heuristic Alpha-Beta,Heuristic Alpha-Beta,25
+full,Heuristic Alpha-Beta,Minimax,Heuristic Alpha-Beta,45
+small,Minimax,Random [plugin],Minimax,52
+small,Random [plugin],Minimax,Minimax,43
+medium,Minimax,Random [plugin],draw,100
+medium,Random [plugin],Minimax,Minimax,46
+full,Minimax,Random [plugin],draw,100
+full,Random [plugin],Minimax,draw,100
+small,Alpha-Beta,Heuristic Minimax,Heuristic Minimax,15
+small,Heuristic Minimax,Alpha-Beta,Heuristic Minimax,20
+medium,Alpha-Beta,Heuristic Minimax,Heuristic Minimax,18
+medium,Heuristic Minimax,Alpha-Beta,Heuristic Minimax,18
+full,Alpha-Beta,Heuristic Minimax,Heuristic Minimax,25
+full,Heuristic Minimax,Alpha-Beta,Heuristic Minimax,23
+small,Alpha-Beta,Heuristic Alpha-Beta,Heuristic Alpha-Beta,15
+small,Heuristic Alpha-Beta,Alpha-Beta,Heuristic Alpha-Beta,15
+medium,Alpha-Beta,Heuristic Alpha-Beta,Heuristic Alpha-Beta,18
+medium,Heuristic Alpha-Beta,Alpha-Beta,Heuristic Alpha-Beta,18
+full,Alpha-Beta,Heuristic Alpha-Beta,Heuristic Alpha-Beta,55
+full,Heuristic Alpha-Beta,Alpha-Beta,Heuristic Alpha-Beta,23
+small,Alpha-Beta,Random [plugin],draw,100
+small,Random [plugin],Alpha-Beta,Alpha-Beta,36
+medium,Alpha-Beta,Random [plugin],draw,100
+medium,Random [plugin],Alpha-Beta,Alpha-Beta,39
+full,Alpha-Beta,Random [plugin],draw,100
+full,Random [plugin],Alpha-Beta,Alpha-Beta,90
+small,Heuristic Minimax,Heuristic Alpha-Beta,draw,11
+small,Heuristic Alpha-Beta,Heuristic Minimax,draw,11
+medium,Heuristic Minimax,Heuristic Alpha-Beta,draw,13
+medium,Heuristic Alpha-Beta,Heuristic Minimax,draw,13
+full,Heuristic Minimax,Heuristic Alpha-Beta,Heuristic Alpha-Beta,33
+full,Heuristic Alpha-Beta,Heuristic Minimax,Heuristic Minimax,33
+small,Heuristic Minimax,Random [plugin],Heuristic Minimax,15
+small,Random [plugin],Heuristic Minimax,Heuristic Minimax,16
+medium,Heuristic Minimax,Random [plugin],Heuristic Minimax,17
+medium,Random [plugin],Heuristic Minimax,Heuristic Minimax,18
+full,Heuristic Minimax,Random [plugin],Heuristic Minimax,23
+full,Random [plugin],Heuristic Minimax,Heuristic Minimax,29
+small,Heuristic Alpha-Beta,Random [plugin],Heuristic Alpha-Beta,15
+small,Random [plugin],Heuristic Alpha-Beta,Heuristic Alpha-Beta,20
+medium,Heuristic Alpha-Beta,Random [plugin],Heuristic Alpha-Beta,18
+medium,Random [plugin],Heuristic Alpha-Beta,Heuristic Alpha-Beta,17
+full,Heuristic Alpha-Beta,Random [plugin],Heuristic Alpha-Beta,23
+full,Random [plugin],Heuristic Alpha-Beta,Heuristic Alpha-Beta,27

@@ -1,0 +1,1 @@
+"""Phát lại sự kiện độc lập với cách cài đặt bộ giải."""

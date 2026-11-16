@@ -1,0 +1,29 @@
+done small c0-s0
+done small c4-s1
+done small c8-s2
+done small c12-s3
+done medium c0-s0
+done medium c4-s1
+done medium c8-s2
+done medium c12-s3
+done full c0-s0
+done full c4-s1
+done full c8-s2
+done full c12-s3
+
+depth algorithm                time (s)        nodes    cutoffs     pruned    evals
+1     Alpha-Beta                 0.0001           17          5         25        0
+1     Heuristic Alpha-Beta       0.0005           22          4         20       16
+1     Heuristic Minimax          0.0025           42          0          0       36
+1     Minimax                    0.0003           42          0          0        0
+2     Alpha-Beta                 0.0007          129         45        225        0
+2     Heuristic Alpha-Beta       0.0042          216         54        252      139
+2     Heuristic Minimax          0.0417         1554          0          0     1296
+2     Minimax                    0.0084         1554          0          0        0
+3     Alpha-Beta                 0.0040          812        295       1474        0
+3     Heuristic Alpha-Beta       0.0354         1892        508       2336     1189
+3     Heuristic Minimax          1.2802        55986          0          0    46656
+3     Minimax                    0.2904        55986          0          0        0
+
+Kiểm tra Alpha-Beta == Minimax (cùng giá trị gốc): ĐẠT
+Kết quả lưu trong: /tmp/claude-0/-home-claude/0e08da85-b51c-5ead-b0fd-77566fa8e70a/scratchpad/work/task2_tank/experiments/results

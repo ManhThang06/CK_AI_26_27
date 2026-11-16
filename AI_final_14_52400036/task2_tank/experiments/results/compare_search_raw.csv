@@ -1,0 +1,145 @@
+map,warmup,depth,algorithm,time_s,nodes_generated,nodes_expanded,terminal_nodes,heuristic_evals,cutoffs,pruned_branches,max_depth_ply,root_value,action
+small,c0-s0,1,Minimax,0.00034,42,7,36,0,0,0,2,0.0,MOVE_UP
+small,c0-s0,1,Alpha-Beta,0.00011,17,7,11,0,5,25,2,0.0,MOVE_UP
+small,c0-s0,1,Heuristic Minimax,0.00264,42,7,0,36,0,0,2,0.0,MOVE_UP
+small,c0-s0,1,Heuristic Alpha-Beta,0.00035,17,7,0,11,5,25,2,0.0,MOVE_UP
+small,c0-s0,2,Minimax,0.00796,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+small,c0-s0,2,Alpha-Beta,0.00062,129,59,71,0,45,225,4,0.0,MOVE_UP
+small,c0-s0,2,Heuristic Minimax,0.03312,1554,259,0,1296,0,0,4,0.0,MOVE_UP
+small,c0-s0,2,Heuristic Alpha-Beta,0.00216,129,59,0,71,45,225,4,0.0,MOVE_UP
+small,c0-s0,3,Minimax,0.2836,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+small,c0-s0,3,Alpha-Beta,0.00358,811,381,431,0,295,1475,6,0.0,MOVE_UP
+small,c0-s0,3,Heuristic Minimax,1.15455,55986,9331,0,46656,0,0,6,0.0,MOVE_UP
+small,c0-s0,3,Heuristic Alpha-Beta,0.01203,836,384,0,453,295,1468,6,0.0,MOVE_UP
+small,c4-s1,1,Minimax,0.00021,42,7,36,0,0,0,2,0.0,MOVE_UP
+small,c4-s1,1,Alpha-Beta,9e-05,17,7,11,0,5,25,2,0.0,MOVE_UP
+small,c4-s1,1,Heuristic Minimax,0.00084,42,7,0,36,0,0,2,4.0,MOVE_UP
+small,c4-s1,1,Heuristic Alpha-Beta,0.0003,17,7,0,11,5,25,2,4.0,MOVE_UP
+small,c4-s1,2,Minimax,0.00712,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+small,c4-s1,2,Alpha-Beta,0.0006,129,59,71,0,45,225,4,0.0,MOVE_UP
+small,c4-s1,2,Heuristic Minimax,0.03044,1554,259,0,1296,0,0,4,6.5,MOVE_UP
+small,c4-s1,2,Heuristic Alpha-Beta,0.00346,199,76,0,124,55,257,4,6.5,MOVE_UP
+small,c4-s1,3,Minimax,0.26369,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+small,c4-s1,3,Alpha-Beta,0.00373,811,381,431,0,295,1475,6,0.0,MOVE_UP
+small,c4-s1,3,Heuristic Minimax,1.12851,55986,9331,0,46656,0,0,6,6.0,MOVE_UP
+small,c4-s1,3,Heuristic Alpha-Beta,0.02026,1265,495,0,771,367,1705,6,6.0,MOVE_UP
+small,c8-s2,1,Minimax,0.00028,42,7,36,0,0,0,2,0.0,MOVE_UP
+small,c8-s2,1,Alpha-Beta,0.0001,17,7,11,0,5,25,2,0.0,MOVE_UP
+small,c8-s2,1,Heuristic Minimax,0.00151,42,7,0,36,0,0,2,2.0,MOVE_UP
+small,c8-s2,1,Heuristic Alpha-Beta,0.00035,17,7,0,11,5,25,2,2.0,MOVE_UP
+small,c8-s2,2,Minimax,0.00773,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+small,c8-s2,2,Alpha-Beta,0.00062,129,59,71,0,45,225,4,0.0,MOVE_UP
+small,c8-s2,2,Heuristic Minimax,0.03184,1554,259,0,1296,0,0,4,0.5,MOVE_UP
+small,c8-s2,2,Heuristic Alpha-Beta,0.00232,147,62,0,86,46,225,4,0.5,MOVE_UP
+small,c8-s2,3,Minimax,0.27134,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+small,c8-s2,3,Alpha-Beta,0.00363,811,381,431,0,295,1475,6,0.0,MOVE_UP
+small,c8-s2,3,Heuristic Minimax,1.11083,55986,9331,0,46656,0,0,6,4.0,MOVE_UP
+small,c8-s2,3,Heuristic Alpha-Beta,0.02363,1407,560,0,848,410,1953,6,4.0,MOVE_UP
+small,c12-s3,1,Minimax,0.00022,42,7,36,0,0,0,2,0.0,MOVE_UP
+small,c12-s3,1,Alpha-Beta,0.00021,17,7,11,0,5,25,2,0.0,MOVE_UP
+small,c12-s3,1,Heuristic Minimax,0.0017,42,7,0,36,0,0,2,2.5,MOVE_RIGHT
+small,c12-s3,1,Heuristic Alpha-Beta,0.00042,22,7,0,16,4,20,2,2.5,MOVE_RIGHT
+small,c12-s3,2,Minimax,0.00775,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+small,c12-s3,2,Alpha-Beta,0.0006,129,59,71,0,45,225,4,0.0,MOVE_UP
+small,c12-s3,2,Heuristic Minimax,0.03214,1554,259,0,1296,0,0,4,2.5,MOVE_RIGHT
+small,c12-s3,2,Heuristic Alpha-Beta,0.00396,244,82,0,163,53,248,4,2.5,MOVE_RIGHT
+small,c12-s3,3,Minimax,0.27243,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+small,c12-s3,3,Alpha-Beta,0.00414,811,381,431,0,295,1475,6,0.0,MOVE_UP
+small,c12-s3,3,Heuristic Minimax,1.14173,55986,9331,0,46656,0,0,6,0.0,MOVE_RIGHT
+small,c12-s3,3,Heuristic Alpha-Beta,0.02671,1641,589,0,1053,404,1893,6,0.0,MOVE_RIGHT
+medium,c0-s0,1,Minimax,0.00025,42,7,36,0,0,0,2,0.0,MOVE_UP
+medium,c0-s0,1,Alpha-Beta,0.0001,17,7,11,0,5,25,2,0.0,MOVE_UP
+medium,c0-s0,1,Heuristic Minimax,0.00361,42,7,0,36,0,0,2,0.0,MOVE_RIGHT
+medium,c0-s0,1,Heuristic Alpha-Beta,0.00048,22,7,0,16,4,20,2,0.0,MOVE_RIGHT
+medium,c0-s0,2,Minimax,0.00766,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+medium,c0-s0,2,Alpha-Beta,0.00061,129,59,71,0,45,225,4,0.0,MOVE_UP
+medium,c0-s0,2,Heuristic Minimax,0.04102,1554,259,0,1296,0,0,4,0.0,MOVE_UP
+medium,c0-s0,2,Heuristic Alpha-Beta,0.00238,147,62,0,86,46,225,4,0.0,MOVE_UP
+medium,c0-s0,3,Minimax,0.27874,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+medium,c0-s0,3,Alpha-Beta,0.00411,811,381,431,0,295,1475,6,0.0,MOVE_UP
+medium,c0-s0,3,Heuristic Minimax,1.30408,55986,9331,0,46656,0,0,6,0.0,MOVE_UP
+medium,c0-s0,3,Heuristic Alpha-Beta,0.0131,842,387,0,456,298,1480,6,0.0,MOVE_UP
+medium,c4-s1,1,Minimax,0.00026,42,7,36,0,0,0,2,0.0,MOVE_UP
+medium,c4-s1,1,Alpha-Beta,9e-05,17,7,11,0,5,25,2,0.0,MOVE_UP
+medium,c4-s1,1,Heuristic Minimax,0.00131,42,7,0,36,0,0,2,4.5,MOVE_UP
+medium,c4-s1,1,Heuristic Alpha-Beta,0.00052,23,7,0,17,5,19,2,4.5,MOVE_UP
+medium,c4-s1,2,Minimax,0.00928,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+medium,c4-s1,2,Alpha-Beta,0.00089,129,59,71,0,45,225,4,0.0,MOVE_UP
+medium,c4-s1,2,Heuristic Minimax,0.03891,1554,259,0,1296,0,0,4,8.0,MOVE_UP
+medium,c4-s1,2,Heuristic Alpha-Beta,0.00287,129,59,0,71,45,225,4,8.0,MOVE_UP
+medium,c4-s1,3,Minimax,0.3092,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+medium,c4-s1,3,Alpha-Beta,0.0044,811,381,431,0,295,1475,6,0.0,MOVE_UP
+medium,c4-s1,3,Heuristic Minimax,1.15972,55986,9331,0,46656,0,0,6,8.5,MOVE_UP
+medium,c4-s1,3,Heuristic Alpha-Beta,0.0122,813,381,0,433,295,1473,6,8.5,MOVE_UP
+medium,c8-s2,1,Minimax,0.00025,42,7,36,0,0,0,2,-0.02,MOVE_UP
+medium,c8-s2,1,Alpha-Beta,9e-05,17,7,11,0,5,25,2,-0.02,MOVE_UP
+medium,c8-s2,1,Heuristic Minimax,0.00188,42,7,0,36,0,0,2,-8.0,MOVE_RIGHT
+medium,c8-s2,1,Heuristic Alpha-Beta,0.00045,22,7,0,16,4,20,2,-8.0,MOVE_RIGHT
+medium,c8-s2,2,Minimax,0.00788,1554,259,1296,0,0,0,4,-0.02,MOVE_UP
+medium,c8-s2,2,Alpha-Beta,0.0006,129,59,71,0,45,225,4,-0.02,MOVE_UP
+medium,c8-s2,2,Heuristic Minimax,0.03651,1554,259,0,1296,0,0,4,-8.0,MOVE_RIGHT
+medium,c8-s2,2,Heuristic Alpha-Beta,0.00549,240,82,0,159,57,252,4,-8.0,MOVE_RIGHT
+medium,c8-s2,3,Minimax,0.2777,55986,9331,46656,0,0,0,6,-0.02,MOVE_UP
+medium,c8-s2,3,Alpha-Beta,0.00358,817,381,437,0,295,1469,6,-0.02,MOVE_UP
+medium,c8-s2,3,Heuristic Minimax,1.18513,55986,9331,0,46656,0,0,6,-6.0,MOVE_UP
+medium,c8-s2,3,Heuristic Alpha-Beta,0.0294,1383,513,0,871,383,1695,6,-6.0,MOVE_UP
+medium,c12-s3,1,Minimax,0.00034,42,7,36,0,0,0,2,0.0,MOVE_UP
+medium,c12-s3,1,Alpha-Beta,0.00013,17,7,11,0,5,25,2,0.0,MOVE_UP
+medium,c12-s3,1,Heuristic Minimax,0.00223,42,7,0,36,0,0,2,0.5,MOVE_RIGHT
+medium,c12-s3,1,Heuristic Alpha-Beta,0.00065,22,7,0,16,4,20,2,0.5,MOVE_RIGHT
+medium,c12-s3,2,Minimax,0.01244,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+medium,c12-s3,2,Alpha-Beta,0.00109,129,59,71,0,45,225,4,0.0,MOVE_UP
+medium,c12-s3,2,Heuristic Minimax,0.04726,1554,259,0,1296,0,0,4,2.0,MOVE_RIGHT
+medium,c12-s3,2,Heuristic Alpha-Beta,0.00436,217,77,0,141,51,245,4,2.0,MOVE_RIGHT
+medium,c12-s3,3,Minimax,0.27979,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+medium,c12-s3,3,Alpha-Beta,0.00363,818,382,437,0,295,1474,6,0.0,MOVE_UP
+medium,c12-s3,3,Heuristic Minimax,1.1903,55986,9331,0,46656,0,0,6,1.5,MOVE_RIGHT
+medium,c12-s3,3,Heuristic Alpha-Beta,0.03402,1943,722,0,1222,503,2389,6,1.5,MOVE_RIGHT
+full,c0-s0,1,Minimax,0.00038,42,7,36,0,0,0,2,0.0,MOVE_UP
+full,c0-s0,1,Alpha-Beta,0.00012,17,7,11,0,5,25,2,0.0,MOVE_UP
+full,c0-s0,1,Heuristic Minimax,0.00491,42,7,0,36,0,0,2,5.375,MOVE_UP
+full,c0-s0,1,Heuristic Alpha-Beta,0.00044,19,7,0,13,5,23,2,5.375,MOVE_UP
+full,c0-s0,2,Minimax,0.00838,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+full,c0-s0,2,Alpha-Beta,0.00065,129,59,71,0,45,225,4,0.0,MOVE_UP
+full,c0-s0,2,Heuristic Minimax,0.05758,1554,259,0,1296,0,0,4,5.375,MOVE_RIGHT
+full,c0-s0,2,Heuristic Alpha-Beta,0.00528,270,97,0,174,66,312,4,5.375,MOVE_RIGHT
+full,c0-s0,3,Minimax,0.3218,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+full,c0-s0,3,Alpha-Beta,0.00363,811,381,431,0,295,1475,6,0.0,MOVE_UP
+full,c0-s0,3,Heuristic Minimax,1.48015,55986,9331,0,46656,0,0,6,3.875,MOVE_UP
+full,c0-s0,3,Heuristic Alpha-Beta,0.0533,2767,1063,0,1705,759,3611,6,3.875,MOVE_UP
+full,c4-s1,1,Minimax,0.00023,42,7,36,0,0,0,2,0.0,MOVE_UP
+full,c4-s1,1,Alpha-Beta,0.00011,17,7,11,0,5,25,2,0.0,MOVE_UP
+full,c4-s1,1,Heuristic Minimax,0.00105,42,7,0,36,0,0,2,13.875,MOVE_RIGHT
+full,c4-s1,1,Heuristic Alpha-Beta,0.00067,28,7,0,22,4,14,2,13.875,MOVE_RIGHT
+full,c4-s1,2,Minimax,0.00855,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+full,c4-s1,2,Alpha-Beta,0.00062,129,59,71,0,45,225,4,0.0,MOVE_UP
+full,c4-s1,2,Heuristic Minimax,0.03952,1554,259,0,1296,0,0,4,17.875,MOVE_RIGHT
+full,c4-s1,2,Heuristic Alpha-Beta,0.00675,334,109,0,226,72,320,4,17.875,MOVE_RIGHT
+full,c4-s1,3,Minimax,0.32718,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+full,c4-s1,3,Alpha-Beta,0.00381,811,381,431,0,295,1475,6,0.0,MOVE_UP
+full,c4-s1,3,Heuristic Minimax,1.38123,55986,9331,0,46656,0,0,6,17.875,MOVE_RIGHT
+full,c4-s1,3,Heuristic Alpha-Beta,0.07983,3765,1291,0,2475,929,3981,6,17.875,MOVE_RIGHT
+full,c8-s2,1,Minimax,0.00023,42,7,36,0,0,0,2,0.0,MOVE_UP
+full,c8-s2,1,Alpha-Beta,9e-05,17,7,11,0,5,25,2,0.0,MOVE_UP
+full,c8-s2,1,Heuristic Minimax,0.00367,42,7,0,36,0,0,2,1.875,MOVE_RIGHT
+full,c8-s2,1,Heuristic Alpha-Beta,0.00062,22,7,0,16,4,20,2,1.875,MOVE_RIGHT
+full,c8-s2,2,Minimax,0.00801,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+full,c8-s2,2,Alpha-Beta,0.00057,129,59,71,0,45,225,4,0.0,MOVE_UP
+full,c8-s2,2,Heuristic Minimax,0.05418,1554,259,0,1296,0,0,4,-0.125,MOVE_UP
+full,c8-s2,2,Heuristic Alpha-Beta,0.0038,191,68,0,124,51,217,4,-0.125,MOVE_UP
+full,c8-s2,3,Minimax,0.31029,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+full,c8-s2,3,Alpha-Beta,0.00582,811,381,431,0,295,1475,6,0.0,MOVE_UP
+full,c8-s2,3,Heuristic Minimax,1.55164,55986,9331,0,46656,0,0,6,-0.125,MOVE_UP
+full,c8-s2,3,Heuristic Alpha-Beta,0.04568,2279,818,0,1462,617,2629,6,-0.125,MOVE_UP
+full,c12-s3,1,Minimax,0.00024,42,7,36,0,0,0,2,0.0,MOVE_UP
+full,c12-s3,1,Alpha-Beta,9e-05,17,7,11,0,5,25,2,0.0,MOVE_UP
+full,c12-s3,1,Heuristic Minimax,0.00498,42,7,0,36,0,0,2,27.25,MOVE_RIGHT
+full,c12-s3,1,Heuristic Alpha-Beta,0.00067,27,7,0,21,3,15,2,27.25,MOVE_RIGHT
+full,c12-s3,2,Minimax,0.00798,1554,259,1296,0,0,0,4,0.0,MOVE_UP
+full,c12-s3,2,Alpha-Beta,0.0007,129,59,71,0,45,225,4,0.0,MOVE_UP
+full,c12-s3,2,Heuristic Minimax,0.05796,1554,259,0,1296,0,0,4,27.25,MOVE_DOWN
+full,c12-s3,2,Heuristic Alpha-Beta,0.00729,346,103,0,244,61,272,4,27.25,MOVE_DOWN
+full,c12-s3,3,Minimax,0.28923,55986,9331,46656,0,0,0,6,0.0,MOVE_UP
+full,c12-s3,3,Alpha-Beta,0.00374,811,381,431,0,295,1475,6,0.0,MOVE_UP
+full,c12-s3,3,Heuristic Minimax,1.57503,55986,9331,0,46656,0,0,6,25.75,MOVE_DOWN
+full,c12-s3,3,Heuristic Alpha-Beta,0.07462,3769,1255,0,2515,831,3761,6,25.75,MOVE_DOWN
