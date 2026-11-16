@@ -20,19 +20,14 @@ from dataclasses import dataclass
 
 from ..engine import Action
 from .adversarial import (AdversarialSearch, SearchResult, SearchStats,
-                      MAX_PLAYER, MIN_PLAYER)
-from .heuristic_eval import (ACTION_DELTA, WIN_SCORE, EvalWeights,
+                      MAX_PLAYER, SearchTimeout)
+from .heuristic_eval import (ACTION_DELTA, WIN_SCORE,
                              HeuristicEvaluator)
 
 
 @dataclass
 class HeuristicStats(SearchStats):
     heuristic_evals: int = 0     # số lần gọi Eval() tại nút lá chạm giới hạn độ sâu
-    depth_reached: int = 0       # độ sâu (cycle) hoàn chỉnh lớn nhất đã tìm xong
-
-
-class SearchTimeout(Exception):
-    pass
 
 
 class _HeuristicSearch(AdversarialSearch):
@@ -43,6 +38,10 @@ class _HeuristicSearch(AdversarialSearch):
     def __init__(self, depth=2, evaluator=None, move_ordering=True, prune_noop=True,
                  ordering_use_path=True, time_limit=None, max_depth=10, history_len=6,
                  avoid_doomed=True, repeat_window=40):
+        if depth < 1 or max_depth < 1:
+            raise ValueError("Độ sâu phải dương")
+        if time_limit is not None and time_limit <= 0:
+            raise ValueError("Ngân sách thời gian phải dương")
         super().__init__(move_ordering=move_ordering, horizon=None)
         self.depth = depth
         self.evaluator = evaluator or HeuristicEvaluator()
@@ -79,11 +78,11 @@ class _HeuristicSearch(AdversarialSearch):
         self._deadline = start + self.time_limit if self.time_limit else None
         depths = range(1, self.max_depth + 1) if self.time_limit else (self.depth,)
 
-        best, hint = None, None
+        best = SearchResult(Action.STAY, 0.0, self.stats, {})
+        hint = None
         for d in depths:
             self.cycle_limit = state.cycle + d
-            # độ sâu 1 luôn chạy xong để chắc chắn có kết quả
-            self._check_time = self._deadline is not None and d > 1
+            self._check_time = self._deadline is not None
             try:
                 result = self._search_root(state, hint)
             except SearchTimeout:
@@ -117,7 +116,7 @@ class _HeuristicSearch(AdversarialSearch):
     def _tick(self):
         s = self.stats
         s.nodes_generated += 1
-        if (self._check_time and (s.nodes_generated & 255) == 0
+        if (self._check_time and (s.nodes_generated & 15) == 0
                 and time.perf_counter() > self._deadline):
             raise SearchTimeout
 
@@ -156,12 +155,45 @@ class _HeuristicSearch(AdversarialSearch):
             return 0.0 if u == 0 else math.copysign(WIN_SCORE - depth, u)
         # chỉ cắt ở ranh giới cycle để vị trí tank và đạn đã được cập nhật đầy đủ
         if state.pending is None and state.cycle >= self.cycle_limit:
+            stats.cutoff_nodes += 1
             stats.heuristic_evals += 1
             return self.evaluator.evaluate(state)
         return None
 
     def _value(self, state, alpha, beta, depth):
-        raise NotImplementedError
+        v = self._leaf(state, depth)
+        if v is not None:
+            return v
+
+        stats = self.stats
+        stats.nodes_expanded += 1
+        actions = self._ordered_actions(state)
+        n = len(actions)
+
+        if state.player() == MAX_PLAYER:
+            v = -math.inf
+            for i, a in enumerate(actions):
+                self._tick()
+                v = max(v, self._value(state.result(a), alpha, beta, depth + 1))
+                if self.use_pruning and v >= beta:
+                    stats.cutoffs += 1
+                    stats.pruned_branches += n - i - 1
+                    return v
+                if self.use_pruning:
+                    alpha = max(alpha, v)
+            return v
+
+        v = math.inf
+        for i, a in enumerate(actions):
+            self._tick()
+            v = min(v, self._value(state.result(a), alpha, beta, depth + 1))
+            if self.use_pruning and v <= alpha:
+                stats.cutoffs += 1
+                stats.pruned_branches += n - i - 1
+                return v
+            if self.use_pruning:
+                beta = min(beta, v)
+        return v
 
     # ------------------------------------------------------------ sắp xếp và cắt tỉa nước đi
     def _ordered_actions(self, state, hint=None):
@@ -245,66 +277,14 @@ class _HeuristicSearch(AdversarialSearch):
 
 
 class HeuristicMinimaxSearch(_HeuristicSearch):
-    """Heuristic Minimax: Minimax giới hạn độ sâu, đánh giá nút lá bằng Eval()."""
+    """Minimax giới hạn độ sâu, đánh giá lá bằng Eval()."""
 
     name = "Heuristic Minimax"
     use_pruning = False
 
-    def _value(self, state, alpha, beta, depth):
-        v = self._leaf(state, depth)
-        if v is not None:
-            return v
-
-        self.stats.nodes_expanded += 1
-        if state.player() == MAX_PLAYER:
-            v = -math.inf
-            for a in self._ordered_actions(state):
-                self._tick()
-                v = max(v, self._value(state.result(a), alpha, beta, depth + 1))
-            return v
-        v = math.inf
-        for a in self._ordered_actions(state):
-            self._tick()
-            v = min(v, self._value(state.result(a), alpha, beta, depth + 1))
-        return v
-
 
 class HeuristicAlphaBetaSearch(_HeuristicSearch):
-    """Heuristic Minimax + Alpha-Beta: cùng giá trị gốc như Heuristic Minimax cùng độ sâu,
-    nhưng bỏ qua các nhánh không ảnh hưởng quyết định (move ordering giúp cắt tỉa nhiều hơn)."""
+    """Cùng cây đánh giá với Heuristic Minimax, bổ sung cắt tỉa Alpha–Beta."""
 
     name = "Heuristic Alpha-Beta"
     use_pruning = True
-
-    def _value(self, state, alpha, beta, depth):
-        v = self._leaf(state, depth)
-        if v is not None:
-            return v
-
-        stats = self.stats
-        stats.nodes_expanded += 1
-        actions = self._ordered_actions(state)
-        n = len(actions)
-
-        if state.player() == MAX_PLAYER:
-            v = -math.inf
-            for i, a in enumerate(actions):
-                self._tick()
-                v = max(v, self._value(state.result(a), alpha, beta, depth + 1))
-                if v >= beta:
-                    stats.cutoffs += 1
-                    stats.pruned_branches += n - i - 1
-                    return v
-                alpha = max(alpha, v)
-            return v
-
-        v = math.inf
-        for i, a in enumerate(actions):
-            self._tick()
-            v = min(v, self._value(state.result(a), alpha, beta, depth + 1))
-            if v <= alpha:
-                stats.cutoffs += 1
-                stats.pruned_branches += n - i - 1
-                return v
-            beta = min(beta, v)
-        return v

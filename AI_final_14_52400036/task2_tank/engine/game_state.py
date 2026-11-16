@@ -44,6 +44,10 @@ class GameState:
         return list(Action)
 
     def result(self, action):
+        if action not in self.legal_actions():
+            raise ValueError("Hành động không hợp lệ")
+        if self.is_terminal():
+            return self.clone()
         new = self.clone()
         if new.pending is None:
             new.pending = action
@@ -74,11 +78,17 @@ class GameState:
         self._move_tanks([action_max, action_min])
         # Tank vừa bước vào ô đang chứa đạn bay tới: đạn trúng ngay, không được "đổi chỗ" xuyên qua.
         self._hit_by_bullets_in_place()
+        if self._max_lost() or self._min_lost():
+            self.cycle += 1
+            self.pending = None
+            return
         for owner, act in enumerate([action_max, action_min]):
             if act == Action.FIRE:
                 self._fire(owner)
         for _ in range(BULLET_SPEED):
             self._advance_bullets()
+            if self._max_lost() or self._min_lost():
+                break
         self.cycle += 1
         self.pending = None
 
@@ -130,6 +140,8 @@ class GameState:
         if any(b.owner == owner for b in self.bullets):
             return
         t = self.tanks[owner]
+        if t.hp <= 0:
+            return
         self.bullets.append(Bullet(t.x, t.y, t.direction, owner))
 
     def _advance_bullets(self):

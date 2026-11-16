@@ -5,27 +5,27 @@ Chạy từ thư mục chứa task2_tank:
 """
 
 import argparse
-import random
 
-from .algorithms import MinimaxAgent, AlphaBetaAgent, Agent, play_match
+from .algorithms import MinimaxAgent, AlphaBetaAgent, play_match
+from .algorithms.agents import RandomAgent
 from .algorithms.scenarios import load_state
-
-
-class RandomAgent(Agent):
-    name = "Random"
-
-    def __init__(self, seed=None):
-        self.rng = random.Random(seed)
-
-    def choose_action(self, state):
-        return self.rng.choice(state.legal_actions())
 
 
 def build_agent(kind, horizon, ordering, seed):
     if kind == "minimax":
-        return MinimaxAgent(horizon=horizon, move_ordering=ordering)
+        return MinimaxAgent(horizon=horizon, move_ordering=ordering,
+                            randomize=True, horizon_score=True, seed=seed,
+                            time_limit=0.5, tactical_ties=True)
     if kind == "alphabeta":
-        return AlphaBetaAgent(horizon=horizon, move_ordering=ordering)
+        return AlphaBetaAgent(horizon=horizon, move_ordering=ordering,
+                              randomize=True, horizon_score=True, seed=seed,
+                              time_limit=0.5, tactical_ties=True)
+    if kind == "heuristic":
+        from .algorithms.agents import HeuristicMinimaxAgent
+        return HeuristicMinimaxAgent(depth=horizon, time_limit=0.5)
+    if kind == "heuristic-ab":
+        from .algorithms.agents import HeuristicAlphaBetaAgent
+        return HeuristicAlphaBetaAgent(depth=horizon, time_limit=0.5)
     return RandomAgent(seed)
 
 
@@ -33,8 +33,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--map", choices=["small", "medium", "full"], default="small")
     ap.add_argument("--horizon", type=int, default=2)
-    ap.add_argument("--max-agent", choices=["minimax", "alphabeta", "random"], default="alphabeta")
-    ap.add_argument("--min-agent", choices=["minimax", "alphabeta", "random"], default="random")
+    ap.add_argument("--max-agent", choices=["minimax", "alphabeta", "heuristic", "heuristic-ab", "random"], default="alphabeta")
+    ap.add_argument("--min-agent", choices=["minimax", "alphabeta", "heuristic", "heuristic-ab", "random"], default="random")
     ap.add_argument("--ordering", action="store_true")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()

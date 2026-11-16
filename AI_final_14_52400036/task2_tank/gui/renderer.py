@@ -3,7 +3,6 @@ nền xanh đen, tường cam nổi khối, căn cứ kim cương (P1 xanh dươ
 tank xanh lá (P1) / cam (P2), thanh HUD ở cuối cửa sổ.
 """
 
-import math
 
 import pygame
 
@@ -300,20 +299,19 @@ class Renderer:
         self.bar(px, box.y + 34, bw, 5, tank.hp / ctrl.max_tank_hp, TANK[i])
         self.bar(px, box.y + 45, bw, 5, base.hp / ctrl.max_base_hp, BASE[i])
         agent = ctrl.agents[i]
-        if agent is None:
-            info = "Human"
-        else:
-            info = ctrl.labels[i]
-            if agent.last_time:
-                info += "  ·  %.0f ms" % (agent.last_time * 1000)
-            if agent.last_nodes is not None:
-                info += "  ·  %d nodes" % agent.last_nodes
+        info = "Human" if agent is None else ctrl.labels[i]
         last = ctrl.last_actions[i].name if ctrl.last_actions[i] else "-"
         self.text(info, "tiny", MUTED, px, box.y + 58)
         if agent is not None and agent.last_error:
-            self.text("ERROR: " + agent.last_error[:40], "tiny", HP_BAD, px, box.y + 74)
+            self.text("ERROR: " + agent.last_error[:35], "tiny", HP_BAD, px, box.y + 74)
         else:
-            self.text("last: %s" % last, "tiny", MUTED, px, box.y + 74)
+            details = last
+            if agent is not None:
+                details = "%.0fms n=%s d=%s %s" % (
+                    agent.last_time * 1000,
+                    agent.last_nodes if agent.last_nodes is not None else "-",
+                    agent.last_depth if agent.last_depth is not None else "-", last)
+            self.text(details, "tiny", MUTED, px, box.y + 74)
 
     def draw_banner(self, text, board_w):
         w = self.screen.get_width()

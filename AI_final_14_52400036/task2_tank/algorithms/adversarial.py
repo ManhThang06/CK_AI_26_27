@@ -6,7 +6,6 @@ tìm kiếm xen kẽ nút MAX và nút MIN, mỗi nút có 6 nhánh.
 """
 
 import math
-import random
 import time
 from dataclasses import dataclass, field
 from typing import Dict
@@ -22,9 +21,11 @@ MIN_PLAYER = 1
 class SearchStats:
     nodes_generated: int = 0     # số lần gọi result() (số nút con được sinh ra)
     nodes_expanded: int = 0      # số nút không kết thúc đã được mở rộng
+    cutoff_nodes: int = 0
     terminal_nodes: int = 0      # số nút kết thúc được đánh giá bằng utility()
     pruned_branches: int = 0     # số nhánh con bị bỏ qua nhờ cắt tỉa (chỉ Alpha-Beta)
     cutoffs: int = 0             # số lần cắt tỉa xảy ra (chỉ Alpha-Beta)
+    depth_reached: int = 0
     max_depth: int = 0           # độ sâu ply lớn nhất đã chạm tới
     elapsed: float = 0.0         # thời gian chạy (giây)
 
@@ -32,11 +33,15 @@ class SearchStats:
 @dataclass
 class SearchResult:
     action: Action
-    value: int
+    value: float
     stats: SearchStats
     # Giá trị của từng hành động ở gốc. Với Alpha-Beta, nhánh bị cắt chỉ là cận
     # (không chính xác) vì không cần biết giá trị thật của nó.
-    action_values: Dict[Action, int] = field(default_factory=dict)
+    action_values: Dict[Action, float] = field(default_factory=dict)
+
+
+class SearchTimeout(Exception):
+    """Ngắt tìm kiếm khi hết ngân sách suy nghĩ."""
 
 
 class AdversarialSearch:
@@ -45,16 +50,17 @@ class AdversarialSearch:
     name = "base"
 
     TIE_EPS = 1e-9
-    MATERIAL_SCALE = 100.0   # điểm vật chất < 0.02, luôn nhỏ hơn giá trị thắng/thua (1/-1)
+    MATERIAL_SCALE = 100.0   # điểm vật chất có biên độ tối đa 0.15 với HP chuẩn, luôn nhỏ hơn giá trị thắng/thua (1/-1)
 
-    def __init__(self, move_ordering=False, horizon=None, rng=None, horizon_score=False):
+    def __init__(self, move_ordering=False, horizon=None, rng=None, horizon_score=False, deadline=None, tie_breaker=None):
         """
         move_ordering: đưa FIRE lên đầu khi tank đang đối mặt địch (giúp cắt tỉa nhiều hơn).
-        horizon: số cycle nhìn trước tính từ trạng thái gốc. Minimax thuần phải duyệt tới nút
-                 kết thúc, mà giới hạn 100 cycle của game là quá sâu, nên khi duyệt tới
-                 cycle gốc + horizon thì coi như game kết thúc (utility() trả 0 vì chưa bên nào
-                 thua, tức là hòa). None nghĩa là chỉ dừng ở trạng thái kết thúc thật của engine.
+        horizon: giới hạn số cycle tính từ gốc. None tìm tới terminal thật.
+        Tại cutoff, horizon_score bật đánh giá chênh lệch HP, tắt dùng hằng số 0.
+        Cutoff được thống kê riêng và không thay đổi điều kiện kết thúc của engine.
         """
+        self.deadline = deadline
+        self.tie_breaker = tie_breaker
         self.move_ordering = move_ordering
         self.horizon = horizon
         self.rng = rng
@@ -101,6 +107,8 @@ class AdversarialSearch:
         is_max = state.player() == MAX_PLAYER
         best = max(values.values()) if is_max else min(values.values())
         tied = [a for a in order if values[a] == best]
+        if self.tie_breaker is not None and len(tied) > 1:
+            return self.tie_breaker(state, tied), best
         if self.rng is None or len(tied) == 1:
             return tied[0], best
         useful = [a for a in tied if not self._is_noop(state, a)]
@@ -128,6 +136,10 @@ class AdversarialSearch:
             return dy == 0 and dx != 0 and (dx > 0) == (fx > 0)
         return dx == 0 and dy != 0 and (dy > 0) == (fy > 0)
 
+    def _check_deadline(self):
+        if self.deadline is not None and time.perf_counter() >= self.deadline:
+            raise SearchTimeout
+
     # ------------------------------------------------------------ API
     def search(self, state) -> SearchResult:
         """Trả về hành động tốt nhất cho người đang đến lượt tại `state`."""
@@ -135,7 +147,7 @@ class AdversarialSearch:
 
 
 class MinimaxSearch(AdversarialSearch):
-    """Minimax thuần: duyệt toàn bộ cây, không cắt tỉa."""
+    """Minimax duyệt đầy đủ cây trong phạm vi terminal hoặc horizon đã chọn."""
 
     name = "Minimax"
 
@@ -155,12 +167,16 @@ class MinimaxSearch(AdversarialSearch):
         return SearchResult(best_action, best_value, self.stats, values)
 
     def _value(self, state, depth):
+        self._check_deadline()
         stats = self.stats
         if depth > stats.max_depth:
             stats.max_depth = depth
 
         if self._is_terminal(state):
-            stats.terminal_nodes += 1
+            if state.is_terminal():
+                stats.terminal_nodes += 1
+            else:
+                stats.cutoff_nodes += 1
             return self._terminal_value(state)
 
         stats.nodes_expanded += 1
@@ -216,12 +232,16 @@ class AlphaBetaSearch(AdversarialSearch):
         return SearchResult(best_action, best_value, self.stats, values)
 
     def _value(self, state, alpha, beta, depth):
+        self._check_deadline()
         stats = self.stats
         if depth > stats.max_depth:
             stats.max_depth = depth
 
         if self._is_terminal(state):
-            stats.terminal_nodes += 1
+            if state.is_terminal():
+                stats.terminal_nodes += 1
+            else:
+                stats.cutoff_nodes += 1
             return self._terminal_value(state)
 
         stats.nodes_expanded += 1

@@ -11,33 +11,10 @@ import argparse
 import csv
 import itertools
 import os
-import time
 
 from ..algorithms.scenarios import load_state
+from ..engine.match import MatchSession
 from ..gui.agent_registry import build_registry
-
-
-class Timed:
-    """Bọc agent để đo thời gian suy nghĩ và số nước đã đi."""
-
-    def __init__(self, agent):
-        self.agent = agent
-        self.time = 0.0
-        self.moves = 0
-
-    def choose_action(self, state):
-        t0 = time.perf_counter()
-        a = self.agent.choose_action(state)
-        self.time += time.perf_counter() - t0
-        self.moves += 1
-        return a
-
-
-def play(state, p1, p2):
-    agents = (p1, p2)
-    while not state.is_terminal():
-        state = state.result(agents[state.player()].choose_action(state))
-    return state
 
 
 def main():
@@ -57,13 +34,20 @@ def main():
     for a, b in itertools.combinations(specs, 2):
         for m in args.maps.split(","):
             for first, second in ((a, b), (b, a)):
-                ta = Timed(first.factory(args.depth))
-                tb = Timed(second.factory(args.depth))
-                final = play(load_state(m), ta, tb)
+                participants = [first.factory(args.depth), second.factory(args.depth)]
+                for agent in participants:
+                    if hasattr(agent, "time_limit"):
+                        agent.time_limit = None
+                    search = getattr(agent, "search", None)
+                    if search is not None:
+                        search.time_limit = None
+                match = MatchSession(load_state(m), participants)
+                final = match.run()
+                ta, tb = match.agents
                 u = final.utility()
                 win = first.label if u > 0 else second.label if u < 0 else "draw"
                 for spec, t in ((first, ta), (second, tb)):
-                    stat[spec.label]["time"] += t.time
+                    stat[spec.label]["time"] += t.total_time
                     stat[spec.label]["moves"] += t.moves
                     if win == "draw":
                         stat[spec.label]["d"] += 1

@@ -1,167 +1,225 @@
-# Task 2 - Tank Battle (Adversarial Search)
+# Task 2 — Kịch bản demo Tank Battle
 
-Game xe tăng theo lượt, điều khiển bằng Minimax, Alpha-Beta, Heuristic Minimax và
-Heuristic Minimax + Alpha-Beta. Có giao diện PyGame và cơ chế nạp thuật toán của nhóm khác.
+## Chuẩn bị trước buổi demo
 
-## 1. Cấu trúc thư mục
+Giải nén để có thư mục `task2_tank`. Mở terminal tại thư mục cha chứa `task2_tank`.
+Dùng Python 3.8 trở lên và cài Pygame.
 
-```
-task2_tank/
-  run_gui.py                chạy giao diện PyGame
-  play_demo.py              chạy thử một ván trong console
-  requirement.txt           thư viện cần cài (pygame)
-  README.md
-  maps/                     small.txt, medium.txt, full.txt
-  engine/                   luật game: GameState, entities, GameMap, hằng số
-  algorithms/
-    adversarial.py          MinimaxSearch, AlphaBetaSearch
-    heuristic_search.py     HeuristicMinimaxSearch, HeuristicAlphaBetaSearch
-    heuristic_eval.py       hàm đánh giá Eval()
-    agents.py               Agent, MinimaxAgent, AlphaBetaAgent, play_match
-    scenarios.py            tạo trạng thái xuất phát (load_state, warmup)
-  gui/
-    app.py                  cửa sổ pygame: menu và màn hình chơi
-    renderer.py             vẽ bàn chơi, tank, đạn, bảng thông tin
-    game_controller.py      điều khiển ván chơi (không dùng pygame), bọc agent an toàn
-    agent_registry.py       danh sách agent: Human, 4 thuật toán, plugin
-  plugins/
-    example_random_agent.py agent mẫu để nạp vào GUI
-  experiments/
-    compare_search.py       so sánh 4 cấu hình tìm kiếm (thời gian, số nút, cắt tỉa)
-    tournament.py           đấu vòng tròn giữa các agent, kể cả plugin
-    results/                kết quả đã chạy (CSV và log)
-  tests/                    unit test
+```bash
+python -m pip install -r task2_tank/requirement.txt
+python -m unittest discover -s task2_tank/tests -t .
+python task2_tank/run_gui.py
 ```
 
-## 2. Cài đặt
+Trên macOS, nếu máy dùng tên lệnh `python3`, thay `python` bằng `python3` trong các lệnh.
+Tệp requirement.txt ghi thư viện GUI. Phần tìm kiếm, engine và thí nghiệm chỉ dùng thư viện chuẩn.
+Bản đóng gói đã kiểm tra trên Windows với Python 3.12 và Pygame 2.6.1. Cần chạy lại trên macOS 13.7.8 Intel i5 theo cấu hình chấm của đề.
 
-Cần Python 3.8+.
+## Cảnh 1 — Giới thiệu bài toán và OOP, khoảng 1 phút
 
-```
-pip install -r task2_tank/requirement.txt
-```
+Mở menu, giới thiệu ba bản đồ small, medium và full.
 
-Mọi lệnh bên dưới chạy từ thư mục **chứa** `task2_tank`.
+Lời trình bày gợi ý
 
-## 3. Chạy
+> Nhóm mô hình Tank Battle thành trò chơi hai người tổng bằng không. P1 là MAX, P2 là MIN.
+> Trạng thái gồm kích thước map, tường và HP, vị trí và hướng hai tank, HP tank/base, đạn,
+> số cycle và hành động đang chờ của MAX. MAX chọn trước, MIN nhìn thấy lựa chọn này,
+> rồi engine giải quyết một cycle. Mỗi cycle tương ứng hai ply trong cây tìm kiếm.
+> Utility được tính từ phía MAX, thắng +1, thua -1, hòa 0. Lợi ích của MIN mang dấu ngược lại.
 
-| Mục đích | Lệnh |
+Mở các file để chỉ trách nhiệm của đối tượng.
+
+| Thành phần | Lớp và trách nhiệm |
 |---|---|
-| Giao diện PyGame | `python task2_tank/run_gui.py` |
-| Một ván trong console | `python -m task2_tank.play_demo --map small --horizon 2` |
-| Thí nghiệm so sánh 4 cấu hình | `python -m task2_tank.experiments.compare_search` |
-| Đấu vòng tròn các agent | `python -m task2_tank.experiments.tournament --depth 2` |
-| Unit test | `python -m unittest discover -s task2_tank/tests -t .` |
+| `engine/game_state.py` | `GameState` cung cấp player, legal_actions, result, is_terminal, utility |
+| `engine/entities.py` | `Tank`, `Base`, `Bullet` lưu dữ liệu thực thể và sao chép |
+| `engine/game_map.py` | `GameMap` đọc bản đồ |
+| `algorithms/adversarial.py` | `AdversarialSearch` là lớp cha, hai lớp con triển khai Minimax và Alpha–Beta |
+| `algorithms/heuristic_search.py` | Hai lớp heuristic dùng chung phần duyệt cây, khác cờ cắt tỉa |
+| `algorithms/agents.py` | `Agent` là lớp trừu tượng, các agent cùng có choose_action(state) |
+| `engine/match.py` | `SafeAgent` xử lý lỗi/đo thời gian, `MatchSession` điều phối trận |
+| `gui/game_controller.py` | `GameController` kế thừa MatchSession, bổ sung log và sự kiện để vẽ |
+| `gui/app.py`, `gui/renderer.py` | Menu, vòng lặp Pygame và hiển thị |
 
-(Chỉ giao diện cần pygame; phần còn lại chạy được không cần pygame.)
+Các hàm hình học, CLI và hàm tạo kịch bản được giữ ở dạng hàm khi chúng không cần quản lý trạng thái riêng.
+DSA được dùng gồm cây tìm kiếm đệ quy, dictionary, deque, Counter, heap và Dijkstra tính đường tiến công.
 
-## 4. Luật game (theo đề)
+## Cảnh 2 — Chứng minh luật game, khoảng 1–2 phút
 
-- Bản đồ lưới, mỗi bên có 1 tank và 1 base. HP ban đầu: tank 6, base 9, tường 3; mỗi phát bắn trừ 1 HP.
-- Tank có 6 hành động: `MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, FIRE, STAY`; mỗi lượt đi tối đa 1 ô.
-- Đạn bay 3 ô mỗi cycle theo hướng nòng, kiểm tra va chạm sau từng ô và dừng ngay khi trúng tường, tank hoặc base.
-- Game kết thúc khi một tank hoặc một base bị phá. Bên còn lại thắng. Nếu hết 100 cycle mà chưa ai thua thì hòa.
+Chọn map small, hai bên Human, bắt đầu ván.
 
-Cách engine mô hình hóa (`engine/game_state.py`):
-- Một cycle gồm 2 ply: P1 (MAX) chọn, rồi P2 (MIN) chọn khi đã biết hành động của P1, sau đó engine xử lý cả cycle (tank di chuyển, bắn đạn mới, đạn bay 3 ô).
-- Mỗi tank chỉ có tối đa một viên đạn đang bay; FIRE khi đạn cũ còn bay bị bỏ qua.
-- Hai tank cùng đi vào một ô: ưu tiên luân phiên theo cycle (cycle chẵn P1, lẻ P2), bên còn lại đứng nguyên. Nếu đích là ô tank đang đứng yên hoặc hai tank đổi chỗ thì cả hai ở lại.
-- Tank bước vào ô đang chứa đạn bay tới thì bị đạn trúng ngay (đạn không xuyên qua tank).
-
-## 5. Thuật toán
-
-| Cấu hình | Lớp | Ghi chú |
-|---|---|---|
-| Minimax | `MinimaxSearch` | duyệt toàn bộ cây tới horizon, không cắt tỉa |
-| Alpha-Beta | `AlphaBetaSearch` | cùng giá trị gốc như Minimax, bỏ nhánh không ảnh hưởng quyết định |
-| Heuristic Minimax | `HeuristicMinimaxSearch` | giới hạn độ sâu, nút lá đánh giá bằng `Eval()` |
-| Heuristic Alpha-Beta | `HeuristicAlphaBetaSearch` | như trên có cắt tỉa Alpha-Beta |
-
-- Độ sâu tính bằng số cycle nhìn trước (1 cycle = 2 ply, mỗi nút có 6 nhánh).
-- Minimax và Alpha-Beta thuần không thể duyệt tới nút kết thúc thật (tối đa 100 cycle), nên cắt ở horizon và coi như chưa phân thắng thua. Với tùy chọn `horizon_score`, nút bị cắt được tính bằng chênh lệch HP tank + base chia 100, luôn nhỏ hơn giá trị thắng/thua thật.
-- `Eval()` (`heuristic_eval.py`) gồm: chênh lệch HP base và tank, chi phí đường đi tới vị trí bắn được base địch (Dijkstra, tường tính theo HP), tank đang ngắm trúng địch, đạn đang bay, độ linh hoạt di chuyển, tường quanh base, phạt đi lòng vòng.
-- Tối ưu để chạy realtime: sắp xếp nước đi (FIRE trúng địch trước), bỏ nước vô tác dụng, bỏ nước bước vào đường đạn chắc chắn trúng, cache đường đi, iterative deepening theo `time_limit`.
-- Tùy chọn cho agent chơi trong GUI: `randomize` chọn ngẫu nhiên có seed giữa các nước bằng điểm (nếu không, Minimax thuần luôn lấy nước đầu tiên và tank đâm tường mãi); mặc định tắt để thí nghiệm tất định.
-
-## 6. Thí nghiệm
-
-### 6.1 So sánh 4 cấu hình (`experiments/compare_search.py`)
-
-Cùng điều kiện cho cả 4 cấu hình: 3 map x 4 trạng thái xuất phát (đầu ván và giữa ván, seed cố định) = 12 kịch bản, HP chuẩn, cùng độ sâu 1 đến 3 cycle, tắt move ordering, lọc nước và ngẫu nhiên. Chỉ số: thời gian, số nút sinh ra, số lần cắt tỉa, số nhánh bị bỏ, số lần gọi `Eval()`. Có kiểm tra Alpha-Beta cho cùng giá trị gốc như Minimax tương ứng.
-
-Kết quả trung bình (xem `experiments/results/`):
-
-| Độ sâu | Thuật toán | Thời gian (s) | Số nút | Cắt tỉa | Gọi Eval |
-|---|---|---|---|---|---|
-| 1 | Minimax | 0.0003 | 42 | 0 | 0 |
-| 1 | Alpha-Beta | 0.0001 | 17 | 5 | 0 |
-| 1 | Heuristic Minimax | 0.0025 | 42 | 0 | 36 |
-| 1 | Heuristic Alpha-Beta | 0.0005 | 22 | 4 | 16 |
-| 2 | Minimax | 0.0084 | 1554 | 0 | 0 |
-| 2 | Alpha-Beta | 0.0007 | 129 | 45 | 0 |
-| 2 | Heuristic Minimax | 0.0417 | 1554 | 0 | 1296 |
-| 2 | Heuristic Alpha-Beta | 0.0042 | 216 | 54 | 139 |
-| 3 | Minimax | 0.2904 | 55986 | 0 | 0 |
-| 3 | Alpha-Beta | 0.0040 | 812 | 295 | 0 |
-| 3 | Heuristic Minimax | 1.2802 | 55986 | 0 | 46656 |
-| 3 | Heuristic Alpha-Beta | 0.0354 | 1892 | 508 | 1189 |
-
-Nhận xét: số nút của Minimax tăng gấp khoảng 36 lần mỗi cycle (6^2), còn Alpha-Beta tăng chậm hơn nhiều; ở độ sâu 3, Alpha-Beta sinh ít hơn Minimax khoảng 69 lần số nút. Bản Heuristic chậm hơn bản thuần cùng số nút vì mỗi lá phải gọi `Eval()`, nhưng chọn nước đi tốt hơn (xem 6.2).
-
-### 6.2 Đấu vòng tròn (`experiments/tournament.py`)
-
-Mỗi cặp agent đấu trên 3 map và đổi bên (HP chuẩn, độ sâu 2). Tournament cũng tự đưa các plugin trong `plugins/` vào giải. Kết quả ví dụ (W/D/L trên 24 ván mỗi agent; plugin ngẫu nhiên không seed nên số liệu có thể lệch nhẹ giữa các lần chạy):
-
-| Agent | W | D | L | ms / nước |
-|---|---|---|---|---|
-| Heuristic Minimax | 19 | 4 | 1 | 24.8 |
-| Heuristic Alpha-Beta | 19 | 4 | 1 | 4.5 |
-| Alpha-Beta | 4 | 7 | 13 | 1.5 |
-| Minimax | 4 | 7 | 13 | 4.9 |
-| Random (plugin) | 0 | 6 | 18 | 0.0 |
-
-Hai bản Heuristic thắng áp đảo; cùng chất lượng chơi nhưng bản có Alpha-Beta nhanh hơn khoảng 5 lần.
-
-## 7. Giao diện
-
-**Menu:** bấm nửa trái hoặc nửa phải của một dòng (hoặc phím mũi tên) để đổi giá trị, Enter để bắt đầu.
-
-| Dòng | Lựa chọn |
+| Nội dung kiểm tra | Thao tác và kết quả cần thấy |
 |---|---|
-| Map | small, medium, full |
-| Player 1 (green) / Player 2 (orange) | Human, Minimax, Alpha-Beta, Heuristic Minimax, Heuristic Alpha-Beta và các plugin |
-| Depth | 1 đến 4 cycle nhìn trước (Minimax thuần tối đa 3 vì quá chậm hơn) |
+| Di chuyển | Tank đi một ô bằng phím điều khiển |
+| Sáu hành động | Bốn hướng, FIRE và STAY |
+| HP | Tank 6, base 9, tường 3; mỗi hit trừ 1 |
+| Đạn | FIRE theo hướng nòng, mỗi cycle tối đa 3 ô |
+| Va chạm | Đạn kiểm tra sau từng ô, dừng ngay khi trúng vật đầu tiên |
+| Kết thúc | Tank hoặc base bị phá thì dừng trận, hiển thị kết quả |
 
-Mỗi tank chọn thuật toán và độ sâu riêng nên chơi người với máy, máy với máy, hoặc hai thuật toán cùng loại đều được.
+Điều khiển P1 bằng W/A/S/D, Space bắn, Q đứng yên.
+Điều khiển P2 bằng phím mũi tên, Enter bắn, Right Shift đứng yên.
+P tạm dừng, N chạy từng cycle cho các lượt AI, +/- đổi tốc độ, R khởi động lại, Esc về menu.
+Các phím hành động của người chơi vẫn thực hiện lượt khi đang pause để có thể demo từng nước.
 
-**Trong ván:**
+Chỉ vào `_resolve_cycle()` và `_advance_bullets()` để giải thích kiểm tra va chạm từng ô.
+Tank bị phá bởi đạn cũ trước giai đoạn bắn không được sinh đạn mới.
+Các viên đạn trong cùng một bước con được xử lý, sau đó kiểm tra kết thúc trước bước con tiếp theo.
 
-| Phím | Tác dụng |
+Các quy ước bổ sung cần trình bày rõ với giảng viên
+
+- Hòa sau 100 cycle nếu hai bên vẫn hoạt động. Đây là giới hạn trận của nhóm.
+- Mỗi tank có tối đa một viên đạn đang bay. FIRE khi đã có đạn được xử lý như đứng yên.
+- Hai tank cùng đến một ô trống thì ưu tiên luân phiên theo cycle. Đổi chỗ trực tiếp bị chặn.
+- Hai bên cùng bị phá trong cùng bước xử lý đạn được tính hòa.
+- MIN quan sát hành động pending của MAX. Mô hình này là thông tin hoàn hảo theo lượt.
+
+## Cảnh 3 — Giải thích bốn cấu hình tìm kiếm, khoảng 2 phút
+
+| Cấu hình | Hàm đánh giá lá và cách duyệt |
 |---|---|
-| P | tạm dừng / tiếp tục |
-| N | chạy từng cycle |
-| + / - | chạy nhanh / chậm |
-| R | chơi lại ván |
-| ESC | về menu |
-| P1: W A S D, SPACE bắn, Q đứng yên | điều khiển tay P1 |
-| P2: phím mũi tên, ENTER bắn, Right Shift đứng yên | điều khiển tay P2 |
+| Minimax | MAX lấy lớn nhất, MIN lấy nhỏ nhất; duyệt đầy đủ trong phạm vi đặt ra |
+| Alpha–Beta | Cùng phép đánh giá với Minimax, cắt khi MAX đạt beta hoặc MIN đạt alpha |
+| Heuristic Minimax | Cắt ở độ sâu giới hạn, dùng Eval ở trạng thái chưa kết thúc |
+| Heuristic Alpha–Beta | Cùng Eval và cutoff, thêm cắt tỉa Alpha–Beta |
 
-Thanh thông tin hiển thị HP tank/base, thuật toán, thời gian suy nghĩ, số nút đã sinh và hành động gần nhất của mỗi bên. Thuật toán chạy trong thread nền nên cửa sổ không bị đứng.
+Lời trình bày gợi ý
 
-## 8. Nạp thuật toán của nhóm khác (plugins)
+> Khi không truyền horizon, Minimax và Alpha–Beta đi đến terminal thật của engine.
+> Cây từ đầu trận quá lớn, nên GUI và bảng thí nghiệm dùng horizon theo số cycle.
+> Với horizon_score bật, hai cấu hình đầu dùng chênh lệch tổng HP chia 100 ở cutoff.
+> Đây là Minimax/Alpha–Beta giới hạn độ sâu với đánh giá HP đơn giản.
+> Hai cấu hình heuristic dùng Eval đầy đủ. Em phân biệt terminal thật với cutoff trong thống kê.
+> Test gần cuối trận xác nhận hai thuật toán không đặt horizon cho cùng utility và không có cutoff.
 
-1. Chép file `.py` của nhóm khác vào `task2_tank/plugins/`.
-2. Mở GUI (hoặc bấm **Reload plugins**, phím F5, ở menu). Agent xuất hiện trong danh sách Player 1 / Player 2 với đuôi `[plugin]`.
-3. Chọn agent đó cho một bên, thuật toán của nhóm mình cho bên kia rồi Start.
+Không tuyên bố đã duyệt toàn bộ cây từ đầu trận. Cutoff đánh giá HP cũng là một hàm ước lượng.
+Trong phạm vi cây và hàm lá giống nhau, cắt tỉa Alpha–Beta bảo toàn giá trị gốc.
 
-File plugin cần một trong hai thứ:
-- hàm `create_agent()` trả về đối tượng agent; hoặc
-- một lớp có phương thức `choose_action(state)`.
+Mở `HeuristicEvaluator.evaluate()` để trình bày các đặc trưng.
+Eval ưu tiên HP base/tank, khả năng tiến công base địch, hướng bắn, đạn, độ linh hoạt và lịch sử lặp.
+Dijkstra ước lượng đường tới vị trí có thể bắn base địch. Trọng số phá tường là 1 + HP của tường.
+Chi phí này là đặc trưng chiến thuật, chưa mô phỏng đủ thời gian đạn bay và giới hạn đạn.
+Điểm kết thúc thật được đặt lớn hơn điểm ước lượng thông thường, có ưu tiên thắng sớm/thua muộn.
 
-Hợp đồng:
-- `choose_action(state)` trả về một `Action` của engine (`MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, FIRE, STAY`).
-- `state.player()` cho biết đang chơi bên nào (0 = P1, 1 = P2), nên agent phải chơi được cả hai bên.
-- Thuộc tính `name` (tùy chọn) là tên hiển thị.
-- File có tên bắt đầu bằng `_` bị bỏ qua.
+## Cảnh 4 — Demo các lỗi đã xử lý, khoảng 2 phút
 
-Plugin hỏng khi nạp sẽ được báo lỗi ở menu mà không làm sập GUI. Nếu agent ném lỗi hoặc trả hành động không hợp lệ giữa ván, tank đứng yên (STAY) và lỗi hiện đỏ trong bảng thông tin. Xem mẫu ở `plugins/example_random_agent.py`.
+### Minimax và Alpha–Beta giảm chạy vòng
+
+Chọn map medium hoặc full, P1 Minimax, P2 Alpha–Beta, depth 2.
+
+> Ở horizon nông, nhiều hành động có cùng điểm HP. Chọn ngẫu nhiên đơn thuần dễ tạo đường đi vòng.
+> Agent giờ ghi nhớ vị trí gần đây và trạng thái lặp. Khi nhiều hành động cùng điểm ở gốc,
+> agent dùng đánh giá chiến thuật một cycle để phá hòa và hạn chế quay lại đường cũ.
+> Điểm minimax là tiêu chí chính. Phá hòa là phần điều khiển bổ sung khi chơi GUI.
+
+Theo dõi tank tiến công và thay đổi hướng bắn, kiểm tra HP đối thủ/tường thay vì chỉ đếm số hướng di chuyển.
+Giảm lặp là heuristic thực dụng, chưa bảo đảm mọi tình huống đều thoát được giằng co.
+
+### Heuristic Minimax depth 3–4 phản hồi theo ngân sách
+
+Chọn Heuristic Minimax, lần lượt depth 3 và 4.
+
+> Agent dùng iterative deepening từ độ sâu 1, tăng dần đến mức chọn trong menu.
+> Ngân sách suy nghĩ GUI là 0,5 giây mỗi quyết định. Nếu chưa duyệt xong mức tiếp theo,
+> agent dùng kết quả của mức đã hoàn tất. HUD hiển thị d là độ sâu thực sự hoàn tất.
+> Vì thế chọn depth 4 có thể chỉ hoàn tất depth 2 hoặc 3 trên máy đang chạy.
+
+Thời gian có thể vượt nhẹ ngân sách vì việc kiểm tra diễn ra trong vòng tìm kiếm và một số phép đánh giá.
+Nếu chưa hoàn tất depth 1 trước hạn, hành động dự phòng là STAY.
+Pygame tiếp tục nhận sự kiện trong khi AI chạy trên thread nền.
+Restart hoặc trở về menu tạo hàng đợi kết quả riêng để thread của ván cũ không ghi đè kết quả ván mới.
+
+## Cảnh 5 — Thí nghiệm so sánh, khoảng 1–2 phút
+
+Chạy kiểm tra nhanh trước mặt giảng viên.
+
+```bash
+python -m task2_tank.experiments.compare_search --max-depth 2 --repeats 2
+```
+
+Chạy đủ bảng độ sâu 1–3 khi chuẩn bị báo cáo.
+
+```bash
+python -m task2_tank.experiments.compare_search --max-depth 3 --repeats 2
+```
+
+> Bốn cấu hình dùng cùng 12 kịch bản, gồm ba map với bốn trạng thái đầu/giữa ván.
+> Cùng độ sâu, tắt ordering và lọc nước, đánh giá tất định. Mỗi lần đo xóa cache đường đi
+> để cấu hình chạy sau không hưởng cache của cấu hình trước.
+> Bảng lưu thời gian nhỏ nhất qua số lần lặp và lấy trung bình trên các kịch bản.
+> Đây là phép đo ở độ sâu cố định, khác chế độ GUI có ngân sách thời gian.
+
+Mở `experiments/results/compare_search_raw.csv` và `compare_search_summary.csv`.
+Giải thích các cột nodes_generated, nodes_expanded, terminal_nodes, cutoff_nodes, heuristic_evals,
+cutoffs, pruned_branches, root_value và max_depth_ply.
+Một cycle có hai ply. Số nút con tạo ra tăng nhanh khi tăng độ sâu.
+Kiểm tra cuối chương trình phải báo Minimax và Alpha–Beta cùng giá trị gốc trong từng cặp.
+`environment.json` lưu cấu hình máy và số lần lặp để tái lập.
+
+Giải đấu được chạy bằng lệnh sau. Các agent đấu trên ba map và đổi bên.
+
+```bash
+python -m task2_tank.experiments.tournament --depth 2
+```
+
+Giải đấu dùng độ sâu cố định, có phá hòa và lịch sử như cấu hình chơi.
+Plugin ngẫu nhiên mẫu dùng seed 42. Phá hòa của hai agent cơ bản có ngẫu nhiên nên kết quả giải đấu có thể thay đổi khi chạy lại. CSV ghi số ván thắng/hòa/thua và thời gian quyết định trung bình.
+Thắng nhiều trong tập map thử chưa chứng minh chiến lược tối ưu trên mọi map.
+
+## Cảnh 6 — Nạp thuật toán nhóm khác, khoảng 1 phút
+
+Chỉ file `plugins/example_random_agent.py`, sau đó về menu bấm Reload plugins hoặc F5.
+Chọn Random [plugin] cho một bên và một thuật toán của nhóm cho bên còn lại.
+
+Hợp đồng plugin
+
+```python
+from task2_tank.engine import Action
+
+class ExternalAgent:
+    name = "Agent nhóm khác"
+
+    def choose_action(self, state):
+        return Action.STAY
+
+
+def create_agent():
+    return ExternalAgent()
+```
+
+> Plugin đặt trong thư mục plugins. Hệ thống nạp create_agent() hoặc lớp có choose_action(state).
+> state.player() cho biết bên đang đi. Plugin trả về Action của cùng engine.
+> Bộ bọc truyền bản sao trạng thái, đo thời gian, bắt exception và thay hành động sai bằng STAY.
+
+Plugin cần tự kết thúc choose_action. Bộ bọc chưa cưỡng chế dừng plugin có vòng lặp vô hạn.
+Chỉ nạp code đã kiểm tra vì import plugin thực thi Python trên máy.
+
+## Cảnh 7 — Kết luận và kiểm tra trước khi nộp
+
+- Yêu cầu 2.1 được minh họa bằng mô hình GameState, MAX/MIN, sáu hành động, transition và utility.
+- Yêu cầu 2.2 được minh họa bằng bốn cấu hình, kiểm tra giá trị gốc và CSV cùng điều kiện tìm kiếm.
+- Yêu cầu 2.3 được minh họa bằng GUI Pygame, menu chọn agent, plugin và đấu chung engine.
+- OOP thể hiện qua lớp trạng thái, lớp tìm kiếm, lớp agent, MatchSession và GameController.
+- Test đã tách thành engine, search, heuristic, controller và plugin, bổ sung hồi quy tank chết vẫn bắn.
+- Hai log TXT lặp nội dung CSV và các file cache Python được loại khỏi gói.
+- play_demo vẫn giữ để tương thích, dùng cùng MatchSession và hỗ trợ cả bốn thuật toán.
+- Các vòng đệ quy MAX/MIN của Minimax và Alpha–Beta được giữ rõ ràng để dễ đối chiếu bài giảng.
+
+Demo console độc lập GUI
+
+```bash
+python -m task2_tank.play_demo --map small --max-agent heuristic-ab --min-agent random --horizon 2 --seed 42
+```
+
+Báo cáo IEEE tối đa 5 trang, video demo và thư mục nộp đúng mẫu là phần đóng gói toàn dự án theo đề.
+Gói này chứa riêng Task 2. Số liệu trong results là kết quả chạy thực tế trên máy ghi trong environment.json.
+
+## Kết quả kiểm tra bản đóng gói
+
+- 26 test tự động đạt.
+- So sánh đủ 144 dòng kết quả từ 12 kịch bản, ba độ sâu và bốn cấu hình, mỗi cấu hình lặp hai lần.
+- Hai cặp Minimax/Alpha–Beta cho cùng giá trị gốc ở toàn bộ 36 điều kiện mỗi cặp.
+- Giải đấu chạy đủ 60 ván ở độ sâu cố định 2.
+- Kiểm tra GUI với SDL dummy đã render menu, bàn chơi, HUD và reset ván.
+- `realtime_check.json` lưu phép đo riêng tám cấu hình GUI ở depth 3 và 4 trên map full.
+- Phép đo realtime là kiểm tra mẫu trên máy hiện tại. Ngân sách 0,5 giây là giới hạn mềm.

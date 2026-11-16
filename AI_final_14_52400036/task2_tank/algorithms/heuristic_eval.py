@@ -26,9 +26,9 @@ import random
 from collections import Counter
 from dataclasses import dataclass
 from functools import lru_cache
-from .adversarial import (MAX_PLAYER, MIN_PLAYER)
+from .adversarial import MAX_PLAYER
 
-from ..engine import Action, Direction
+from ..engine import Action
 
 WIN_SCORE = 10_000.0     # giá trị thắng; thắng sớm được WIN_SCORE - depth
 PATH_CAP = 60.0          # chặn trên chi phí đường đi (khi không có đường)

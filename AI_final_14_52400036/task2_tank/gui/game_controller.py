@@ -8,39 +8,12 @@ import time
 from collections import deque
 
 from ..algorithms.scenarios import load_state
-from ..engine import Action
+from ..engine.match import MatchSession
 
 MAP_NAMES = ["small", "medium", "full"]
 
 
-class SafeAgent:
-    """Bọc agent bất kỳ: bắt lỗi, kiểm tra hành động hợp lệ, đo thời gian suy nghĩ."""
-
-    def __init__(self, agent):
-        self.agent = agent
-        self.last_error = None
-        self.last_time = 0.0
-        self.total_time = 0.0
-        self.last_nodes = None
-
-    def choose_action(self, state):
-        t0 = time.perf_counter()
-        try:
-            action = self.agent.choose_action(state)
-            if action not in state.legal_actions():
-                raise ValueError("hành động không hợp lệ: %r" % (action,))
-            self.last_error = None
-        except Exception as exc:
-            action = Action.STAY
-            self.last_error = "%s: %s" % (type(exc).__name__, exc)
-        self.last_time = time.perf_counter() - t0
-        self.total_time += self.last_time
-        stats = getattr(getattr(self.agent, "last_result", None), "stats", None)
-        self.last_nodes = getattr(stats, "nodes_generated", None)
-        return action
-
-
-class GameController:
+class GameController(MatchSession):
     def __init__(self, map_name, factories, labels):
         """factories[i]: hàm không tham số trả về agent, hoặc None nếu bên i do người chơi."""
         self.map_name = map_name
@@ -53,8 +26,7 @@ class GameController:
         self.reset()
 
     def reset(self):
-        self.state = self.initial.clone()
-        self.agents = [SafeAgent(f()) if f else None for f in self.factories]
+        super().__init__(self.initial, [factory() if factory else None for factory in self.factories])
         self.last_actions = [None, None]
         self.events = []          # (x, y, loại) các va chạm của cycle vừa xử lý
         self.events_time = -10_000.0
@@ -70,9 +42,6 @@ class GameController:
     def is_human(self, p):
         return self.agents[p] is None
 
-    def is_over(self):
-        return self.state.is_terminal()
-
     def result_text(self):
         if not self.is_over():
             return ""
@@ -84,13 +53,11 @@ class GameController:
         return "Draw"
 
     # ------------------------------------------------------------ hành động
-    def ai_action(self, p):
-        """Chạy agent của bên p (gọi được từ thread riêng, không sửa state)."""
-        return self.agents[p].choose_action(self.state.clone())
-
     def apply(self, action):
         prev = self.state
-        self.state = prev.result(action)
+        if self.is_over():
+            return
+        super().apply(action)
         if prev.pending is None:
             return
         self.last_actions = [prev.pending, action]

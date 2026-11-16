@@ -6,45 +6,10 @@ import os
 from dataclasses import dataclass
 from typing import Callable, List, Optional, Tuple
 
-from ..algorithms.agents import Agent, MinimaxAgent, AlphaBetaAgent
-from ..algorithms.heuristic_search import (HeuristicMinimaxSearch,
-                                           HeuristicAlphaBetaSearch)
+from ..algorithms.agents import (MinimaxAgent, AlphaBetaAgent,
+                                 HeuristicMinimaxAgent, HeuristicAlphaBetaAgent)
 
 PLUGIN_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "plugins")
-MAX_PURE_HORIZON = 3   # Minimax thuần với horizon > 3 quá chậm để chơi realtime
-
-
-class HeuristicAgent(Agent):
-    """Bọc HeuristicMinimaxSearch / HeuristicAlphaBetaSearch.
-
-    Mỗi bên giữ một đối tượng search riêng vì search nhớ các ô đã đứng (chống đi lòng vòng).
-    """
-
-    search_cls = None
-    label = "Heuristic"
-
-    def __init__(self, depth=2):
-        self.depth = depth
-        self.search = self.search_cls(depth=depth)
-        self.last_result = None
-
-    @property
-    def name(self):
-        return "%s (d=%d)" % (self.label, self.depth)
-
-    def choose_action(self, state):
-        self.last_result = self.search.search(state)
-        return self.last_result.action
-
-
-class HeuristicMinimaxAgent(HeuristicAgent):
-    search_cls = HeuristicMinimaxSearch
-    label = "Heuristic Minimax"
-
-
-class HeuristicAlphaBetaAgent(HeuristicAgent):
-    search_cls = HeuristicAlphaBetaSearch
-    label = "Heuristic Alpha-Beta"
 
 
 @dataclass
@@ -65,13 +30,13 @@ def _builtin_specs() -> List[AgentSpec]:
         AgentSpec("Human", None, False, "human"),
         # randomize + horizon_score: với HP chuẩn 6/9/3, horizon nông không thấy thắng/thua nên mọi nước đều
         # bằng điểm; nếu cứ lấy nước đầu tiên thì tank đâm đầu vào tường (MOVE_UP) mãi. Xem AdversarialSearch.
-        AgentSpec("Minimax", lambda d: MinimaxAgent(horizon=min(d, MAX_PURE_HORIZON), move_ordering=True,
-                                                    randomize=True, horizon_score=True), True,
-                  "built-in", MAX_PURE_HORIZON),
+        AgentSpec("Minimax", lambda d: MinimaxAgent(horizon=d, move_ordering=True,
+                                                    randomize=True, horizon_score=True, time_limit=0.5, tactical_ties=True), True,
+                  "built-in", 4),
         AgentSpec("Alpha-Beta", lambda d: AlphaBetaAgent(horizon=d, move_ordering=True,
-                                                         randomize=True, horizon_score=True), True),
-        AgentSpec("Heuristic Minimax", lambda d: HeuristicMinimaxAgent(depth=d), True),
-        AgentSpec("Heuristic Alpha-Beta", lambda d: HeuristicAlphaBetaAgent(depth=d), True),
+                                                         randomize=True, horizon_score=True, time_limit=0.5, tactical_ties=True), True),
+        AgentSpec("Heuristic Minimax", lambda d: HeuristicMinimaxAgent(depth=d, time_limit=0.5), True),
+        AgentSpec("Heuristic Alpha-Beta", lambda d: HeuristicAlphaBetaAgent(depth=d, time_limit=0.5), True),
     ]
 
 

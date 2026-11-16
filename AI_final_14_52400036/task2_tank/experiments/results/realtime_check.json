@@ -1,0 +1,50 @@
+[
+  {
+    "algorithm": "Minimax",
+    "requested_depth": 3,
+    "completed_depth": 2,
+    "elapsed_s": 0.5005
+  },
+  {
+    "algorithm": "Minimax",
+    "requested_depth": 4,
+    "completed_depth": 2,
+    "elapsed_s": 0.5009
+  },
+  {
+    "algorithm": "Alpha-Beta",
+    "requested_depth": 3,
+    "completed_depth": 3,
+    "elapsed_s": 0.0287
+  },
+  {
+    "algorithm": "Alpha-Beta",
+    "requested_depth": 4,
+    "completed_depth": 4,
+    "elapsed_s": 0.1527
+  },
+  {
+    "algorithm": "Heuristic Minimax",
+    "requested_depth": 3,
+    "completed_depth": 2,
+    "elapsed_s": 0.5008
+  },
+  {
+    "algorithm": "Heuristic Minimax",
+    "requested_depth": 4,
+    "completed_depth": 2,
+    "elapsed_s": 0.5033
+  },
+  {
+    "algorithm": "Heuristic Alpha-Beta",
+    "requested_depth": 3,
+    "completed_depth": 3,
+    "elapsed_s": 0.2292
+  },
+  {
+    "algorithm": "Heuristic Alpha-Beta",
+    "requested_depth": 4,
+    "completed_depth": 3,
+    "elapsed_s": 0.506
+  }
+]

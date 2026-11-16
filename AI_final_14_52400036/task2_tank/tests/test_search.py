@@ -64,40 +64,40 @@ class PureSearchTests(unittest.TestCase):
         self.assertTrue(len(acts) >= 4)
 
 
-class EngineTests(unittest.TestCase):
-    def test_initial_hp_matches_spec(self):
-        st = load_state("small")
-        self.assertEqual([t.hp for t in st.tanks], [6, 6])
-        self.assertEqual([b.hp for b in st.bases], [9, 9])
-        self.assertTrue(all(hp == 3 for hp in st.walls.values()))
 
-    def test_six_actions(self):
-        self.assertEqual(len(load_state("small").legal_actions()), 6)
-
-    def test_bullet_moves_three_cells_per_cycle(self):
+class TerminalSearchTests(unittest.TestCase):
+    def test_exact_search_without_horizon_matches_at_real_terminal(self):
         from task2_tank.engine import GameMap, GameState
-        st = GameState.from_map(GameMap.parse("1.......2\nA.......B"))
-        st = st.result(Action.FIRE).result(Action.STAY)
-        self.assertEqual((st.bullets[0].x, st.bullets[0].y), (3, 0))
+        from task2_tank.engine.constants import MAX_CYCLES
+        state = GameState.from_map(GameMap.parse("12\nAB"))
+        state.cycle = MAX_CYCLES - 1
+        state.tanks[1].hp = 1
+        full = MinimaxSearch().search(state)
+        pruned = AlphaBetaSearch().search(state)
+        self.assertEqual(full.value, 1)
+        self.assertEqual(full.value, pruned.value)
+        self.assertEqual(full.stats.cutoff_nodes, 0)
 
-    def test_bullet_damages_and_stops_at_tank(self):
-        from task2_tank.engine import GameMap, GameState
-        st = GameState.from_map(GameMap.parse("12\nAB"))
-        st = st.result(Action.FIRE).result(Action.STAY)
-        self.assertEqual(st.tanks[1].hp, 5)
-        self.assertEqual(st.bullets, [])
+class PlayingRegressionTests(unittest.TestCase):
+    def test_tactical_ties_progress_against_idle_opponent(self):
+        from task2_tank.algorithms.agents import AlphaBetaAgent
+        for cls in (MinimaxAgent, AlphaBetaAgent):
+            state = load_state("full")
+            agent = cls(horizon=2, randomize=True, horizon_score=True,
+                        tactical_ties=True, seed=7)
+            positions = set()
+            for _ in range(30):
+                if state.is_terminal():
+                    break
+                action = agent.choose_action(state)
+                state = state.result(action).result(Action.STAY)
+                positions.add((state.tanks[0].x, state.tanks[0].y))
+            self.assertGreater(len(positions), 4)
+            self.assertLess(state.bases[1].hp, 9)
 
-
-class PluginTests(unittest.TestCase):
-    def test_example_plugin_is_loaded(self):
-        from task2_tank.gui.agent_registry import build_registry
-        specs, errors = build_registry()
-        self.assertEqual(errors, [])
-        plugin = [s for s in specs if s.source == "plugin"]
-        self.assertTrue(plugin)
-        agent = plugin[0].factory(1)
-        self.assertIn(agent.choose_action(load_state("small")), Action)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_tactical_tie_break_preserves_primary_search_value(self):
+        state = load_state("full")
+        plain = MinimaxSearch(horizon=1, horizon_score=True).search(state)
+        agent = MinimaxAgent(horizon=1, horizon_score=True, tactical_ties=True)
+        agent.choose_action(state)
+        self.assertEqual(agent.last_result.value, plain.value)

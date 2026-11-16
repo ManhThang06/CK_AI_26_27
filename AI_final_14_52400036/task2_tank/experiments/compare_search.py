@@ -6,7 +6,7 @@ Cùng điều kiện cho mọi cấu hình:
     giữa ván tạo bằng warmup() với seed cố định), HP chuẩn 6/9/3 của đề;
   - cùng độ sâu (số cycle nhìn trước), mỗi cycle gồm 2 ply;
   - tất định: tắt move ordering, tắt lọc nước vô tác dụng, tắt nhiễu và chọn ngẫu nhiên.
-Minimax và Alpha-Beta thuần chạm giới hạn độ sâu thì tính giá trị bằng chênh lệch HP
+Minimax và Alpha-Beta giới hạn độ sâu thì tính giá trị bằng chênh lệch HP
 (horizon_score); hai bản Heuristic dùng hàm đánh giá Eval() đầy đủ.
 
 Chạy (từ thư mục chứa task2_tank):
@@ -18,12 +18,15 @@ import argparse
 import csv
 import math
 import os
+import json
+import platform
 import time
 from collections import defaultdict
 
 from ..algorithms.adversarial import MinimaxSearch, AlphaBetaSearch
 from ..algorithms.heuristic_search import HeuristicMinimaxSearch, HeuristicAlphaBetaSearch
 from ..algorithms.scenarios import load_state, warmup
+from ..algorithms.heuristic_eval import _plan
 
 MAPS = ("small", "medium", "full")
 WARMUPS = ((0, 0), (4, 1), (8, 2), (12, 3))   # (số cycle chơi ngẫu nhiên, seed)
@@ -43,7 +46,7 @@ CONFIGS = {
 EQUIVALENT = (("Minimax", "Alpha-Beta"), ("Heuristic Minimax", "Heuristic Alpha-Beta"))
 
 FIELDS = ["map", "warmup", "depth", "algorithm", "time_s", "nodes_generated", "nodes_expanded",
-          "terminal_nodes", "heuristic_evals", "cutoffs", "pruned_branches", "max_depth_ply",
+          "terminal_nodes", "cutoff_nodes", "heuristic_evals", "cutoffs", "pruned_branches", "max_depth_ply",
           "root_value", "action"]
 
 
@@ -61,6 +64,7 @@ def run(max_depth, repeats):
             for name, make in CONFIGS.items():
                 best = None
                 for _ in range(repeats):                  # lấy thời gian nhỏ nhất để giảm nhiễu đo
+                    _plan.cache_clear()
                     t0 = time.perf_counter()
                     res = make(d).search(state)
                     dt = time.perf_counter() - t0
@@ -70,7 +74,7 @@ def run(max_depth, repeats):
                 rows.append(dict(
                     map=m, warmup=tag, depth=d, algorithm=name, time_s=round(best, 5),
                     nodes_generated=s.nodes_generated, nodes_expanded=s.nodes_expanded,
-                    terminal_nodes=s.terminal_nodes, heuristic_evals=getattr(s, "heuristic_evals", 0),
+                    terminal_nodes=s.terminal_nodes, cutoff_nodes=s.cutoff_nodes, heuristic_evals=getattr(s, "heuristic_evals", 0),
                     cutoffs=s.cutoffs, pruned_branches=s.pruned_branches, max_depth_ply=s.max_depth,
                     root_value=round(res.value, 6), action=res.action.name))
         print("done", m, tag, flush=True)
@@ -114,12 +118,19 @@ def main():
     ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "results"))
     args = ap.parse_args()
 
+    if args.max_depth < 1 or args.repeats < 1:
+        ap.error("Độ sâu và số lần chạy phải dương")
     rows = run(args.max_depth, args.repeats)
     os.makedirs(args.out, exist_ok=True)
     with open(os.path.join(args.out, "compare_search_raw.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, FIELDS)
         w.writeheader()
         w.writerows(rows)
+
+    with open(os.path.join(args.out, "environment.json"), "w", encoding="utf-8") as f:
+        json.dump({"python": platform.python_version(), "platform": platform.platform(),
+                   "repeats": args.repeats, "depth": args.max_depth,
+                   "timing": "minimum of repeats; cold path cache per search"}, f, indent=2)
 
     summ = summarize(rows)
     with open(os.path.join(args.out, "compare_search_summary.csv"), "w", newline="", encoding="utf-8") as f:

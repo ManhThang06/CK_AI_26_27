@@ -3,6 +3,7 @@
 Chạy:  python run_gui.py   (trong thư mục task2_tank)
 """
 
+import queue
 import threading
 import time
 
@@ -84,7 +85,7 @@ class App:
         self.paused = False
         self.step_once = False
         self.thinking = False
-        self.pending_result = None
+        self.results = queue.SimpleQueue()
         self.token = 0
         self.next_time = 0.0
 
@@ -189,7 +190,7 @@ class App:
     def _reset_runtime(self):
         self.token += 1
         self.thinking = False
-        self.pending_result = None
+        self.results = queue.SimpleQueue()
         self.paused = False
         self.step_once = False
         self.next_time = 0.0
@@ -235,9 +236,8 @@ class App:
 
     def _update_game(self):
         ctrl = self.ctrl
-        if self.pending_result is not None:
-            token, action = self.pending_result
-            self.pending_result = None
+        if not self.results.empty():
+            token, action = self.results.get_nowait()
             if token == self.token:
                 self.thinking = False
                 ctrl.apply(action)
@@ -259,13 +259,15 @@ class App:
     def _start_think(self, p):
         self.thinking = True
         token = self.token
+        controller = self.ctrl
+        results = self.results
 
         def work():
             try:
-                action = self.ctrl.ai_action(p)
+                action = controller.ai_action(p)
             except Exception:
                 action = Action.STAY
-            self.pending_result = (token, action)
+            results.put((token, action))
 
         threading.Thread(target=work, daemon=True).start()
 
@@ -282,6 +284,3 @@ class App:
 def main():
     App().run()
 
-
-if __name__ == "__main__":
-    main()
